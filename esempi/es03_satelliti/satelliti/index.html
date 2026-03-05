@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Satellite Tracker — Orbite Attive</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+
+  :root {
+    --bg: #010810;
+    --grid: rgba(0,180,255,0.06);
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #39ff14;
+    --dim: rgba(0,212,255,0.5);
+    --panel-bg: rgba(0,18,36,0.88);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--accent);
+    font-family: 'Share Tech Mono', monospace;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* Starfield */
+  #stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Main canvas */
+  #canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* Info panel top-left */
+  #info-panel {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    background: var(--panel-bg);
+    border: 1px solid var(--accent);
+    border-left: 3px solid var(--accent);
+    padding: 14px 18px;
+    min-width: 260px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 30px rgba(0,212,255,0.15), inset 0 0 20px rgba(0,212,255,0.03);
+  }
+
+  #info-panel h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    text-shadow: 0 0 10px var(--accent);
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0,212,255,0.1);
+    font-size: 11px;
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { color: var(--dim); }
+  .stat-val { color: #fff; font-weight: bold; }
+  .stat-val.green { color: var(--accent3); }
+  .stat-val.orange { color: var(--accent2); }
+
+  #selected-info {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0,212,255,0.2);
+    font-size: 10px;
+    line-height: 1.7;
+    display: none;
+  }
+  #selected-info.visible { display: block; }
+  #selected-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    text-shadow: 0 0 8px var(--accent2);
+    margin-bottom: 4px;
+  }
+  .sel-row { display: flex; justify-content: space-between; }
+  .sel-label { color: var(--dim); }
+  .sel-val { color: #fff; }
+
+  /* Legend bottom-left */
+  #legend {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 10;
+    font-size: 10px;
+    line-height: 2;
+  }
+  .leg-item { display: flex; align-items: center; gap: 8px; color: var(--dim); }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* Status bar bottom */
+  #status {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 2px;
+    text-align: center;
+  }
+
+  /* Tooltip */
+  #tooltip {
+    position: fixed;
+    z-index: 20;
+    background: var(--panel-bg);
+    border: 1px solid var(--accent2);
+    padding: 6px 10px;
+    font-size: 10px;
+    pointer-events: none;
+    display: none;
+    color: #fff;
+  }
+
+  /* Controls */
+  #controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 10px;
+    color: var(--dim);
+    text-align: right;
+  }
+  .ctrl-btn {
+    background: var(--panel-bg);
+    border: 1px solid rgba(0,212,255,0.3);
+    color: var(--accent);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .ctrl-btn:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(0,212,255,0.3);
+  }
+
+  /* Scanlines overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.05) 2px,
+      rgba(0,0,0,0.05) 4px
+    );
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  .pulse { animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<canvas id="canvas"></canvas>
+
+<div id="info-panel">
+  <h1>◈ SAT TRACKER</h1>
+  <div class="stat-row">
+    <span class="stat-label">SATELLITI ATTIVI</span>
+    <span class="stat-val green" id="stat-total">—</span>
+  </div>
+  <div class="stat-row">
+    <span class="stat-label">VISIBILI ORA</span>
+    <span class="stat-val" id="stat-visible">—</span>
+  </div>
+  <div class="stat-row">
+    <span class="stat-label">ROTAZIONE TERRA</span>
+    <span class="stat-val" id="stat-rot">—°</span>
+  </div>
+  <div class="stat-row">
+    <span class="stat-label">UTC</span>
+    <span class="stat-val orange" id="stat-time">—</span>
+  </div>
+  <div class="stat-row">
+    <span class="stat-label">FONTE DATI</span>
+    <span class="stat-val" style="font-size:9px">CELESTRAK.ORG</span>
+  </div>
+  <div id="selected-info">
+    <div id="selected-name">—</div>
+    <div class="sel-row"><span class="sel-label">NORAD ID</span><span class="sel-val" id="sel-norad">—</span></div>
+    <div class="sel-row"><span class="sel-label">INCLINAZIONE</span><span class="sel-val" id="sel-inc">—</span></div>
+    <div class="sel-row"><span class="sel-label">PERIODO</span><span class="sel-val" id="sel-period">—</span></div>
+    <div class="sel-row"><span class="sel-label">EPOCH</span><span class="sel-val" id="sel-epoch">—</span></div>
+    <div class="sel-row"><span class="sel-label">ECCENTRICITÀ</span><span class="sel-val" id="sel-ecc">—</span></div>
+  </div>
+</div>
+
+<div id="controls">
+  <div style="color:var(--dim); font-size:9px; letter-spacing:2px">CONTROLLI</div>
+  <button class="ctrl-btn" id="btn-rotate">⟳ ROTAZIONE: ON</button>
+  <button class="ctrl-btn" id="btn-orbits">◎ ORBITE: OFF</button>
+  <button class="ctrl-btn" id="btn-zoom-in">+ ZOOM IN</button>
+  <button class="ctrl-btn" id="btn-zoom-out">− ZOOM OUT</button>
+</div>
+
+<div id="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:#39ff14"></div>LEO (< 2000 km)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#00d4ff"></div>MEO (2000–35786 km)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#ff6b35"></div>GEO (≈ 35786 km)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#c084fc"></div>HEO / ALTRO</div>
+</div>
+
+<div id="status" class="pulse">▶ SISTEMA ATTIVO — DATI IN TEMPO REALE</div>
+
+<div id="tooltip"></div>
+
+<script>
+// Stars background
+const starCanvas = document.getElementById('stars');
+const sctx = starCanvas.getContext('2d');
+let stars = [];
+
+function initStars() {
+  starCanvas.width = window.innerWidth;
+  starCanvas.height = window.innerHeight;
+  stars = [];
+  for (let i = 0; i < 800; i++) {
+    stars.push({
+      x: Math.random() * starCanvas.width,
+      y: Math.random() * starCanvas.height,
+      r: Math.random() * 1.2,
+      a: Math.random()
+    });
+  }
+}
+
+function drawStars() {
+  sctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+  stars.forEach(s => {
+    sctx.beginPath();
+    sctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    sctx.fillStyle = `rgba(255,255,255,${s.a})`;
+    sctx.fill();
+  });
+}
+
+// Main canvas
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let W, H, cx, cy, earthR;
+let satellites = [];
+let rotation = 0;
+let autoRotate = true;
+let showOrbits = false;
+let zoom = 1;
+let hoveredSat = null;
+let selectedSat = null;
+let mouseX = 0, mouseY = 0;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  cx = W / 2;
+  cy = H / 2;
+  earthR = Math.min(W, H) * 0.18;
+  initStars();
+  drawStars();
+}
+
+window.addEventListener('resize', resize);
+resize();
+
+// TLE orbital mechanics (simplified)
+function tleToXYZ(sat, gmst) {
+  // Very simplified position using mean motion and epoch
+  const mo = sat.MEAN_MOTION; // rev/day
+  const inc = sat.INCLINATION * Math.PI / 180;
+  const raan = (sat.RA_OF_ASC_NODE || 0) * Math.PI / 180;
+  const aop = (sat.ARG_OF_PERICENTER || 0) * Math.PI / 180;
+  const ecc = sat.ECCENTRICITY || 0;
+  const ma0 = (sat.MEAN_ANOMALY || 0) * Math.PI / 180;
+
+  // Epoch to days since epoch
+  const now = Date.now() / 1000;
+  const epochStr = sat.EPOCH;
+  const epochDate = new Date(epochStr);
+  const epochSec = epochDate.getTime() / 1000;
+  const dt = (now - epochSec) / 86400; // days
+
+  // Mean anomaly at current time
+  const ma = ma0 + mo * 2 * Math.PI * dt;
+
+  // Solve Kepler's equation (simplified for low eccentricity)
+  let E = ma;
+  for (let i = 0; i < 5; i++) E = ma + ecc * Math.sin(E);
+
+  // True anomaly
+  const nu = 2 * Math.atan2(
+    Math.sqrt(1 + ecc) * Math.sin(E / 2),
+    Math.sqrt(1 - ecc) * Math.cos(E / 2)
+  );
+
+  // Semi-major axis from mean motion (Earth GM = 398600.4418 km^3/s^2)
+  const n = mo * 2 * Math.PI / 86400; // rad/s
+  const a = Math.cbrt(398600.4418 / (n * n)); // km
+
+  // Radius
+  const r = a * (1 - ecc * Math.cos(E));
+
+  // Position in orbital plane
+  const xo = r * Math.cos(nu);
+  const yo = r * Math.sin(nu);
+
+  // Rotate to ECI
+  const cosO = Math.cos(raan), sinO = Math.sin(raan);
+  const cosw = Math.cos(aop), sinw = Math.sin(aop);
+  const cosi = Math.cos(inc), sini = Math.sin(inc);
+
+  const x = (cosO*cosw - sinO*sinw*cosi)*xo + (-cosO*sinw - sinO*cosw*cosi)*yo;
+  const y = (sinO*cosw + cosO*sinw*cosi)*xo + (-sinO*sinw + cosO*cosw*cosi)*yo;
+  const z = (sinw*sini)*xo + (cosw*sini)*yo;
+
+  return { x, y, z, r: r - 6371 }; // altitude km
+}
+
+function project(x3d, y3d, z3d, rotZ) {
+  // Rotate around Z axis (polar axis)
+  const cosR = Math.cos(rotZ), sinR = Math.sin(rotZ);
+  const rotX = x3d * cosR - y3d * sinR;
+  const rotY = x3d * sinR + y3d * cosR;
+  const rotZ = z3d;
+
+  const scale = earthR * zoom / 6371;
+
+  // Project with Z as vertical axis
+  const px = cx + rotX * scale;
+  const py = cy - rotZ * scale;
+  // rotY is now depth (distance from the viewer)
+  return { px, py, depth: rotY, visible: rotY >= 0 };
+}
+
+function getSatColor(altKm) {
+  if (altKm < 2000) return '#39ff14';
+  if (altKm < 35000) return '#00d4ff';
+  if (altKm < 40000) return '#ff6b35';
+  return '#c084fc';
+}
+
+function getSatRadius(altKm) {
+  if (altKm < 2000) return 1.5;
+  if (altKm < 35000) return 2;
+  return 2.5;
+}
+
+// Draw Earth
+function drawEarth(rot) {
+  const r = earthR * zoom;
+
+  // Atmosphere glow
+  const atmo = ctx.createRadialGradient(cx, cy, r * 0.95, cx, cy, r * 1.15);
+  atmo.addColorStop(0, 'rgba(0,100,255,0.15)');
+  atmo.addColorStop(1, 'rgba(0,50,255,0)');
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 1.15, 0, Math.PI * 2);
+  ctx.fillStyle = atmo;
+  ctx.fill();
+
+  // Earth body
+  const grad = ctx.createRadialGradient(cx - r*0.3, cy - r*0.3, r*0.1, cx, cy, r);
+  grad.addColorStop(0, '#1a4a8a');
+  grad.addColorStop(0.4, '#0d3060');
+  grad.addColorStop(0.7, '#072048');
+  grad.addColorStop(1, '#020d1f');
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Grid lines on earth
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.clip();
+
+  ctx.strokeStyle = 'rgba(0,150,255,0.12)';
+  ctx.lineWidth = 0.5;
+
+  // Latitude lines
+  for (let lat = -75; lat <= 75; lat += 15) {
+    const latR = Math.cos(lat * Math.PI/180) * r;
+    const latY = cy - Math.sin(lat * Math.PI/180) * r;
+    if (latR > 0) {
+      ctx.beginPath();
+      ctx.ellipse(cx, latY, latR, latR * 0.1, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  // Longitude lines
+  for (let lon = 0; lon < 360; lon += 20) {
+    const angle = (lon + rot * 180/Math.PI) * Math.PI/180;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, r * Math.abs(Math.cos(angle)), r, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // Equator highlight
+  ctx.strokeStyle = 'rgba(0,212,255,0.25)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, r, r * 0.08, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.restore();
+
+  // Terminator (day/night)
+  const termGrad = ctx.createLinearGradient(cx - r, cy, cx + r * 0.3, cy);
+  termGrad.addColorStop(0, 'rgba(0,0,0,0)');
+  termGrad.addColorStop(0.5, 'rgba(0,0,0,0)');
+  termGrad.addColorStop(0.7, 'rgba(0,0,20,0.4)');
+  termGrad.addColorStop(1, 'rgba(0,0,20,0.7)');
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = termGrad;
+  ctx.fill();
+
+  // Rim glow
+  const rimGrad = ctx.createRadialGradient(cx, cy, r * 0.9, cx, cy, r);
+  rimGrad.addColorStop(0, 'rgba(0,80,255,0)');
+  rimGrad.addColorStop(1, 'rgba(0,150,255,0.3)');
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = rimGrad;
+  ctx.fill();
+
+  // Highlight
+  const hl = ctx.createRadialGradient(cx - r*0.35, cy - r*0.3, 0, cx - r*0.35, cy - r*0.3, r*0.5);
+  hl.addColorStop(0, 'rgba(100,180,255,0.12)');
+  hl.addColorStop(1, 'rgba(100,180,255,0)');
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = hl;
+  ctx.fill();
+}
+
+let visibleCount = 0;
+
+function drawSatellites(rot) {
+  if (!satellites.length) return;
+
+  const projected = [];
+  visibleCount = 0;
+
+  satellites.forEach((sat, i) => {
+    try {
+      const pos = tleToXYZ(sat, rot);
+      const p = project(pos.x, pos.y, pos.z, rot);
+      projected.push({ sat, p, alt: pos.r, i });
+    } catch(e) {}
+  });
+
+  // Sort by depth (back to front)
+  projected.sort((a, b) => a.p.depth - b.p.depth);
+
+  // Draw orbits for selected
+  if (showOrbits || selectedSat !== null) {
+    projected.forEach(({ sat, alt, i }) => {
+      if (selectedSat !== null && i !== selectedSat) return;
+      const r = earthR * zoom * (1 + alt / 6371);
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, r, r * 0.15, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = `${getSatColor(alt)}22`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    });
+  }
+
+  let newHovered = null;
+
+  projected.forEach(({ sat, p, alt, i }) => {
+    if (!p.visible) return;
+    visibleCount++;
+
+    const color = getSatColor(alt);
+    const dotR = getSatRadius(alt);
+    const distToMouse = Math.hypot(p.px - mouseX, p.py - mouseY);
+
+    const isHovered = distToMouse < 8;
+    const isSelected = i === selectedSat;
+
+    if (isHovered) newHovered = i;
+
+    // Glow for hovered/selected
+    if (isHovered || isSelected) {
+      ctx.beginPath();
+      ctx.arc(p.px, p.py, dotR * 4, 0, Math.PI * 2);
+      const g = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, dotR * 4);
+      g.addColorStop(0, `${color}88`);
+      g.addColorStop(1, `${color}00`);
+      ctx.fillStyle = g;
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(p.px, p.py, isHovered || isSelected ? dotR * 2 : dotR, 0, Math.PI * 2);
+    ctx.fillStyle = isHovered || isSelected ? '#fff' : color;
+    ctx.fill();
+  });
+
+  hoveredSat = newHovered;
+  return visibleCount;
+}
+
+function updateTime() {
+  const now = new Date();
+  const h = String(now.getUTCHours()).padStart(2,'0');
+  const m = String(now.getUTCMinutes()).padStart(2,'0');
+  const s = String(now.getUTCSeconds()).padStart(2,'0');
+  document.getElementById('stat-time').textContent = `${h}:${m}:${s}`;
+}
+
+let lastTime = 0;
+
+function animate(ts) {
+  const dt = Math.min((ts - lastTime) / 1000, 0.1);
+  lastTime = ts;
+
+  if (autoRotate) rotation += dt * 0.1;
+
+  ctx.clearRect(0, 0, W, H);
+
+  drawEarth(rotation);
+  const vis = drawSatellites(rotation);
+
+  document.getElementById('stat-rot').textContent = ((rotation * 180 / Math.PI) % 360).toFixed(1);
+  if (vis !== undefined) document.getElementById('stat-visible').textContent = vis;
+
+  updateTime();
+
+  // Tooltip
+  const tt = document.getElementById('tooltip');
+  if (hoveredSat !== null && satellites[hoveredSat]) {
+    const sat = satellites[hoveredSat];
+    tt.style.display = 'block';
+    tt.style.left = (mouseX + 15) + 'px';
+    tt.style.top = (mouseY - 10) + 'px';
+    tt.textContent = sat.OBJECT_NAME || sat.SATELLITE_NAME || `SAT #${hoveredSat}`;
+  } else {
+    tt.style.display = 'none';
+  }
+
+  requestAnimationFrame(animate);
+}
+
+// Mouse
+canvas.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+canvas.addEventListener('click', e => {
+  if (hoveredSat !== null) {
+    if (selectedSat === hoveredSat) {
+      selectedSat = null;
+      document.getElementById('selected-info').classList.remove('visible');
+    } else {
+      selectedSat = hoveredSat;
+      const sat = satellites[selectedSat];
+      document.getElementById('selected-info').classList.add('visible');
+      document.getElementById('selected-name').textContent = sat.OBJECT_NAME || 'SCONOSCIUTO';
+      document.getElementById('sel-norad').textContent = sat.NORAD_CAT_ID || '—';
+      document.getElementById('sel-inc').textContent = sat.INCLINATION ? sat.INCLINATION.toFixed(2) + '°' : '—';
+      document.getElementById('sel-period').textContent = sat.MEAN_MOTION ? (1440 / sat.MEAN_MOTION).toFixed(1) + ' min' : '—';
+      document.getElementById('sel-epoch').textContent = sat.EPOCH ? sat.EPOCH.split('T')[0] : '—';
+      document.getElementById('sel-ecc').textContent = sat.ECCENTRICITY ? sat.ECCENTRICITY.toFixed(6) : '—';
+    }
+  }
+});
+
+// Controls
+document.getElementById('btn-rotate').addEventListener('click', () => {
+  autoRotate = !autoRotate;
+  document.getElementById('btn-rotate').textContent = `⟳ ROTAZIONE: ${autoRotate ? 'ON' : 'OFF'}`;
+});
+document.getElementById('btn-orbits').addEventListener('click', () => {
+  showOrbits = !showOrbits;
+  document.getElementById('btn-orbits').textContent = `◎ ORBITE: ${showOrbits ? 'ON' : 'OFF'}`;
+});
+document.getElementById('btn-zoom-in').addEventListener('click', () => { zoom = Math.min(zoom * 1.3, 4); });
+document.getElementById('btn-zoom-out').addEventListener('click', () => { zoom = Math.max(zoom / 1.3, 0.4); });
+
+// Drag to rotate
+let isDragging = false, dragStartX = 0, rotStart = 0;
+canvas.addEventListener('mousedown', e => {
+  isDragging = true;
+  dragStartX = e.clientX;
+  rotStart = rotation;
+});
+canvas.addEventListener('mouseup', () => isDragging = false);
+canvas.addEventListener('mouseleave', () => isDragging = false);
+canvas.addEventListener('mousemove', e => {
+  if (isDragging) {
+    rotation = rotStart + (e.clientX - dragStartX) * 0.005;
+  }
+});
+
+// Wheel zoom
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  if (e.deltaY < 0) zoom = Math.min(zoom * 1.1, 4);
+  else zoom = Math.max(zoom / 1.1, 0.4);
+}, { passive: false });
+
+// Fetch satellites
+async function fetchSatellites() {
+  try {
+    
+    // Use a CORS proxy to bypass browser restrictions
+    const targetUrl = 'https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=json';
+    const proxyUrl = 'https://api.allorigins.win/raw?url=';
+    const url = proxyUrl + encodeURIComponent(targetUrl);
+    
+    const response = await fetch(url);
+    
+    if (!response.ok) throw new Error(`Network error: ${response.statusText}`);
+    
+    const data = await response.json();
+    
+    // Sample for performance (take every nth satellite)
+    const step = Math.max(1, Math.floor(data.length / 1500));
+    satellites = data.filter((_, i) => i % step === 0);
+    
+    document.getElementById('stat-total').textContent = data.length.toLocaleString('it-IT');
+    
+  } catch (err) {
+    console.error("Failed to fetch live data, falling back to demo mode:", err);
+    
+    satellites = generateDemoSatellites(1500);
+    document.getElementById('stat-total').textContent = `~${(8000).toLocaleString('it-IT')} (DEMO)`;
+    
+    document.getElementById('status').textContent = '▶ MODALITÀ DEMO — DATI SIMULATI (ERRORE CONNESSIONE)';
+  }
+}
+
+function generateDemoSatellites(count) {
+  const sats = [];
+  const types = [
+    { name: 'STARLINK', count: 600, altMin: 500, altMax: 600, inc: 53 },
+    { name: 'ISS', count: 1, alt: 408, inc: 51.6 },
+    { name: 'NOAA', count: 10, altMin: 850, altMax: 1450, inc: 98 },
+    { name: 'GPS', count: 31, alt: 20200, inc: 55 },
+    { name: 'GLONASS', count: 24, alt: 19100, inc: 64.8 },
+    { name: 'GALILEO', count: 30, alt: 23222, inc: 56 },
+    { name: 'INTELSAT', count: 50, alt: 35786, inc: 0.5 },
+    { name: 'OTHER', count: count - 746, altMin: 300, altMax: 36000, inc: null }
+  ];
+
+  types.forEach(type => {
+    const n = type.count;
+    for (let i = 0; i < n; i++) {
+      const alt = type.alt || (type.altMin + Math.random() * (type.altMax - type.altMin));
+      const inc = type.inc !== null ? (type.inc + (Math.random()-0.5)*2) : Math.random() * 130;
+      const a = (6371 + alt);
+      const n_mm = Math.sqrt(398600.4418 / (a * a * a)) * 86400 / (2 * Math.PI);
+      
+      sats.push({
+        OBJECT_NAME: `${type.name}-${i+1}`,
+        NORAD_CAT_ID: 25000 + sats.length,
+        INCLINATION: inc,
+        RA_OF_ASC_NODE: Math.random() * 360,
+        ECCENTRICITY: 0.0001 + Math.random() * 0.01,
+        ARG_OF_PERICENTER: Math.random() * 360,
+        MEAN_ANOMALY: Math.random() * 360,
+        MEAN_MOTION: n_mm,
+        EPOCH: new Date(Date.now() - Math.random() * 7 * 86400 * 1000).toISOString()
+      });
+    }
+  });
+
+  return sats.slice(0, count);
+}
+
+// Start
+drawStars();
+requestAnimationFrame(ts => { lastTime = ts; animate(ts); });
+fetchSatellites();
+</script>
+</body>
+</html>
