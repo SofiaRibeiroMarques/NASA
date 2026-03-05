@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ISS Tracker 3D</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+</head>
+<body style="margin:0;background:#000">
+<script>
+let lat = 0, lon = 0;
+let stars = [];
+let astros = [];
+let locName = "Ricerca posizione...";
+let rotX = 0.3, rotY = 0;
+let lastMX, lastMY, dragging = false;
+let trail = [];
+let pulse = 0;
+let earthTexture, cloudTexture;
+let earthRotation = 0;
+
+function preload() {
+  // Carica le texture per il globo e le nuvole
+  earthTexture = loadImage('https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg');
+  cloudTexture = loadImage('https://www.solarsystemscope.com/textures/download/2k_earth_clouds.jpg');
+}
+
+function setup() {
+  createCanvas(windowWidth, windowHeight, WEBGL);
+  textFont('monospace');
+  for (let i = 0; i < 600; i++)
+    stars.push({ x: random(-width, width), y: random(-height, height), b: random(80, 255), s: random(0.8, 2.5) });
+
+  // Fetch Astronauts (dal link di index.html)
+  fetch('http://api.open-notify.org/astros.json')
+    .then(r => r.json())
+    .then(data => { astros = data.people; });
+
+  getISS();
+}
+
+function mousePressed() { dragging = true; lastMX = mouseX; lastMY = mouseY; }
+function mouseDragged() {
+  if (!dragging) return;
+  rotY += (mouseX - lastMX) * 0.008;
+  rotX += (mouseY - lastMY) * 0.008;
+  rotX = constrain(rotX, -HALF_PI, HALF_PI);
+  lastMX = mouseX; lastMY = mouseY;
+}
+function mouseReleased() { dragging = false; }
+
+function draw() {
+  background(0, 5, 15);
+  pulse = (sin(frameCount * 0.05) + 1) / 2;
+
+  push(); resetMatrix(); noStroke();
+  for (let s of stars) { fill(s.b); rect(s.x, s.y, s.s, s.s); }
+  pop();
+
+  if (!dragging) rotY += 0.002;
+  rotateX(rotX);
+  rotateY(rotY);
+
+  directionalLight(255, 245, 200, -1, 0.3, -0.8);
+  ambientLight(25, 30, 45); // Luce ambientale ridotta per notti più scure
+
+  // --- Inizio Sistema Terra (ruota sul proprio asse) ---
+  push();
+  earthRotation += 0.0005; // Rotazione della Terra
+  rotateY(earthRotation);
+
+  // 1. Globo terrestre con texture
+  push();
+  noStroke();
+  texture(earthTexture);
+  sphere(200, 64, 48);
+  pop();
+
+  // 2. Strato di nuvole
+  push();
+  noStroke();
+  texture(cloudTexture);
+  blendMode(ADD); // Le nuvole appaiono luminose
+  sphere(202, 64, 48); // Sfera leggermente più grande per le nuvole
+  blendMode(BLEND); // Ripristina il blend mode
+  pop();
+
+  // 3. Atmosfera
+  push(); noStroke(); noLights();
+  fill(40, 120, 255, 18); sphere(210);
+  fill(30, 90, 200,  8);  sphere(222);
+  pop();
+
+  // 4. Piano orbitale
+  push(); noFill(); noLights();
+  stroke(0, 255, 200, 30); strokeWeight(1);
+  rotateX(radians(51.6));
+  ellipse(0, 0, 440, 440);
+  pop();
+
+  let r = 225;
+  let x =  r * cos(radians(lat)) * cos(radians(lon));
+  let y = -r * sin(radians(lat));
+  let z =  r * cos(radians(lat)) * sin(radians(lon));
+
+  trail.push({ x, y, z });
+  if (trail.length > 80) trail.shift();
+
+  push(); noFill(); noLights();
+  for (let i = 1; i < trail.length; i++) {
+    let a = map(i, 0, trail.length, 0, 120);
+    stroke(0, 255, 180, a); strokeWeight(1.5);
+    let t = trail[i], tp = trail[i-1];
+    line(tp.x, tp.y, tp.z, t.x, t.y, t.z);
+  }
+  pop();
+
+  push(); translate(x, y, z); noStroke(); noLights();
+  fill(0, 255, 180, 25 + pulse * 40); sphere(16 + pulse * 6);
+  fill(0, 255, 180, 80 + pulse * 60); sphere(10);
+  fill(255, 240, 100); sphere(5);
+
+  push();
+  rotateY(-rotY);
+  rotateX(-rotX);
+  fill(255); textSize(14);
+  text(`${lat.toFixed(2)}, ${lon.toFixed(2)}`, 25, -10);
+  pop();
+  pop();
+
+  let sx = 200/r * x, sy = 200/r * y, sz = 200/r * z;
+
+  push(); noLights(); stroke(0, 255, 180, 50); strokeWeight(0.8);
+  line(sx, sy, sz, x, y, z);
+  pop();
+
+  push();
+  translate(sx, sy, sz);
+  noStroke();
+  noLights();
+
+  fill(0, 255, 180, 50 + pulse * 80);
+  sphere(8 + pulse * 4);
+
+  fill(200, 255, 240);
+  sphere(3);
+  pop();
+  
+  pop(); // --- Fine Sistema Terra ---
+
+
+  push(); resetMatrix(); noStroke();
+
+  const hx = -width/2 + 20;
+  const hy = -height/2;
+
+  fill(0, 255, 180, 200); textSize(12);
+  text('● ISS LIVE TRACKER', hx, hy + 28);
+
+  fill(0, 255, 180, 60);
+  rect(hx, hy + 34, 180, 1);
+
+  fill(120, 200, 255, 160); textSize(10);
+  text('POSITION', hx, hy + 50);
+
+  fill(255); textSize(13);
+  const latDir = lat >= 0 ? 'N' : 'S';
+  const lonDir = lon >= 0 ? 'E' : 'W';
+  text(abs(lat).toFixed(4) + '° ' + latDir, hx, hy + 68);
+  text(abs(lon).toFixed(4) + '° ' + lonDir, hx, hy + 86);
+
+  fill(255, 200, 100); textSize(11);
+  text(locName, hx, hy + 102);
+
+  fill(0, 255, 180, 60);
+  rect(hx, hy + 110, 180, 1);
+
+  fill(120, 200, 255, 160); textSize(10);
+  text('ORBITAL DATA', hx, hy + 124);
+
+  fill(255, 220, 80); textSize(13);
+  text('ALT  ~408 km', hx, hy + 142);
+  text('SPD  7.66 km/s', hx, hy + 160);
+
+  fill(0, 255, 180, 60);
+  rect(hx, hy + 168, 180, 1);
+
+  fill(100, 180, 255, 130); textSize(10);
+  text(new Date().toUTCString().slice(17, 25) + ' UTC', hx, hy + 182);
+
+  // Lista Astronauti
+  fill(0, 255, 180, 60); rect(hx, hy + 192, 180, 1);
+  fill(120, 200, 255, 160); textSize(10); text('CREW (' + astros.length + ')', hx, hy + 206);
+  fill(255); textSize(11);
+  let ay = hy + 224;
+  for(let p of astros) { text(p.name, hx, ay); ay += 14; }
+
+  fill(100, 200, 255, 80); textSize(10);
+  text('drag to rotate', hx, height/2 - 20);
+  pop();
+}
+
+async function getISS() {
+  try {
+    const data = await (await fetch('https://api.wheretheiss.at/v1/satellites/25544')).json();
+    lat = parseFloat(data.latitude);
+    lon = parseFloat(data.longitude);
+
+    // Reverse Geocoding per ottenere il nome del luogo
+    const geo = await (await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=it`)).json();
+    locName = geo.countryName || geo.locality || "Oceano / Acque Int.";
+  } catch(e) {
+    console.warn('ISS fetch error:', e);
+  }
+  setTimeout(getISS, 5000);
+}
+</script>
+</body>
+</html>
