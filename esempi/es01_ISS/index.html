@@ -8,16 +8,17 @@
 <body>
 
 	<script>
-		const API_URL = "http://api.open-notify.org/astros.json"
+		const API_URL = "https://api.open-notify.org/astros.json";
 		fetch(API_URL)
 		.then( r => r.json())
 		.then( data => {
-			const n = data.number
-			document.body.innerHTML = `Ci sono ${n} astronauti in orbita attualmente:<br>`
+			const n = data.number;
+			let htmlContent = `Ci sono ${n} astronauti in orbita attualmente:<br>`;
 			data.people.forEach( a => {
-				document.body.innerHTML += a.name + " 🚀 " + a.craft + "<br>"
-			})
-		})
+				htmlContent += `${a.name} 🚀 ${a.craft}<br>`;
+			});
+			document.body.innerHTML = htmlContent;
+		});
 	</script>
 
 
