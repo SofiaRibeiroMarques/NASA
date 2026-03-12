@@ -1,4 +1,4 @@
-# NASA
+# NASA 70
 
 ## ESERCIZIO ISS
 [es01_ISS](https://sofiaribeiromarques.github.io/NASA/esempi/es01_ISS/index2.html)
@@ -9,7 +9,7 @@
 ## ESERCIZIO LUNA
 [es04_moon](https://sofiaribeiromarques.github.io/NASA/esempi/es04_moon)
 
-## IDEA PROGETTO NASA 70
+## IDEA PROGETTO 1
 Il sito visualizza come lo sbarco sulla Luna sia stato narrato dai giornali di diversi paesi il 21 luglio 1969.
 Piuttosto che funzionare come un semplice archivio, la piattaforma analizza le scelte editoriali fatte dalle diverse testate.
 Attraverso una mappa interattiva, gli utenti possono esplorare le prime pagine dei quotidiani di vari paesi. Il sistema estrae e confronta automaticamente diversi elementi:
