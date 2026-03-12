@@ -11,7 +11,7 @@
 
 ## IDEA PROGETTO 1
 Il sito visualizza come lo sbarco sulla Luna sia stato narrato dai giornali di diversi paesi il 21 luglio 1969.
-Piuttosto che funzionare come un semplice archivio, la piattaforma analizza le scelte editoriali fatte dalle diverse testate.
+La piattaforma analizza le scelte editoriali fatte dalle diverse testate.
 Attraverso una mappa interattiva, gli utenti possono esplorare le prime pagine dei quotidiani di vari paesi. Il sistema estrae e confronta automaticamente diversi elementi:
 - il linguaggio dei titoli
 - la gerarchia visiva della pagina
