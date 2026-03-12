@@ -1,13 +1,13 @@
 # NASA 70
 
 ## ESERCIZIO ISS
-[es01_ISS](https://sofiaribeiromarques.github.io/NASA/esempi/es01_ISS/index2.html)
+[ISS](https://sofiaribeiromarques.github.io/NASA/esempi/es01_ISS/index2.html)
 
 ## ESERCIZIO SATELLITI
-[es03_satelliti](https://sofiaribeiromarques.github.io/NASA/esempi/es03_satelliti)
+[satelliti](https://sofiaribeiromarques.github.io/NASA/esempi/es03_satelliti)
 
 ## ESERCIZIO LUNA
-[es04_moon](https://sofiaribeiromarques.github.io/NASA/esempi/es04_moon)
+[moon](https://sofiaribeiromarques.github.io/NASA/esempi/es04_moon)
 
 ## IDEA PROGETTO 1
 Il sito visualizza come lo sbarco sulla Luna sia stato narrato dai giornali di diversi paesi il 21 luglio 1969.
