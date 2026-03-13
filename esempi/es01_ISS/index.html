@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ES01 - ISS</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ES01 - ISS</title>
 </head>
 <body>
-
+	<div id="content">Caricamento...</div>
 	<script>
-		const API_URL = "https://api.open-notify.org/astros.json";
+		const API_URL = "http://api.open-notify.org/astros.json";
+		const contentDiv = document.getElementById('content');
+
 		fetch(API_URL)
 		.then( r => r.json())
 		.then( data => {
-			const n = data.number;
-			let htmlContent = `Ci sono ${n} astronauti in orbita attualmente:<br>`;
+			let htmlContent = `Ci sono ${data.number} astronauti in orbita attualmente:<br>`;
 			data.people.forEach( a => {
 				htmlContent += `${a.name} 🚀 ${a.craft}<br>`;
 			});
-			document.body.innerHTML = htmlContent;
+			contentDiv.innerHTML = htmlContent;
+		})
+		.catch(err => {
+			console.error("Errore nel caricamento dati:", err);
+            contentDiv.textContent = "Impossibile caricare i dati degli astronauti.";
 		});
 	</script>
-
 
 </body>
 </html>
