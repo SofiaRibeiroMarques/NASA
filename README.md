@@ -25,4 +25,3 @@ Il progetto diventa così non solo un archivio, ma un’indagine interattiva su 
 
 ### TARGET:
 Il progetto è rivolto principalmente a studenti e ricercatori di media studies, giornalismo e storia contemporanea interessati ad analizzare come i media di diversi paesi hanno interpretato lo sbarco sulla Luna.
->>>>>>> 16fe72819e35aa0dbce144013c3331fe10e4a1f6
