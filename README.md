@@ -1,8 +1,3 @@
-
-# NASA
-
-## esercizio_ISS
-=======
 # NASA 70
 
 ## ESERCIZIO ISS
