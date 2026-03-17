@@ -19,7 +19,27 @@
         body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetica Neue', Arial, sans-serif; overflow: hidden; color: white; }
         #map { height: 100vh; width: 100%; background: #000; }
 
-        /* Popup Mappa */
+        /* --- LIGHTBOX (Ingrandimento Immagine) --- */
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 20000;
+            cursor: zoom-out;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #lightbox img {
+            max-width: 95%;
+            max-height: 95%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            border: 2px solid #444;
+            transition: transform 0.3s ease;
+        }
+
+        /* --- POPUP MAPPA --- */
         .popup-img-container {
             width: 100%;
             height: 110px;
@@ -27,10 +47,11 @@
             margin-top: 8px;
             border: 1px solid #333;
             background: #222;
+            cursor: zoom-in;
         }
         .popup-img-container img { width: 100%; height: auto; display: block; }
 
-        /* Overlay di Confronto */
+        /* --- OVERLAY CONFRONTO --- */
         #comparison-overlay {
             display: none;
             position: fixed;
@@ -49,16 +70,25 @@
         .pane-usa { border-top-color: var(--usa-red); }
         .pane-urss { border-top-color: var(--urss-yellow); }
         
-        .img-grande { width: 100%; max-height: 350px; object-fit: contain; margin-bottom: 20px; border: 1px solid #444; background: #000; }
+        .img-grande { 
+            width: 100%; 
+            max-height: 350px; 
+            object-fit: contain; 
+            margin-bottom: 20px; 
+            border: 1px solid #444; 
+            background: #000; 
+            cursor: zoom-in;
+            transition: 0.2s;
+        }
+        .img-grande:hover { filter: brightness(1.2); }
         
         .vs-circle { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: white; color: black; width: 45px; height: 45px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 100;
-            box-shadow: 0 0 15px rgba(255,255,255,0.2);
         }
 
-        .close-btn { position: absolute; top: 20px; right: 25px; background: #222; color: white; border: 1px solid #555; padding: 10px 20px; cursor: pointer; transition: 0.3s; }
+        .close-btn { position: absolute; top: 20px; right: 25px; background: #222; color: white; border: 1px solid #555; padding: 10px 20px; cursor: pointer; z-index: 10001; }
         .close-btn:hover { background: white; color: black; }
 
         .leaflet-popup-content-wrapper { background: #111; color: white; border-radius: 0; border: 1px solid #444; }
@@ -67,10 +97,14 @@
 </head>
 <body>
 
+    <div id="lightbox" onclick="this.style.display='none'">
+        <img id="lightbox-img" src="" alt="Ingrandimento">
+    </div>
+
     <div id="map"></div>
 
     <div id="comparison-overlay">
-        <button class="close-btn" onclick="chiudiConfronto()">CHIUDI [ESC]</button>
+        <button class="close-btn" onclick="chiudiConfronto()">CHIUDI</button>
         <h2 style="text-align:center; letter-spacing: 2px; color: var(--bridge-blue);">ANALISI COMPARATIVA: USA vs URSS</h2>
         <div class="split-container">
             <div class="vs-circle">VS</div>
@@ -83,42 +117,29 @@
     <script src="https://cdn.jsdelivr.net/npm/@elfalem/leaflet-curve@0.9.2/dist/leaflet.curve.min.js"></script>
 
     <script>
-        // Inizializzazione Mappa Dark
+        // Inizializzazione Mappa
         const map = L.map('map', { zoomControl: false, minZoom: 2 });
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: 'MOONPRINT Project'
         }).addTo(map);
 
-        // DATABASE COMPLETO: 20 TESTATE
         const testate = [
-            // USA (ROSSI)
-            { id:"ny", nazione:"USA", citta:"New York", giornale:"NY Times", coords:[40.71, -74.00], img:"https://static01.nyt.com/images/2019/07/16/pageoneplus/16a1-july21-1969/16a1-july21-1969-superJumbo.jpg", analisi:"Focus sull'eroismo e sul primato tecnologico." },
-            { id:"dc", nazione:"USA", citta:"Washington", giornale:"Washington Post", coords:[38.90, -77.03], img:"https://images.fineartamerica.com/images/artworkimages/mediumlarge/3/washington-post-front-page-july-21-1969-everett.jpg", analisi:"Legittimazione politica della corsa allo spazio." },
-            { id:"ch", nazione:"USA", citta:"Chicago", giornale:"Chicago Tribune", coords:[41.87, -87.62], img:"https://via.placeholder.com/300x450/111/4da6ff?text=Chicago+Tribune", analisi:"Il trionfo dell'umanità libera." },
-            { id:"la", nazione:"USA", citta:"Los Angeles", giornale:"LA Times", coords:[34.05, -118.24], img:"https://via.placeholder.com/300x450/111/4da6ff?text=LA+Times", analisi:"Enfasi visiva sulle mappe lunari." },
-            { id:"tx", nazione:"USA", citta:"Houston", giornale:"Houston Chronicle", coords:[29.76, -95.36], img:"https://via.placeholder.com/300x450/111/4da6ff?text=Houston+Chronicle", analisi:"Orgoglio del centro di controllo NASA." },
-
-            // URSS (GIALLI)
-            { id:"mo", nazione:"URSS", citta:"Mosca", giornale:"Pravda", coords:[55.75, 37.61], img:"https://via.placeholder.com/300x450/111/ffcc00?text=Pravda", analisi:"Cronaca tecnica, assenza di toni celebrativi verso gli USA." },
-            { id:"sp", nazione:"URSS", citta:"Leningrado", giornale:"L. Pravda", coords:[59.93, 30.33], img:"https://via.placeholder.com/300x450/111/ffcc00?text=Leningrad+Pravda", analisi:"Tentativo di evidenziare la missione Luna-15." },
-            { id:"nv", nazione:"URSS", citta:"Novosibirsk", giornale:"V. Novosibirsk", coords:[55.00, 82.93], img:"https://via.placeholder.com/300x450/111/ffcc00?text=Novosibirsk+News", analisi:"Informazione essenziale per il blocco siberiano." },
-
-            // RESTO DEL MONDO (BIANCHI)
-            { nazione:"Italia", citta:"Torino", giornale:"La Stampa", coords:[45.07, 7.68], img:"img/1.jpg", analisi:"Poesia ed emozione per il primo passo." },
-            { nazione:"Italia", citta:"Milano", giornale:"Corriere Sera", coords:[45.46, 9.19], img:"img/2.jpg", analisi:"Analisi grafica millimetrica dello sbarco." },
+            { id:"ny", nazione:"USA", citta:"New York", giornale:"NY Times", coords:[40.71, -74.00], img:"img/34.jpg", analisi:"Focus sull'eroismo e sul primato tecnologico." },
+            { id:"dc", nazione:"USA", citta:"Washington", giornale:"Washington Post", coords:[38.90, -77.03], img:"img/30.jpg", analisi:"Legittimazione politica della corsa allo spazio." },
+            { id:"ch", nazione:"USA", citta:"Chicago", giornale:"Chicago Tribune", coords:[41.87, -87.62], img:"img/7.jpg", analisi:"Il trionfo dell'umanità libera." },
+            { id:"la", nazione:"USA", citta:"Los Angeles", giornale:"LA Times", coords:[34.05, -118.24], img:"img/10.jpeg", analisi:"Enfasi visiva sulle mappe lunari." },
+            { id:"tx", nazione:"USA", citta:"Houston", giornale:"Houston Chronicle", coords:[29.76, -95.36], img:"img/8.jpeg", analisi:"Orgoglio del centro di controllo NASA." },
+            { id:"mo", nazione:"URSS", citta:"Mosca", giornale:"Pravda", coords:[55.75, 37.61], img:"img/51.png", analisi:"Cronaca tecnica, assenza di toni celebrativi verso gli USA." },
+            { id:"sp", nazione:"URSS", citta:"Leningrado", giornale:"L. Pravda", coords:[59.93, 30.33], img:"img/52.png", analisi:"Tentativo di evidenziare la missione Luna-15." },
+            { id:"nv", nazione:"URSS", citta:"Novosibirsk", giornale:"V. Novosibirsk", coords:[55.00, 82.93], img:"img/53.jpg", analisi:"Informazione essenziale per il blocco siberiano." },
+            { nazione:"Italia", citta:"Torino", giornale:"La Stampa", coords:[45.07, 7.68], img:"img/2.jpg", analisi:"Poesia ed emozione per il primo passo." },
+            { nazione:"Italia", citta:"Milano", giornale:"Corriere Sera", coords:[45.46, 9.19], img:"img/4.jpg", analisi:"Analisi grafica millimetrica dello sbarco." },
             { nazione:"UK", citta:"Londra", giornale:"The Guardian", coords:[51.50, -0.12], img:"img/3.jpg", analisi:"Lo sbarco come evento scientifico globale." },
-            { nazione:"Francia", citta:"Parigi", giornale:"Le Monde", coords:[48.85, 2.35], img:"img/4.jpg", analisi:"Riflessione filosofica sulla civiltà umana." },
-            { nazione:"Germania", citta:"Berlino", giornale:"Bild", coords:[52.52, 13.40], img:"img/5.jpg", analisi:"Popolarizzazione e sensazionalismo." },
-            { nazione:"Spagna", citta:"Madrid", giornale:"ABC", coords:[40.41, -3.70], img:"img/6.jpg", analisi:"Iconografia eroica e trionfale." },
-            { nazione:"Giappone", citta:"Tokyo", giornale:"Asahi Shimbun", coords:[35.68, 139.69], img:"https://via.placeholder.com/300x450/111/fff?text=Asahi+Shimbun", analisi:"L'inizio dell'era spaziale per l'Asia." },
-            { nazione:"Australia", citta:"Sydney", giornale:"The Herald", coords:[-33.86, 151.20], img:"https://via.placeholder.com/300x450/111/fff?text=Sydney+Herald", analisi:"Testimonianza della storica diretta TV." },
-            { nazione:"Brasile", citta:"Rio", giornale:"O Globo", coords:[-22.90, -43.17], img:"https://via.placeholder.com/300x450/111/fff?text=O+Globo", analisi:"Entusiasmo moderno e impaginazione dinamica." },
-            { nazione:"India", citta:"Delhi", giornale:"Times of India", coords:[28.61, 77.20], img:"https://via.placeholder.com/300x450/111/fff?text=Times+of+India", analisi:"Un traguardo per l'intera razza umana." },
-            { nazione:"Egitto", citta:"Il Cairo", giornale:"Al-Ahram", coords:[30.04, 31.23], img:"https://via.placeholder.com/300x450/111/fff?text=Al-Ahram", analisi:"Cronaca scientifica nel mondo arabo." },
-            { nazione:"Canada", citta:"Toronto", giornale:"The Star", coords:[43.65, -79.38], img:"https://via.placeholder.com/300x450/111/fff?text=Toronto+Star", analisi:"Analisi del futuro oltre la Terra." }
+            { nazione:"Francia", citta:"Parigi", giornale:"Le Monde", coords:[48.85, 2.35], img:"img/16.jpeg", analisi:"Riflessione filosofica sulla civiltà umana." },
+            { nazione:"Germania", citta:"Berlino", giornale:"Bild", coords:[52.52, 13.40], img:"img/50.jpg", analisi:"Popolarizzazione e sensazionalismo." },
+            { nazione:"Spagna", citta:"Madrid", giornale:"ABC", coords:[40.41, -3.70], img:"img/12.jpg", analisi:"Iconografia eroica e trionfale." }
         ];
 
-        // Creazione Marker e Zoom Automatico
         const markers = L.featureGroup();
         testate.forEach(t => {
             let color = t.nazione === "USA" ? "var(--usa-red)" : (t.nazione === "URSS" ? "var(--urss-yellow)" : "#ffffff");
@@ -129,44 +150,55 @@
             m.bindPopup(`
                 <div style="width:180px">
                     <strong>${t.giornale}</strong><br><small>${t.citta}, ${t.nazione}</small>
-                    <div class="popup-img-container"><img src="${t.img}"></div>
+                    <div class="popup-img-container"><img src="${t.img}" class="zoomable"></div>
                 </div>
             `);
         });
 
         markers.addTo(map);
-        map.fitBounds(markers.getBounds().pad(0.1)); // Centra tutti i pallini
+        map.fitBounds(markers.getBounds().pad(0.1));
 
-        // Funzione Linee Blu FINI e CONTINUE
         function creaPonte(usaId, urssId) {
             const usa = testate.find(t => t.id === usaId);
             const urss = testate.find(t => t.id === urssId);
 
             const curva = L.curve(['M', usa.coords, 'Q', [usa.coords[0]+18, (usa.coords[1]+urss.coords[1])/2], urss.coords], {
-                color: 'var(--bridge-blue)',
-                weight: 1.5, // Molto sottile
-                opacity: 0.5,
-                fill: false,
-                interactive: true
+                color: 'var(--bridge-blue)', weight: 1.5, opacity: 0.5, fill: false
             }).addTo(map);
 
             curva.on('mouseover', function() { this.setStyle({opacity:1, weight:3, color:'#fff'}); });
             curva.on('mouseout', function() { this.setStyle({opacity:0.5, weight:1.5, color:'var(--bridge-blue)'}); });
             
             curva.on('click', () => {
-                document.getElementById('box-usa').innerHTML = `<img src="${usa.img}" class="img-grande"><h2>${usa.giornale}</h2><p>${usa.analisi}</p>`;
-                document.getElementById('box-urss').innerHTML = `<img src="${urss.img}" class="img-grande"><h2>${urss.giornale}</h2><p>${urss.analisi}</p>`;
+                document.getElementById('box-usa').innerHTML = `<img src="${usa.img}" class="img-grande zoomable"><h2>${usa.giornale}</h2><p>${usa.analisi}</p>`;
+                document.getElementById('box-urss').innerHTML = `<img src="${urss.img}" class="img-grande zoomable"><h2>${urss.giornale}</h2><p>${urss.analisi}</p>`;
                 document.getElementById('comparison-overlay').style.display = 'block';
             });
         }
 
-        // Ponti Geopolitici
         creaPonte("ny", "mo");
         creaPonte("dc", "sp");
         creaPonte("tx", "nv");
 
+        // --- LOGICA INGRANDIMENTO (LIGHTBOX) ---
+        document.addEventListener('click', function (e) {
+            // Se l'elemento cliccato ha la classe 'zoomable' o è un'immagine dentro un container popup
+            if (e.target.tagName === 'IMG' && (e.target.classList.contains('zoomable') || e.target.closest('.popup-img-container'))) {
+                const lightbox = document.getElementById('lightbox');
+                const lightboxImg = document.getElementById('lightbox-img');
+                lightboxImg.src = e.target.src;
+                lightbox.style.display = 'flex';
+            }
+        });
+
         function chiudiConfronto() { document.getElementById('comparison-overlay').style.display = 'none'; }
-        window.addEventListener('keydown', (e) => { if(e.key === "Escape") chiudiConfronto(); });
+        
+        window.addEventListener('keydown', (e) => { 
+            if(e.key === "Escape") {
+                document.getElementById('comparison-overlay').style.display = 'none';
+                document.getElementById('lightbox').style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
