@@ -3,113 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOONPRINT | Global Media Archive</title>
+    <title>Man on Moon</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
         :root {
-            --usa-red: #ff4d4d;
-            --urss-yellow: #ffcc00;
-            --bridge-blue: #4da6ff;
+            --usa-red: #c0392b;   
+            --urss-yellow: #d68910; 
+            --uk-blue: #2980b9;
+            --china-green: #1ba112;
+            --others-gray: #95a5a6;
+            --bridge-blue: #546e7a; 
             --bg-dark: #050505;
             --text-gray: #ccc;
+            --card-bg: #111;
         }
 
-        body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetica Neue', Arial, sans-serif; overflow: hidden; color: white; }
-        #map { height: 100vh; width: 100%; background: #000; }
+        body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetica Neue', Arial, sans-serif; overflow: hidden; color: white; margin-top:0; }
+        
+        #map { height: 100vh; width: 100%; background: #e6e6e6; margin-top: 50px }
+        .leaflet-tile-pane {
+            filter: grayscale(100%) brightness(105%);
+        }
 
-        /* --- LIGHTBOX (Ingrandimento Immagine) --- */
+      /* ─── NAV ─── */
+  .section-nav {
+    position: fixed;
+    top: 0;
+    left:0;
+    width: 100%;
+    z-index: 10000;
+    background: rgba(10,10,11,0.92);
+    backdrop-filter: blur(8px);
+  }
+  .nav-tab {
+    padding: 1rem 1.5rem;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 8px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #6a6860;
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-right: 1px solid #252520;
+    transition: all 0.2s;
+  }
+  .nav-tab:hover, .nav-tab.active { color: var(--moon-hi); background: rgba(200,192,168,0.04); }
+
+        /* --- LIGHTBOX --- */
         #lightbox {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 20000;
-            cursor: zoom-out;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); z-index: 20000; cursor: zoom-out;
+            align-items: center; justify-content: center; padding: 20px;
         }
-        #lightbox img {
-            max-width: 95%;
-            max-height: 95%;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            border: 2px solid #444;
-            transition: transform 0.3s ease;
-        }
+        #lightbox img { max-width: 95%; max-height: 95%; border: 1px solid #444; }
 
         /* --- POPUP MAPPA --- */
         .popup-img-container {
-            width: 100%;
-            height: 110px;
-            overflow: hidden;
-            margin-top: 8px;
-            border: 1px solid #333;
-            background: #222;
-            cursor: zoom-in;
+            width: 100%; height: 110px; overflow: hidden; margin-top: 8px;
+            border: 1px solid #333; background: #222; cursor: zoom-in;
         }
         .popup-img-container img { width: 100%; height: auto; display: block; }
 
-        /* --- OVERLAY CONFRONTO --- */
+        /* ─── ANALISI COMPARATIVA ─── */
         #comparison-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 9999;
-            padding: 30px;
-            box-sizing: border-box;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(230, 230, 230, 0.98); backdrop-filter: blur(12px);
+            align-items: center; justify-content: center; z-index: 9999;
             animation: fadeIn 0.4s ease;
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .split-container { display: flex; gap: 25px; height: 80vh; margin-top: 20px; position: relative; }
-        .pane { flex: 1; background: #111; border: 1px solid #333; padding: 25px; overflow-y: auto; border-top: 5px solid #444; }
-        .pane-usa { border-top-color: var(--usa-red); }
-        .pane-urss { border-top-color: var(--urss-yellow); }
-        
-        .img-grande { 
-            width: 100%; 
-            max-height: 350px; 
-            object-fit: contain; 
-            margin-bottom: 20px; 
-            border: 1px solid #444; 
-            background: #000; 
-            cursor: zoom-in;
-            transition: 0.2s;
-        }
-        .img-grande:hover { filter: brightness(1.2); }
-        
-        .vs-circle { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; color: black; width: 45px; height: 45px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 100;
+        .comparison-container {
+            display: flex; align-items: center; width: 90%; max-width: 1000px; position: relative;
         }
 
-        .close-btn { position: absolute; top: 20px; right: 25px; background: #222; color: white; border: 1px solid #555; padding: 10px 20px; cursor: pointer; z-index: 10001; }
-        .close-btn:hover { background: white; color: black; }
+        .newspaper-card {
+            flex: 1; background: #ffffff; border: 1px solid #e5e5e5;
+            display: flex; flex-direction: column; margin: 0 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        }
+
+        .card-header {
+            padding: 12px 15px; display: flex; align-items: center;
+            background: #fafafa; border-bottom: 1px solid #eee;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-usa { background: var(--usa-red); }
+        .dot-urss { background: var(--urss-yellow); }
+        .journal-name { font-weight: 600; font-size: 15px; color: #222; }
+
+        .image-box {
+            aspect-ratio: 1 / 1; background: #f4f4f4; display: flex;
+            align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #eee;
+        }
+        .image-box img { width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; }
+
+        .card-footer { padding: 25px; min-height: 120px; }
+        .footer-label { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; margin-bottom: 10px; text-transform: uppercase; }
+        .label-usa { color: var(--usa-red); }
+        .label-urss { color: var(--urss-yellow); }
+        .footer-desc { font-size: 14px; line-height: 1.6; color: #555; font-weight: 400; }
+
+        .vs-divider { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10; }
+        .vs-circle {
+            width: 38px; height: 38px; background: #fff; border: 1px solid #ddd; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: #999; font-size: 11px; font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .card-usa { border-top: 3px solid var(--usa-red); }
+        .card-urss { border-top: 3px solid var(--urss-yellow); }
+
+        .close-btn { position: absolute; top: 60px; right: 40px; background: rgba(230,230,230,0.8); border: 1px solid #999; padding: 10px 20px; color: #333; cursor: pointer; font-size: 11px; letter-spacing: 2px; z-index: 10001; transition: all 0.3s; }
+        .close-btn:hover { background: #333; color: #fff; border-color: #333; }
 
         .leaflet-popup-content-wrapper { background: #111; color: white; border-radius: 0; border: 1px solid #444; }
         .leaflet-popup-tip { background: #111; }
+
+        /* ─── ARCHIVE VIEW ─── */
+        #archive-view {
+            display: none; position: fixed; top: 60px; left: 0; width: 100%; height: calc(100% - 60px);
+            background: #e6e6e6; z-index: 9000; overflow-y: auto;
+            padding: 40px 10%; box-sizing: border-box;
+        }
+        .continent-block { margin-bottom: 60px; }
+        .continent-title { 
+            font-size: 18px; font-weight: 700; letter-spacing: 3px; color: #333; 
+            border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 25px; 
+            text-transform: uppercase;
+        }
+        .country-block { margin-bottom: 30px; }
+        .country-title { font-size: 14px; font-weight: 600; color: #555; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1.5px; border-left: 3px solid #ccc; padding-left: 10px; }
+        .grid-container {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 20px;
+        }
+        .grid-item { cursor: pointer; transition: transform 0.2s; }
+        .grid-item:hover { transform: translateY(-5px); }
+        .grid-img-wrapper {
+            background: #fff; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #ddd;
+            aspect-ratio: 0.8; overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
+        .grid-img-wrapper img { width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%); transition: filter 0.3s; }
+        .grid-item:hover img { filter: grayscale(0%); }
+        .grid-info { margin-top: 15px; }
+        .grid-journal { font-weight: bold; font-size: 14px; color: #111; margin-bottom: 4px; }
+        .grid-city { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- PURPOSE MODAL --- */
+        #purpose-btn {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            color: #555;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 4000;
+            transition: all 0.2s;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        #purpose-btn:hover {
+            transform: scale(1.05);
+            background: #333;
+            color: #fff;
+            border-color: #333;
+        }
+
+        #purpose-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+            z-index: 25000; align-items: center; justify-content: center; animation: fadeIn 0.3s;
+        }
+
+        #purpose-modal {
+            background: #fff; color: #333; padding: 30px 40px;
+            max-width: 550px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        #purpose-modal h2 { margin-top: 0; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; }
+        #purpose-modal p { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 15px; line-height: 1.7; color: #555; }
+        .close-purpose-btn {
+            display: block; margin-top: 25px; margin-left: auto; background: #333; color: #fff;
+            border: none; padding: 10px 25px; cursor: pointer; text-transform: uppercase;
+            font-size: 11px; letter-spacing: 1px; transition: background 0.2s;
+        }
+        .close-purpose-btn:hover { background: #000; }
     </style>
 </head>
 <body>
 
+  <!-- NAV -->
+<nav class="section-nav" id="main-nav">
+  <button class="nav-tab active" onclick="showView('map')">Map</button>
+  <button class="nav-tab" onclick="showView('archive')">Newspapers</button>
+</nav>
+
+    <!-- ARCHIVE -->
+    <div id="archive-view"></div>
+
     <div id="lightbox" onclick="this.style.display='none'">
-        <img id="lightbox-img" src="" alt="Ingrandimento">
+        <img id="lightbox-img" src="" alt="Zoom">
     </div>
 
     <div id="map"></div>
 
     <div id="comparison-overlay">
-        <button class="close-btn" onclick="chiudiConfronto()">CHIUDI</button>
-        <h2 style="text-align:center; letter-spacing: 2px; color: var(--bridge-blue);">ANALISI COMPARATIVA: USA vs URSS</h2>
-        <div class="split-container">
-            <div class="vs-circle">VS</div>
-            <div class="pane pane-usa" id="box-usa"></div>
-            <div class="pane pane-urss" id="box-urss"></div>
+        <button class="close-btn" onclick="chiudiConfronto()">Close</button>
+        <div class="comparison-container">
+            <div class="vs-divider"><div class="vs-circle">vs</div></div>
+            <div class="newspaper-card card-usa" id="box-usa"></div>
+            <div class="newspaper-card card-urss" id="box-urss"></div>
+        </div>
+    </div>
+
+    <button id="purpose-btn">?</button>
+
+    <div id="purpose-overlay">
+        <div id="purpose-modal">
+            <h2>Man on Moon</h2>
+            <p>This interactive archive explores how global media reported the Apollo 11 moon landing in July 1969. It visualizes the geopolitical narratives of the Cold War, contrasting the triumphant tone of the West with the more subdued, technical coverage from the Soviet bloc.</p>
+            <p>Use the <strong>Map</strong> to see the direct comparisons between rival nations or browse the <strong>Newspapers</strong> archive to see the front pages for yourself.</p>
+            <button class="close-purpose-btn">Close</button>
         </div>
     </div>
 
@@ -117,73 +242,134 @@
     <script src="https://cdn.jsdelivr.net/npm/@elfalem/leaflet-curve@0.9.2/dist/leaflet.curve.min.js"></script>
 
     <script>
-        // Inizializzazione Mappa
-        const map = L.map('map', { zoomControl: false, minZoom: 2 });
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: 'MOONPRINT Project'
-        }).addTo(map);
+        const map = L.map('map', { 
+            zoomControl: false, 
+            minZoom: 2, 
+            maxBounds: [[-85, -180], [85, 180]],
+            maxBoundsViscosity: 1.0,
+            bounceAtZoomLimits: false
+        });
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
         const testate = [
-            { id:"ny", nazione:"USA", citta:"New York", giornale:"NY Times", coords:[40.71, -74.00], img:"img/34.jpg", analisi:"Focus sull'eroismo e sul primato tecnologico." },
-            { id:"dc", nazione:"USA", citta:"Washington", giornale:"Washington Post", coords:[38.90, -77.03], img:"img/30.jpg", analisi:"Legittimazione politica della corsa allo spazio." },
-            { id:"ch", nazione:"USA", citta:"Chicago", giornale:"Chicago Tribune", coords:[41.87, -87.62], img:"img/7.jpg", analisi:"Il trionfo dell'umanità libera." },
-            { id:"la", nazione:"USA", citta:"Los Angeles", giornale:"LA Times", coords:[34.05, -118.24], img:"img/10.jpeg", analisi:"Enfasi visiva sulle mappe lunari." },
-            { id:"tx", nazione:"USA", citta:"Houston", giornale:"Houston Chronicle", coords:[29.76, -95.36], img:"img/8.jpeg", analisi:"Orgoglio del centro di controllo NASA." },
-            { id:"mo", nazione:"URSS", citta:"Mosca", giornale:"Pravda", coords:[55.75, 37.61], img:"img/51.png", analisi:"Cronaca tecnica, assenza di toni celebrativi verso gli USA." },
-            { id:"sp", nazione:"URSS", citta:"Leningrado", giornale:"L. Pravda", coords:[59.93, 30.33], img:"img/52.png", analisi:"Tentativo di evidenziare la missione Luna-15." },
-            { id:"nv", nazione:"URSS", citta:"Novosibirsk", giornale:"V. Novosibirsk", coords:[55.00, 82.93], img:"img/53.jpg", analisi:"Informazione essenziale per il blocco siberiano." },
-            { nazione:"Italia", citta:"Torino", giornale:"La Stampa", coords:[45.07, 7.68], img:"img/2.jpg", analisi:"Poesia ed emozione per il primo passo." },
-            { nazione:"Italia", citta:"Milano", giornale:"Corriere Sera", coords:[45.46, 9.19], img:"img/4.jpg", analisi:"Analisi grafica millimetrica dello sbarco." },
-            { nazione:"UK", citta:"Londra", giornale:"The Guardian", coords:[51.50, -0.12], img:"img/3.jpg", analisi:"Lo sbarco come evento scientifico globale." },
-            { nazione:"Francia", citta:"Parigi", giornale:"Le Monde", coords:[48.85, 2.35], img:"img/16.jpeg", analisi:"Riflessione filosofica sulla civiltà umana." },
-            { nazione:"Germania", citta:"Berlino", giornale:"Bild", coords:[52.52, 13.40], img:"img/50.jpg", analisi:"Popolarizzazione e sensazionalismo." },
-            { nazione:"Spagna", citta:"Madrid", giornale:"ABC", coords:[40.41, -3.70], img:"img/12.jpg", analisi:"Iconografia eroica e trionfale." }
+            // NORTH AMERICA
+            { id:"fl", continente:"North America", nazione:"USA", citta:"St. Petersburg, FL", giornale:"St. Petersburg Times", coords:[27.76, -82.64], img:"img/1.jpg", analisi:"Moon, We're Onto You." },
+            { id:"id", continente:"North America", nazione:"USA", citta:"Twin Falls, ID", giornale:"Times News", coords:[42.56, -114.46], img:"img/3.jpg", analisi:"Edizione locale: Man on Moon." },
+            { id:"ar", continente:"North America", nazione:"USA", citta:"Little Rock, AR", giornale:"Arkansas Gazette", coords:[34.74, -92.28], img:"img/6.jpg", analisi:"First Men Land on Moon." },
+            { id:"sf", continente:"North America", nazione:"USA", citta:"San Francisco, CA", giornale:"SF Chronicle", coords:[37.77, -122.41], img:"img/29.jpg", analisi:"Men on Moon." },
+            { id:"us_gen", continente:"North America", nazione:"USA", citta:"Washington DC", giornale:"Evening Star", coords:[38.90, -77.03], img:"img/34.jpg", analisi:"Astronauts Lift Off Moon." },
+            { id:"can", continente:"North America", nazione:"Canada", citta:"Toronto", giornale:"Globe and Mail", coords:[43.65, -79.38], img:"img/37.jpg", analisi:"Man on Moon: A fine, soft surface." },
+
+            // SOUTH & CENTRAL AMERICA
+            { id:"arg", continente:"South America", nazione:"Argentina", citta:"Buenos Aires", giornale:"Clarín", coords:[-34.60, -58.38], img:"img/9.jpg", analisi:"La más grande hazaña humana." },
+            { id:"sal", continente:"South America", nazione:"El Salvador", citta:"San Salvador", giornale:"La Prensa Gráfica", coords:[13.69, -89.22], img:"img/23.jpg", analisi:"El hombre pone pie en la luna." },
+
+            // EUROPE
+            { id:"uk", continente:"Europe", nazione:"UK", citta:"London", giornale:"Daily Mirror", coords:[51.50, -0.12], img:"img/10.jpeg", analisi:"Man on the Moon: We're breathing again." },
+            { id:"fr_mul", continente:"Europe", nazione:"France", citta:"Mulhouse", giornale:"L'Alsace", coords:[47.75, 7.33], img:"img/30.jpg", analisi:"FANTASTIC." },
+            { id:"fr_par", continente:"Europe", nazione:"France", citta:"Paris", giornale:"Le Figaro", coords:[48.85, 2.35], img:"img/33.jpg", analisi:"Ils ont marché sur la lune." },
+            { id:"be", continente:"Europe", nazione:"Belgium", citta:"Brussels", giornale:"Le Soir", coords:[50.85, 4.35], img:"img/16.jpeg", analisi:"L'homme marche sur la lune." },
+            { id:"de", continente:"Europe", nazione:"Germany", citta:"Hamburg", giornale:"Bild", coords:[53.55, 9.99], img:"img/50.jpg", analisi:"Der Mond ist jetzt ein Ami." },
+            { id:"es_mad", continente:"Europe", nazione:"Spain", citta:"Madrid", giornale:"Hoja del Lunes", coords:[40.41, -3.70], img:"img/12.jpg", analisi:"El hombre pone pie en la luna." },
+            { id:"es_zam", continente:"Europe", nazione:"Spain", citta:"Zamora", giornale:"El Correo", coords:[41.50, -5.74], img:"img/11.jpg", analisi:"¡Llegaron!" },
+            { id:"pt", continente:"Europe", nazione:"Portugal", citta:"Lisbon", giornale:"Diário de Lisboa", coords:[38.72, -9.13], img:"img/31.jpg", analisi:"Armstrong e Aldrin caminharam..." },
+            
+            // ITALY
+            { id:"it_mil", continente:"Europe", nazione:"Italy", citta:"Milan", giornale:"Corriere della Sera", coords:[45.46, 9.19], img:"img/35.jpg", analisi:"L'uomo è sulla luna." },
+            { id:"it_mil2", continente:"Europe", nazione:"Italy", citta:"Milan", giornale:"Corriere d'Inf.", coords:[45.48, 9.20], img:"img/4.jpg", analisi:"Missione Luna: Partiti!" },
+            { id:"it_tur", continente:"Europe", nazione:"Italy", citta:"Turin", giornale:"Stampa Sera", coords:[45.07, 7.68], img:"img/5.jpg", analisi:"I due astronauti camminano." },
+            { id:"it_bol", continente:"Europe", nazione:"Italy", citta:"Bologna", giornale:"Resto del Carlino", coords:[44.49, 11.34], img:"img/2.jpg", analisi:"L'uomo è sulla luna." },
+            { id:"it_rom", continente:"Europe", nazione:"Italy", citta:"Rome", giornale:"Il Tempo", coords:[41.90, 12.49], img:"img/13.jpg", analisi:"Esplorata la luna." },
+            { id:"it_nap", continente:"Europe", nazione:"Italy", citta:"Naples", giornale:"Il Mattino", coords:[40.85, 14.26], img:"img/28.jpg", analisi:"Un'era nuova nella storia." },
+            { id:"it_cre", continente:"Europe", nazione:"Italy", citta:"Cremona", giornale:"La Provincia", coords:[45.13, 10.02], img:"img/38.jpg", analisi:"Luna: ce l'hanno fatta!" },
+            { id:"it_vic", continente:"Europe", nazione:"Italy", citta:"Vicenza", giornale:"Voce dei Berici", coords:[45.55, 11.53], img:"img/24.jpg", analisi:"La fantascienza diventa realtà." },
+
+            // USSR
+            { id:"ussr_mo", continente:"USSR", nazione:"USSR", citta:"Moscow", giornale:"Izvestia", coords:[55.75, 37.61], img:"img/51.png", analisi:"Cronaca ufficiale sovietica." },
+            { id:"ussr_le", continente:"USSR", nazione:"USSR", citta:"Leningrad", giornale:"Zemlya", coords:[59.93, 30.33], img:"img/52.png", analisi:"Terrestri sulla luna." },
+            { id:"ussr_no", continente:"USSR", nazione:"USSR", citta:"Novosibirsk", giornale:"Pravda", coords:[55.00, 82.93], img:"img/53.jpg", analisi:"Prima spedizione lunare." },
+
+            // ASIA / OCEANIA / OTHERS
+            { id:"cn", continente:"Asia", nazione:"China", analisi:"Nel 1969 la Cina ignorò l'allunaggio principalmente per ragioni ideologiche e interne: nel pieno della Rivoluzione Culturale, il regime di Mao Zedong evitò di celebrare un successo dell'arcinemico 'imperialista' americano, preferendo oscurare la notizia o bollarla come propaganda. Inoltre, l'assenza di relazioni diplomatiche tra Pechino e Washington e la debolezza del programma spaziale cinese di allora, frenato dall'instabilità politica, rendevano la Luna un obiettivo tecnologicamente e politicamente fuori portata.", coords:[39.90, 116.40] },
+            { id:"nz", continente:"Oceania", nazione:"New Zealand", citta:"Auckland", giornale:"Auckland Star", coords:[-36.84, 174.76], img:"img/7.jpg", analisi:"Man's Walk on the Moon." }
         ];
 
         const markers = L.featureGroup();
         testate.forEach(t => {
-            let color = t.nazione === "USA" ? "var(--usa-red)" : (t.nazione === "URSS" ? "var(--urss-yellow)" : "#ffffff");
-            const m = L.circleMarker(t.coords, {
-                radius: 7, fillColor: color, color: "#000", weight: 1, fillOpacity: 1
-            }).addTo(markers);
+            let color;
+            if (t.nazione === "USA") color = "var(--usa-red)";
+            else if (t.nazione === "USSR") color = "var(--urss-yellow)";
+            else if (t.nazione === "UK") color = "var(--uk-blue)";
+            else if (t.nazione === "China") color = "var(--china-green)";
+            else color = "var(--others-gray)";
 
-            m.bindPopup(`
-                <div style="width:180px">
-                    <strong>${t.giornale}</strong><br><small>${t.citta}, ${t.nazione}</small>
-                    <div class="popup-img-container"><img src="${t.img}" class="zoomable"></div>
-                </div>
-            `);
+            const m = L.circleMarker(t.coords, { radius: 7, fillColor: color, stroke: false, fillOpacity: 0.9 }).addTo(markers);
+            
+            if (t.nazione === "China") {
+                m.bindPopup(`<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;">${t.analisi}</div>`);
+            } else {
+                m.bindPopup(`
+                    <div style="width:180px">
+                        <strong>${t.giornale}</strong><br><small>${t.citta}, ${t.nazione}</small>
+                        <div class="popup-img-container"><img src="${t.img}" class="zoomable"></div>
+                    </div>
+                `);
+            }
         });
-
         markers.addTo(map);
         map.fitBounds(markers.getBounds().pad(0.1));
 
-        function creaPonte(usaId, urssId) {
-            const usa = testate.find(t => t.id === usaId);
-            const urss = testate.find(t => t.id === urssId);
+        function creaPonte(id1, id2) {
+            const t1 = testate.find(t => t.id === id1);
+            const t2 = testate.find(t => t.id === id2);
+            
+            // Fallback safety if id changed
+            if(!t1 || !t2) return; 
 
-            const curva = L.curve(['M', usa.coords, 'Q', [usa.coords[0]+18, (usa.coords[1]+urss.coords[1])/2], urss.coords], {
-                color: 'var(--bridge-blue)', weight: 1.5, opacity: 0.5, fill: false
+            const curva = L.curve(['M', t1.coords, 'Q', [t1.coords[0]+15, (t1.coords[1]+t2.coords[1])/2], t2.coords], {
+                color: 'var(--bridge-blue)', weight: 1.5, opacity: 0.4, fill: false
             }).addTo(map);
 
-            curva.on('mouseover', function() { this.setStyle({opacity:1, weight:3, color:'#fff'}); });
-            curva.on('mouseout', function() { this.setStyle({opacity:0.5, weight:1.5, color:'var(--bridge-blue)'}); });
+            curva.on('mouseover', function() { this.setStyle({opacity:1, weight:2, color:'#fff'}); });
+            curva.on('mouseout', function() { this.setStyle({opacity:0.4, weight:1.5, color:'var(--bridge-blue)'}); });
             
             curva.on('click', () => {
-                document.getElementById('box-usa').innerHTML = `<img src="${usa.img}" class="img-grande zoomable"><h2>${usa.giornale}</h2><p>${usa.analisi}</p>`;
-                document.getElementById('box-urss').innerHTML = `<img src="${urss.img}" class="img-grande zoomable"><h2>${urss.giornale}</h2><p>${urss.analisi}</p>`;
-                document.getElementById('comparison-overlay').style.display = 'block';
+                const getColor = (n) => {
+                    if (n === "USA") return "var(--usa-red)";
+                    if (n === "USSR") return "var(--urss-yellow)";
+                    if (n === "UK") return "var(--uk-blue)";
+                    return "#888";
+                };
+                const c1 = getColor(t1.nazione);
+                const c2 = getColor(t2.nazione);
+
+                const b1 = document.getElementById('box-usa');
+                b1.style.borderTopColor = c1;
+                b1.innerHTML = `
+                    <div class="card-header"><div class="header-left"><div class="dot" style="background:${c1}"></div><span class="journal-name">${t1.giornale}</span></div></div>
+                    <div class="image-box"><img src="${t1.img}"></div>
+                    <div class="card-footer"><div class="footer-label" style="color:${c1}">${t1.giornale} • ${t1.citta}, ${t1.nazione}</div><div class="footer-desc">${t1.analisi}</div></div>`;
+                
+                const b2 = document.getElementById('box-urss');
+                b2.style.borderTopColor = c2;
+                b2.innerHTML = `
+                    <div class="card-header"><div class="header-left"><div class="dot" style="background:${c2}"></div><span class="journal-name">${t2.giornale}</span></div></div>
+                    <div class="image-box"><img src="${t2.img}"></div>
+                    <div class="card-footer"><div class="footer-label" style="color:${c2}">${t2.giornale} • ${t2.citta}, ${t2.nazione}</div><div class="footer-desc">${t2.analisi}</div></div>`;
+                
+                document.getElementById('comparison-overlay').style.display = 'flex';
             });
         }
 
-        creaPonte("ny", "mo");
-        creaPonte("dc", "sp");
-        creaPonte("tx", "nv");
+        // Collegamenti significativi: contrasto visivo e politico (USA vs USSR)
+        creaPonte("sf", "ussr_mo");     // San Francisco (Titolo enorme "MEN ON MOON") vs Mosca (Cronaca ufficiale)
+        creaPonte("id", "ussr_le");     // Idaho (Titolo a tutta pagina "MAN ON MOON") vs Leningrado (Focus tecnico)
+        creaPonte("us_gen", "ussr_no"); // Washington (Politica "WALK ON MOON") vs Novosibirsk (Prima spedizione)
+        creaPonte("uk", "ar");          // Londra (Sollievo "Breathing again") vs Arkansas (Celebrazione globale "Earthmen Unite")
 
-        // --- LOGICA INGRANDIMENTO (LIGHTBOX) ---
         document.addEventListener('click', function (e) {
-            // Se l'elemento cliccato ha la classe 'zoomable' o è un'immagine dentro un container popup
-            if (e.target.tagName === 'IMG' && (e.target.classList.contains('zoomable') || e.target.closest('.popup-img-container'))) {
+            if (e.target.tagName === 'IMG' && (e.target.closest('.popup-img-container') || e.target.closest('.image-box'))) {
                 const lightbox = document.getElementById('lightbox');
                 const lightboxImg = document.getElementById('lightbox-img');
                 lightboxImg.src = e.target.src;
@@ -193,12 +379,72 @@
 
         function chiudiConfronto() { document.getElementById('comparison-overlay').style.display = 'none'; }
         
-        window.addEventListener('keydown', (e) => { 
-            if(e.key === "Escape") {
-                document.getElementById('comparison-overlay').style.display = 'none';
-                document.getElementById('lightbox').style.display = 'none';
-            }
+        /* --- PURPOSE MODAL LOGIC --- */
+        const purposeBtn = document.getElementById('purpose-btn');
+        const purposeOverlay = document.getElementById('purpose-overlay');
+        const closePurposeBtn = purposeOverlay.querySelector('.close-purpose-btn');
+
+        purposeBtn.addEventListener('click', () => {
+            purposeOverlay.style.display = 'flex';
         });
+
+        function closePurposeModal() {
+            purposeOverlay.style.display = 'none';
+        }
+
+        closePurposeBtn.addEventListener('click', closePurposeModal);
+        purposeOverlay.addEventListener('click', (e) => {
+            if (e.target === purposeOverlay) closePurposeModal();
+        });
+
+        // Global Escape Key Handler
+        window.addEventListener('keydown', (e) => { if(e.key === "Escape") { chiudiConfronto(); document.getElementById('lightbox').style.display = 'none'; closePurposeModal(); }});
+
+        /* --- ARCHIVE LOGIC --- */
+        function showView(viewName) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if(viewName === 'map') {
+                document.getElementById('archive-view').style.display = 'none';
+            } else {
+                renderArchive();
+                document.getElementById('archive-view').style.display = 'block';
+            }
+        }
+
+        function renderArchive() {
+            const container = document.getElementById('archive-view');
+            if(container.innerHTML.trim() !== "") return; 
+
+            const continents = [...new Set(testate.map(t => t.continente))];
+            let fullHtml = "";
+            
+            continents.forEach(cont => {
+                const items = testate.filter(t => t.continente === cont);
+                if(items.filter(t => t.img).length === 0) return;
+
+                let html = `<div class="continent-block"><div class="continent-title">${cont}</div>`;
+                
+                const countries = [...new Set(items.map(i => i.nazione))];
+                countries.forEach(country => {
+                    const cItems = items.filter(t => t.nazione === country && t.img);
+                    if(cItems.length === 0) return;
+
+                    html += `<div class="country-block"><div class="country-title">${country}</div><div class="grid-container">`;
+                    cItems.forEach(t => {
+                        html += `<div class="grid-item" onclick="document.getElementById('lightbox-img').src='${t.img}'; document.getElementById('lightbox').style.display='flex'">
+                                    <div class="grid-img-wrapper"><img src="${t.img}"></div>
+                                    <div class="grid-info"><div class="grid-journal">${t.giornale}</div><div class="grid-city">${t.citta}</div></div>
+                                 </div>`;
+                    });
+                    html += `</div></div>`;
+                });
+                html += `</div>`;
+                fullHtml += html;
+            });
+            container.innerHTML = fullHtml;
+        }
     </script>
 </body>
 </html>
