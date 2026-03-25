@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,6 +36,9 @@
     z-index: 10000;
     background: rgba(10,10,11,0.92);
     backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .nav-tab {
     padding: 1rem 1.5rem;
@@ -51,6 +54,14 @@
     transition: all 0.2s;
   }
   .nav-tab:hover, .nav-tab.active { color: var(--moon-hi); background: rgba(200,192,168,0.04); }
+
+  .site-title {
+    font-weight: 800;
+    letter-spacing: 3px;
+    margin-left: 25px;
+    color: #e0e0e0;
+    text-transform: uppercase;
+  }
 
         /* --- LIGHTBOX --- */
         #lightbox {
@@ -128,9 +139,9 @@
 
         /* ─── ARCHIVE VIEW ─── */
         #archive-view {
-            display: none; position: fixed; top: 60px; left: 0; width: 100%; height: calc(100% - 60px);
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #e6e6e6; z-index: 9000; overflow-y: auto;
-            padding: 40px 10%; box-sizing: border-box;
+            padding: 90px 10% 40px; box-sizing: border-box;
         }
         .continent-block { margin-bottom: 60px; }
         .continent-title { 
@@ -146,7 +157,7 @@
         .grid-item { cursor: pointer; transition: transform 0.2s; }
         .grid-item:hover { transform: translateY(-5px); }
         .grid-img-wrapper {
-            background: #fff; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #ddd;
+            background: transparent; padding: 0; box-shadow: none; border: none;
             aspect-ratio: 0.8; overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
         .grid-img-wrapper img { width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%); transition: filter 0.3s; }
@@ -158,8 +169,9 @@
         /* --- PURPOSE MODAL --- */
         #purpose-btn {
             position: fixed;
-            top: 80px;
-            right: 20px;
+            top: auto;
+            bottom: 30px;
+            left: 20px;
             width: 30px;
             height: 30px;
             background: #fff;
@@ -205,8 +217,11 @@
 
   <!-- NAV -->
 <nav class="section-nav" id="main-nav">
-  <button class="nav-tab active" onclick="showView('map')">Map</button>
-  <button class="nav-tab" onclick="showView('archive')">Newspapers</button>
+  <div class="site-title">MoonPrint</div>
+  <div>
+    <button class="nav-tab active" onclick="showView('map')">Map</button>
+    <button class="nav-tab" onclick="showView('archive')">Newspapers</button>
+  </div>
 </nav>
 
     <!-- ARCHIVE -->
@@ -231,7 +246,7 @@
 
     <div id="purpose-overlay">
         <div id="purpose-modal">
-            <h2>Man on Moon</h2>
+            <h2>MoonPrint</h2>
             <p>This interactive archive explores how global media reported the Apollo 11 moon landing in July 1969. It visualizes the geopolitical narratives of the Cold War, contrasting the triumphant tone of the West with the more subdued, technical coverage from the Soviet bloc.</p>
             <p>Use the <strong>Map</strong> to see the direct comparisons between rival nations or browse the <strong>Newspapers</strong> archive to see the front pages for yourself.</p>
             <button class="close-purpose-btn">Close</button>
@@ -255,10 +270,10 @@
         const testate = [
             // NORTH AMERICA
             { id:"fl", continente:"North America", nazione:"USA", citta:"St. Petersburg, FL", giornale:"St. Petersburg Times", coords:[27.76, -82.64], img:"img/1.jpg", analisi:"Moon, We're Onto You." },
-            { id:"id", continente:"North America", nazione:"USA", citta:"Twin Falls, ID", giornale:"Times News", coords:[42.56, -114.46], img:"img/3.jpg", analisi:"Edizione locale: Man on Moon." },
-            { id:"ar", continente:"North America", nazione:"USA", citta:"Little Rock, AR", giornale:"Arkansas Gazette", coords:[34.74, -92.28], img:"img/6.jpg", analisi:"First Men Land on Moon." },
-            { id:"sf", continente:"North America", nazione:"USA", citta:"San Francisco, CA", giornale:"SF Chronicle", coords:[37.77, -122.41], img:"img/29.jpg", analisi:"Men on Moon." },
-            { id:"us_gen", continente:"North America", nazione:"USA", citta:"Washington DC", giornale:"Evening Star", coords:[38.90, -77.03], img:"img/34.jpg", analisi:"Astronauts Lift Off Moon." },
+            { id:"id", continente:"North America", nazione:"USA", citta:"Twin Falls, ID", giornale:"Times News", coords:[42.56, -114.46], img:"img/3.jpg", analisi:"Even in local papers, the event consumed the entire front page. The layout mirrors national pride, showing how deeply the landing permeated American society." },
+            { id:"ar", continente:"North America", nazione:"USA", citta:"Little Rock, AR", giornale:"Arkansas Gazette", coords:[34.74, -92.28], img:"img/6.jpg", analisi:"A classic heartland perspective. The headline is direct and historic, grounding the cosmic event in a familiar cadence for its readers." },
+            { id:"sf", continente:"North America", nazione:"USA", citta:"San Francisco, CA", giornale:"SF Chronicle", coords:[37.77, -122.41], img:"img/29.jpg", analisi:"The headline dominates with a font size reserved for war declarations. It captures the sheer emotional magnitude of the American achievement." },
+            { id:"us_gen", continente:"North America", nazione:"USA", citta:"Washington DC", giornale:"Evening Star", coords:[38.90, -77.03], img:"img/34.jpg", analisi:"Published in the capital, the focus is on the astronauts as heroes, reinforcing the narrative of American individualism and pioneering spirit." },
             { id:"can", continente:"North America", nazione:"Canada", citta:"Toronto", giornale:"Globe and Mail", coords:[43.65, -79.38], img:"img/37.jpg", analisi:"Man on Moon: A fine, soft surface." },
 
             // SOUTH & CENTRAL AMERICA
@@ -266,7 +281,7 @@
             { id:"sal", continente:"South America", nazione:"El Salvador", citta:"San Salvador", giornale:"La Prensa Gráfica", coords:[13.69, -89.22], img:"img/23.jpg", analisi:"El hombre pone pie en la luna." },
 
             // EUROPE
-            { id:"uk", continente:"Europe", nazione:"UK", citta:"London", giornale:"Daily Mirror", coords:[51.50, -0.12], img:"img/10.jpeg", analisi:"Man on the Moon: We're breathing again." },
+            { id:"uk", continente:"Europe", nazione:"UK", citta:"London", giornale:"Daily Mirror", coords:[51.50, -0.12], img:"img/10.jpeg", analisi:"Britain shares the relief. 'We're breathing again' highlights the global tension and the shared human stake in the mission's safety." },
             { id:"fr_mul", continente:"Europe", nazione:"France", citta:"Mulhouse", giornale:"L'Alsace", coords:[47.75, 7.33], img:"img/30.jpg", analisi:"FANTASTIC." },
             { id:"fr_par", continente:"Europe", nazione:"France", citta:"Paris", giornale:"Le Figaro", coords:[48.85, 2.35], img:"img/33.jpg", analisi:"Ils ont marché sur la lune." },
             { id:"be", continente:"Europe", nazione:"Belgium", citta:"Brussels", giornale:"Le Soir", coords:[50.85, 4.35], img:"img/16.jpeg", analisi:"L'homme marche sur la lune." },
@@ -286,12 +301,12 @@
             { id:"it_vic", continente:"Europe", nazione:"Italy", citta:"Vicenza", giornale:"Voce dei Berici", coords:[45.55, 11.53], img:"img/24.jpg", analisi:"La fantascienza diventa realtà." },
 
             // USSR
-            { id:"ussr_mo", continente:"USSR", nazione:"USSR", citta:"Moscow", giornale:"Izvestia", coords:[55.75, 37.61], img:"img/51.png", analisi:"Cronaca ufficiale sovietica." },
-            { id:"ussr_le", continente:"USSR", nazione:"USSR", citta:"Leningrad", giornale:"Zemlya", coords:[59.93, 30.33], img:"img/52.png", analisi:"Terrestri sulla luna." },
-            { id:"ussr_no", continente:"USSR", nazione:"USSR", citta:"Novosibirsk", giornale:"Pravda", coords:[55.00, 82.93], img:"img/53.jpg", analisi:"Prima spedizione lunare." },
+            { id:"ussr_mo", continente:"USSR", nazione:"USSR", citta:"Moscow", giornale:"Izvestia", coords:[55.75, 37.61], img:"img/51.png", analisi:"Izvestia places the news below the fold. The tone is strictly factual, acknowledging the feat but stripping away the 'space race' victory narrative." },
+            { id:"ussr_le", continente:"USSR", nazione:"USSR", citta:"Leningrad", giornale:"Zemlya", coords:[59.93, 30.33], img:"img/52.png", analisi:"Coverage focuses on technical aspects. The layout remains dense, framing the landing as scientific progress rather than a geopolitical win." },
+            { id:"ussr_no", continente:"USSR", nazione:"USSR", citta:"Novosibirsk", giornale:"Pravda", coords:[55.00, 82.93], img:"img/53.jpg", analisi:"Pravda presents a formal announcement, emphasizing collective scientific achievement while carefully avoiding praise of the US political system." },
 
             // ASIA / OCEANIA / OTHERS
-            { id:"cn", continente:"Asia", nazione:"China", analisi:"Nel 1969 la Cina ignorò l'allunaggio principalmente per ragioni ideologiche e interne: nel pieno della Rivoluzione Culturale, il regime di Mao Zedong evitò di celebrare un successo dell'arcinemico 'imperialista' americano, preferendo oscurare la notizia o bollarla come propaganda. Inoltre, l'assenza di relazioni diplomatiche tra Pechino e Washington e la debolezza del programma spaziale cinese di allora, frenato dall'instabilità politica, rendevano la Luna un obiettivo tecnologicamente e politicamente fuori portata.", coords:[39.90, 116.40] },
+            { id:"cn", continente:"Asia", nazione:"China", analisi:"In 1969, China largely ignored the moon landing for ideological and domestic reasons: in the midst of the Cultural Revolution, Mao Zedong’s regime refrained from celebrating a success achieved by its arch-enemy, the 'imperialist' United States, preferring instead to downplay the news or dismiss it as propaganda. Furthermore, the absence of diplomatic relations between Beijing and Washington and the weakness of China’s space program at the time—hampered by political instability—made the Moon a technologically and politically out-of-reach goal.", coords:[39.90, 116.40] },
             { id:"nz", continente:"Oceania", nazione:"New Zealand", citta:"Auckland", giornale:"Auckland Star", coords:[-36.84, 174.76], img:"img/7.jpg", analisi:"Man's Walk on the Moon." }
         ];
 
