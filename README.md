@@ -10,7 +10,13 @@ Autore: Sofia Marques \
 
 
 ## Introduzione e tema
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Congue eu consequat ac felis donec. Nisi est sit amet facilisis magna etiam tempor. Nisl nisi scelerisque eu ultrices vitae. Id aliquet lectus proin nibh nisl. Urna nec tincidunt praesent semper feugiat nibh. Imperdiet dui accumsan sit amet nulla facilisi morbi. Aliquet enim tortor at auctor urna nunc. Id cursus metus aliquam eleifend mi. Ultricies lacus sed turpis tincidunt id aliquet risus feugiat in. Odio morbi quis commodo odio aenean sed. Turpis cursus in hac habitasse. Sed enim ut sem viverra aliquet eget sit. Iaculis at erat pellentesque adipiscing commodo. Et pharetra pharetra massa massa ultricies mi quis hendrerit dolor. At tempor commodo ullamcorper a lacus vestibulum sed arcu. Ipsum faucibus vitae aliquet nec ullamcorper sit. Tempus quam pellentesque nec nam aliquam sem et tortor. Turpis egestas sed tempus urna et pharetra pharetra massa. Ridiculus mus mauris vitae ultricies leo integer malesuada nunc vel.
+Il sito visualizza come lo sbarco sulla Luna sia stato narrato dai giornali di diversi paesi il 21 luglio 1969.
+Piuttosto che funzionare come un semplice archivio, la piattaforma analizza le scelte editoriali fatte dalle diverse testate.
+Attraverso una mappa interattiva, gli utenti possono esplorare le prime pagine dei quotidiani di vari paesi.
+
+Attraverso visualizzazioni dei dati, il progetto mostra come lo stesso evento storico sia stato interpretato e raccontato in modi diversi a seconda del contesto culturale e politico.
+L’esperienza integra inoltre un archivio di telecronache storiche e comunicazioni audio tra gli astronauti e Houston, sincronizzate con i momenti chiave dell’evento, permettendo di confrontare l’evento reale con la narrazione costruita dai media.
+Il progetto diventa così non solo un archivio, ma un’indagine interattiva su come i media globali hanno costruito il significato di uno degli eventi più iconici della storia contemporanea.
 
 
 ## Riferimenti progettuali
@@ -19,15 +25,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 
 ## Design dell’interfaccia e modalità di interazione
-- indicare qual'è il tipo di layout che ho utilizzato, come ho strutturato la pagina(es. interazione di click e passaggio da pagina a pagina con un menu), come si interagisce con le diverse pagine. allegare delle immagini/video per mostrare l'interfaccia(almeno 1 video). 
+(indicare qual'è il tipo di layout che ho utilizzato, come ho strutturato la pagina(es. interazione di click e passaggio da pagina a pagina con un menu), come si interagisce con le diverse pagine. allegare delle immagini/video per mostrare l'interfaccia(almeno 1 video).)
 
 
 
 
 ## Tecnologia usata
-spiegare quali sono le caratteristiche dal punto di vista tecnico che distingue il progetto dagli altri. le logiche che ho utilizzato per usufruire dell'interfaccia(es. panneli interattivi all'interno della pagina). 
-
-Inserire una parte particolare del mio codice.
+(spiegare quali sono le caratteristiche dal punto di vista tecnico che distingue il progetto dagli altri. le logiche che ho utilizzato per usufruire dell'interfaccia(es. panneli interattivi all'interno della pagina). Inserire una parte particolare del mio codice.)
 
 
 ```JavaScript
@@ -55,6 +59,6 @@ image.src = url;
 
 
 ## Target e contesto d’uso
-... contesto ideale per fruire della pagina.
+(... contesto ideale per fruire della pagina.)
 
 
