@@ -82,14 +82,16 @@
         #comparison-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(230, 230, 230, 0.98); backdrop-filter: blur(12px);
-            align-items: center; justify-content: center; z-index: 9999;
+            align-items: flex-start; justify-content: center; z-index: 9999;
             animation: fadeIn 0.4s ease;
+            overflow-y: auto;
+            padding: 80px 0;
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .comparison-container {
-            display: flex; align-items: center; width: 90%; max-width: 1000px; position: relative;
+            display: flex; align-items: stretch; width: 90%; max-width: 1000px; position: relative;
         }
 
         .newspaper-card {
@@ -111,11 +113,11 @@
 
         .image-box {
             aspect-ratio: 1 / 1; background: #f4f4f4; display: flex;
-            align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #eee;
+            align-items: flex-start; justify-content: center; position: relative; border-bottom: 1px solid #eee;
         }
-        .image-box img { width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; }
+        .image-box img { width: 100%; height: 100%; object-fit: contain; object-position: top; cursor: zoom-in; }
 
-        .card-footer { padding: 20px 25px; max-height: 300px; overflow-y: auto; }
+        .card-footer { padding: 20px 25px; flex: 1; }
         .footer-label { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; margin-bottom: 12px; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .label-usa { color: var(--usa-red); }
         .label-urss { color: var(--urss-yellow); }
@@ -132,7 +134,7 @@
         .card-usa { border-top: 3px solid var(--usa-red); }
         .card-urss { border-top: 3px solid var(--urss-yellow); }
 
-        .close-btn { position: absolute; top: 60px; right: 40px; background: rgba(230,230,230,0.8); border: 1px solid #999; padding: 10px 20px; color: #333; cursor: pointer; font-size: 11px; letter-spacing: 2px; z-index: 10001; transition: all 0.3s; }
+        .close-btn { position: fixed; top: 60px; right: 40px; background: rgba(230,230,230,0.8); border: 1px solid #999; padding: 10px 20px; color: #333; cursor: pointer; font-size: 11px; letter-spacing: 2px; z-index: 10001; transition: all 0.3s; }
         .close-btn:hover { background: #333; color: #fff; border-color: #333; }
 
         .leaflet-popup-content-wrapper { background: #111; color: white; border-radius: 0; border: 1px solid #444; }
