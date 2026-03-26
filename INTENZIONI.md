@@ -1,14 +1,5 @@
 # NASA 70
 
-## ESERCIZIO ISS
-[ISS](https://sofiaribeiromarques.github.io/NASA/esempi/es01_ISS/index2.html)
-
-## ESERCIZIO SATELLITI
-[Satelliti](https://sofiaribeiromarques.github.io/NASA/esempi/es03_satelliti)
-
-## ESERCIZIO LUNA
-[Luna](https://sofiaribeiromarques.github.io/NASA/esempi/es04_moon)
-
 ## IDEA PROGETTO 1
 Il sito visualizza come lo sbarco sulla Luna sia stato narrato dai giornali di diversi paesi il 21 luglio 1969.
 La piattaforma analizza le scelte editoriali fatte dalle diverse testate.
@@ -26,4 +17,4 @@ Il progetto diventa così non solo un archivio, ma un’indagine interattiva su 
 ### TARGET:
 Il progetto è rivolto principalmente a studenti e ricercatori di media studies, giornalismo e storia contemporanea interessati ad analizzare come i media di diversi paesi hanno interpretato lo sbarco sulla Luna.
 
-[Man on Moon](https://sofiaribeiromarques.github.io/NASA/progetto/index.html)
+[MOONPRINT](https://sofiaribeiromarques.github.io/NASA/progetto/index.html)
