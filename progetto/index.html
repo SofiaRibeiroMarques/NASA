@@ -11,10 +11,10 @@
         :root {
             --usa-red: #c0392b;   
             --urss-yellow: #d68910; 
-            --uk-blue: #2980b9;
+            --uk-purple: #a562c1;
             --china-green: #1ba112;
             --others-gray: #95a5a6;
-            --bridge-blue: #546e7a; 
+            --bridge-blue: #005780; 
             --bg-dark: #050505;
             --text-gray: #ccc;
             --card-bg: #111;
@@ -306,7 +306,7 @@
 
             // EUROPE
             { id:"uk", continente:"Europe", nazione:"UK", citta:"London", giornale:"Daily Mirror", coords:[51.50, -0.12], img:"img/10.jpeg", analisi:"Focuses on the global relief and the shared human stake in the mission's safety.", visual: "Tabloid style with high-contrast, dramatic photography focusing on the faces of the astronauts.", tone: "Intimate and emotional; the headline 'We're breathing again' speaks to the tension of the era." },
-            { id:"uk_2", continente:"Europe", nazione:"UK", citta:"London", giornale:"The Guardian", coords:[51.51, -0.13], img:"img/60.jpeg", analisi:"A broadsheet perspective on the lunar landing, emphasizing the scientific and historical significance of the mission.", visual: "Traditional broadsheet layout with detailed technical reports and a central focus on the lunar landscape.", tone: "Measured and historical, framing the event as a monumental leap for science and mankind." },
+            { id:"uk_2", continente:"Europe", nazione:"UK", citta:"Manchester", giornale:"The Guardian", coords:[53.48, -2.24], img:"img/60.jpeg", analisi:"A broadsheet perspective from the North, emphasizing the scientific and historical significance of the mission.", visual: "Traditional broadsheet layout with detailed technical reports.", tone: "Measured and historical." },
             { id:"fr_mul", continente:"Europe", nazione:"France", citta:"Mulhouse", giornale:"L'Alsace", coords:[47.75, 7.33], img:"img/30.jpg", analisi:"FANTASTIC." },
             { id:"fr_par", continente:"Europe", nazione:"France", citta:"Paris", giornale:"Le Figaro", coords:[48.85, 2.35], img:"img/33.jpg", analisi:"Ils ont marché sur la lune." },
             { id:"be", continente:"Europe", nazione:"Belgium", citta:"Brussels", giornale:"Le Soir", coords:[50.85, 4.35], img:"img/16.jpeg", analisi:"L'homme marche sur la lune." },
@@ -340,7 +340,7 @@
             let color;
             if (t.nazione === "USA") color = "var(--usa-red)";
             else if (t.nazione === "USSR") color = "var(--urss-yellow)";
-            else if (t.nazione === "UK") color = "var(--uk-blue)";
+            else if (t.nazione === "UK") color = "var(--uk-purple)";
             else if (t.nazione === "China") color = "var(--china-green)";
             else color = "var(--others-gray)";
 
@@ -367,7 +367,7 @@
             // Fallback safety if id changed
             if(!t1 || !t2) return; 
 
-            const curva = L.curve(['M', t1.coords, 'Q', [t1.coords[0]+15, (t1.coords[1]+t2.coords[1])/2], t2.coords], {
+            const curva = L.curve(['M', t1.coords, 'Q', [t1.coords[0]+5, (t1.coords[1]+t2.coords[1])/2], t2.coords], {
                 color: 'var(--bridge-blue)', weight: 1.5, opacity: 0.4, fill: false
             }).addTo(map);
 
@@ -378,7 +378,7 @@
                 const getColor = (n) => {
                     if (n === "USA") return "var(--usa-red)";
                     if (n === "USSR") return "var(--urss-yellow)";
-                    if (n === "UK") return "var(--uk-blue)";
+                    if (n === "UK") return "var(--uk-purple)";
                     return "#888";
                 };
                 const c1 = getColor(t1.nazione);
@@ -412,11 +412,10 @@
         }
 
         // Collegamenti significativi: contrasto visivo e politico (USA vs USSR)
-        creaPonte("sf", "ussr_mo");     // San Francisco (Titolo enorme "MEN ON MOON") vs Mosca (Cronaca ufficiale)
         creaPonte("id", "ussr_le");     // Idaho (Titolo a tutta pagina "MAN ON MOON") vs Leningrado (Focus tecnico)
         creaPonte("us_gen", "ussr_no"); // Washington (Politica "WALK ON MOON") vs Novosibirsk (Prima spedizione)
         creaPonte("uk", "ar");          // Londra (Sollievo "Breathing again") vs Arkansas (Celebrazione globale "Earthmen Unite")
-        creaPonte("uk_2", "ussr_mo");   // London (The Guardian) vs Moscow (Izvestia)
+        creaPonte("uk_2", "ussr_mo");   // Manchester (The Guardian) vs Moscow (Izvestia)
 
         document.addEventListener('click', function (e) {
             if (e.target.tagName === 'IMG' && (e.target.closest('.popup-img-container') || e.target.closest('.image-box'))) {
