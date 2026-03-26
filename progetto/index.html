@@ -10,7 +10,7 @@
     <style>
         :root {
             --usa-red: #c0392b;   
-            --urss-yellow: #d68910; 
+            --ussr-yellow: #d68910; 
             --uk-purple: #a562c1;
             --china-green: #1ba112;
             --others-gray: #95a5a6;
@@ -56,7 +56,7 @@
   .nav-tab:hover, .nav-tab.active { color: var(--moon-hi); background: rgba(200,192,168,0.04); }
 
   .site-title {
-    font-weight: 800;
+    font-weight: 600;
     letter-spacing: 3px;
     margin-left: 25px;
     color: #e0e0e0;
@@ -71,14 +71,14 @@
         }
         #lightbox img { max-width: 95%; max-height: 95%; border: 1px solid #444; }
 
-        /* --- POPUP MAPPA --- */
+        /* --- MAP POPUP --- */
         .popup-img-container {
             width: 100%; height: 110px; overflow: hidden; margin-top: 8px;
             border: 1px solid #333; background: #222; cursor: zoom-in;
         }
         .popup-img-container img { width: 100%; height: auto; display: block; }
 
-        /* ─── ANALISI COMPARATIVA ─── */
+        /* ─── COMPARATIVE ANALYSIS ─── */
         #comparison-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(230, 230, 230, 0.98); backdrop-filter: blur(12px);
@@ -108,7 +108,7 @@
         .header-left { display: flex; align-items: center; gap: 10px; }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
         .dot-usa { background: var(--usa-red); }
-        .dot-urss { background: var(--urss-yellow); }
+        .dot-ussr { background: var(--ussr-yellow); }
         .journal-name { font-weight: 600; font-size: 15px; color: #222; }
 
         .image-box {
@@ -120,7 +120,7 @@
         .card-footer { padding: 15px 25px; flex: 1; }
         .footer-label { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; margin-bottom: 8px; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .label-usa { color: var(--usa-red); }
-        .label-urss { color: var(--urss-yellow); }
+        .label-ussr { color: var(--ussr-yellow); }
         .footer-desc { font-size: 13px; line-height: 1.5; color: #555; font-weight: 400; margin-bottom: 10px; }
         .footer-desc strong { color: #222; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; display: block; margin-bottom: 2px; }
 
@@ -132,7 +132,7 @@
         }
 
         .card-usa { border-top: 3px solid var(--usa-red); }
-        .card-urss { border-top: 3px solid var(--urss-yellow); }
+        .card-ussr { border-top: 3px solid var(--ussr-yellow); }
 
         .close-btn { position: fixed; top: 60px; right: 40px; background: rgba(230,230,230,0.8); border: 1px solid #999; padding: 10px 20px; color: #333; cursor: pointer; font-size: 11px; letter-spacing: 2px; z-index: 10001; transition: all 0.3s; }
         .close-btn:hover { background: #333; color: #fff; border-color: #333; }
@@ -258,11 +258,11 @@
     <div id="map"></div>
 
     <div id="comparison-overlay">
-        <button class="close-btn" onclick="chiudiConfronto()">Close</button>
+        <button class="close-btn" onclick="closeComparison()">Close</button>
         <div class="comparison-container">
             <div class="vs-divider"><div class="vs-circle">vs</div></div>
             <div class="newspaper-card card-usa" id="box-usa"></div>
-            <div class="newspaper-card card-urss" id="box-urss"></div>
+            <div class="newspaper-card card-ussr" id="box-ussr"></div>
         </div>
     </div>
 
@@ -291,76 +291,76 @@
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
-        const testate = [
+        const publications = [
             // NORTH AMERICA
-            { id:"fl", continente:"North America", nazione:"USA", citta:"St. Petersburg, FL", giornale:"St. Petersburg Times", coords:[27.76, -82.64], img:"img/1.jpg", analisi:"Moon, We're Onto You." },
-            { id:"id", continente:"North America", nazione:"USA", citta:"Twin Falls, ID", giornale:"Times News", coords:[42.56, -114.46], img:"img/3.jpg", analisi:"Even in local papers, the event consumed the entire front page. The layout mirrors national pride, showing how deeply the landing permeated American society." },
-            { id:"ar", continente:"North America", nazione:"USA", citta:"Little Rock, AR", giornale:"Arkansas Gazette", coords:[34.74, -92.28], img:"img/6.jpg", analisi:"A classic heartland perspective grounding the cosmic event in a familiar cadence for its readers.", visual: "Balanced layout where text and image share space, reflecting a traditional broadsheet style.", tone: "Solemn and historical, treating the event as a permanent milestone for 'Earthmen'." },
-            { id:"sf", continente:"North America", nazione:"USA", citta:"San Francisco, CA", giornale:"SF Chronicle", coords:[37.77, -122.41], img:"img/29.jpg", analisi:"Captures the sheer emotional magnitude of the American achievement.", visual: "Extreme importance of image over text: the 'MEN ON MOON' headline occupies nearly 40% of the page.", tone: "Sensationalist and triumphant; uses font sizes usually reserved for the end of a World War." },
-            { id:"us_gen", continente:"North America", nazione:"USA", citta:"Washington DC", giornale:"Evening Star", coords:[38.90, -77.03], img:"img/34.jpg", analisi:"Focuses on the astronauts as heroes, reinforcing the narrative of American individualism.", visual: "Portrait-style photography centers the human element over the technical machinery.", tone: "Heroic and narrative-driven, focusing on the 'pioneering spirit' of the individuals." },
-            { id:"can", continente:"North America", nazione:"Canada", citta:"Toronto", giornale:"Globe and Mail", coords:[43.65, -79.38], img:"img/37.jpg", analisi:"Man on Moon: A fine, soft surface." },
+            { id:"fl", continent:"North America", country:"USA", city:"St. Petersburg, FL", newspaper:"St. Petersburg Times", coords:[27.76, -82.64], img:"img/1.jpg", analysis:"Moon, We're Onto You." },
+            { id:"id", continent:"North America", country:"USA", city:"Twin Falls, ID", newspaper:"Times News", coords:[42.56, -114.46], img:"img/3.jpg", analysis:"Even in local papers, the event consumed the entire front page. The layout mirrors national pride, showing how deeply the landing permeated American society." },
+            { id:"ar", continent:"North America", country:"USA", city:"Little Rock, AR", newspaper:"Arkansas Gazette", coords:[34.74, -92.28], img:"img/6.jpg", analysis:"A classic heartland perspective grounding the cosmic event in a familiar cadence for its readers.", visual: "Balanced layout where text and image share space, reflecting a traditional broadsheet style.", tone: "Solemn and historical, treating the event as a permanent milestone for 'Earthmen'." },
+            { id:"sf", continent:"North America", country:"USA", city:"San Francisco, CA", newspaper:"SF Chronicle", coords:[37.77, -122.41], img:"img/29.jpg", analysis:"Captures the sheer emotional magnitude of the American achievement.", visual: "Extreme importance of image over text: the 'MEN ON MOON' headline occupies nearly 40% of the page.", tone: "Sensationalist and triumphant; uses font sizes usually reserved for the end of a World War." },
+            { id:"us_gen", continent:"North America", country:"USA", city:"Washington DC", newspaper:"Evening Star", coords:[38.90, -77.03], img:"img/34.jpg", analysis:"Focuses on the astronauts as heroes, reinforcing the narrative of American individualism.", visual: "Portrait-style photography centers the human element over the technical machinery.", tone: "Heroic and narrative-driven, focusing on the 'pioneering spirit' of the individuals." },
+            { id:"can", continent:"North America", country:"Canada", city:"Toronto", newspaper:"Globe and Mail", coords:[43.65, -79.38], img:"img/37.jpg", analysis:"Man on Moon: A fine, soft surface." },
 
             // SOUTH & CENTRAL AMERICA
-            { id:"arg", continente:"South America", nazione:"Argentina", citta:"Buenos Aires", giornale:"Clarín", coords:[-34.60, -58.38], img:"img/9.jpg", analisi:"La más grande hazaña humana." },
-            { id:"sal", continente:"South America", nazione:"El Salvador", citta:"San Salvador", giornale:"La Prensa Gráfica", coords:[13.69, -89.22], img:"img/23.jpg", analisi:"El hombre pone pie en la luna." },
+            { id:"arg", continent:"South America", country:"Argentina", city:"Buenos Aires", newspaper:"Clarín", coords:[-34.60, -58.38], img:"img/9.jpg", analysis:"La más grande hazaña humana." },
+            { id:"sal", continent:"South America", country:"El Salvador", city:"San Salvador", newspaper:"La Prensa Gráfica", coords:[13.69, -89.22], img:"img/23.jpg", analysis:"El hombre pone pie en la luna." },
 
             // EUROPE
-            { id:"uk", continente:"Europe", nazione:"UK", citta:"London", giornale:"Daily Mirror", coords:[51.50, -0.12], img:"img/10.jpeg", analisi:"Focuses on the global relief and the shared human stake in the mission's safety.", visual: "Tabloid style with high-contrast, dramatic photography focusing on the faces of the astronauts.", tone: "Intimate and emotional; the headline 'We're breathing again' speaks to the tension of the era." },
-            { id:"uk_2", continente:"Europe", nazione:"UK", citta:"Manchester", giornale:"The Guardian", coords:[53.48, -2.24], img:"img/60.jpeg", analisi:"A broadsheet perspective from the North, emphasizing the scientific and historical significance of the mission.", visual: "Traditional broadsheet layout with detailed technical reports.", tone: "Measured and historical." },
-            { id:"fr_mul", continente:"Europe", nazione:"France", citta:"Mulhouse", giornale:"L'Alsace", coords:[47.75, 7.33], img:"img/30.jpg", analisi:"FANTASTIC." },
-            { id:"fr_par", continente:"Europe", nazione:"France", citta:"Paris", giornale:"Le Figaro", coords:[48.85, 2.35], img:"img/33.jpg", analisi:"Ils ont marché sur la lune." },
-            { id:"be", continente:"Europe", nazione:"Belgium", citta:"Brussels", giornale:"Le Soir", coords:[50.85, 4.35], img:"img/16.jpeg", analisi:"L'homme marche sur la lune." },
-            { id:"de", continente:"Europe", nazione:"Germany", citta:"Hamburg", giornale:"Bild", coords:[53.55, 9.99], img:"img/50.jpg", analisi:"Der Mond ist jetzt ein Ami." },
-            { id:"es_mad", continente:"Europe", nazione:"Spain", citta:"Madrid", giornale:"Hoja del Lunes", coords:[40.41, -3.70], img:"img/12.jpg", analisi:"El hombre pone pie en la luna." },
-            { id:"es_zam", continente:"Europe", nazione:"Spain", citta:"Zamora", giornale:"El Correo", coords:[41.50, -5.74], img:"img/11.jpg", analisi:"¡Llegaron!" },
-            { id:"pt", continente:"Europe", nazione:"Portugal", citta:"Lisbon", giornale:"Diário de Lisboa", coords:[38.72, -9.13], img:"img/31.jpg", analisi:"Armstrong e Aldrin caminharam..." },
+            { id:"uk", continent:"Europe", country:"UK", city:"London", newspaper:"Daily Mirror", coords:[51.50, -0.12], img:"img/10.jpeg", analysis:"Focuses on the global relief and the shared human stake in the mission's safety.", visual: "Tabloid style with high-contrast, dramatic photography focusing on the faces of the astronauts.", tone: "Intimate and emotional; the headline 'We're breathing again' speaks to the tension of the era." },
+            { id:"uk_2", continent:"Europe", country:"UK", city:"Manchester", newspaper:"The Guardian", coords:[53.48, -2.24], img:"img/60.jpeg", analysis:"A broadsheet perspective from the North, emphasizing the scientific and historical significance of the mission.", visual: "Traditional broadsheet layout with detailed technical reports.", tone: "Measured and historical." },
+            { id:"fr_mul", continent:"Europe", country:"France", city:"Mulhouse", newspaper:"L'Alsace", coords:[47.75, 7.33], img:"img/30.jpg", analysis:"FANTASTIC." },
+            { id:"fr_par", continent:"Europe", country:"France", city:"Paris", newspaper:"Le Figaro", coords:[48.85, 2.35], img:"img/33.jpg", analysis:"Ils ont marché sur la lune." },
+            { id:"be", continent:"Europe", country:"Belgium", city:"Brussels", newspaper:"Le Soir", coords:[50.85, 4.35], img:"img/16.jpeg", analysis:"L'homme marche sur la lune." },
+            { id:"de", continent:"Europe", country:"Germany", city:"Hamburg", newspaper:"Bild", coords:[53.55, 9.99], img:"img/50.jpg", analysis:"Der Mond ist jetzt ein Ami." },
+            { id:"es_mad", continent:"Europe", country:"Spain", city:"Hoja del Lunes", coords:[40.41, -3.70], img:"img/12.jpg", analysis:"El hombre pone pie en la luna." },
+            { id:"es_zam", continent:"Europe", country:"Spain", city:"Zamora", newspaper:"El Correo", coords:[41.50, -5.74], img:"img/11.jpg", analysis:"¡Llegaron!" },
+            { id:"pt", continent:"Europe", country:"Portugal", city:"Lisbon", newspaper:"Diário de Lisboa", coords:[38.72, -9.13], img:"img/31.jpg", analysis:"Armstrong e Aldrin caminharam..." },
             
             // ITALY
-            { id:"it_mil", continente:"Europe", nazione:"Italy", citta:"Milan", giornale:"Corriere della Sera", coords:[45.46, 9.19], img:"img/35.jpg", analisi:"L'uomo è sulla luna." },
-            { id:"it_mil2", continente:"Europe", nazione:"Italy", citta:"Milan", giornale:"Corriere d'Inf.", coords:[45.48, 9.20], img:"img/4.jpg", analisi:"Missione Luna: Partiti!" },
-            { id:"it_tur", continente:"Europe", nazione:"Italy", citta:"Turin", giornale:"Stampa Sera", coords:[45.07, 7.68], img:"img/5.jpg", analisi:"I due astronauti camminano." },
-            { id:"it_bol", continente:"Europe", nazione:"Italy", citta:"Bologna", giornale:"Resto del Carlino", coords:[44.49, 11.34], img:"img/2.jpg", analisi:"L'uomo è sulla luna." },
-            { id:"it_rom", continente:"Europe", nazione:"Italy", citta:"Rome", giornale:"Il Tempo", coords:[41.90, 12.49], img:"img/13.jpg", analisi:"Esplorata la luna." },
-            { id:"it_nap", continente:"Europe", nazione:"Italy", citta:"Naples", giornale:"Il Mattino", coords:[40.85, 14.26], img:"img/28.jpg", analisi:"Un'era nuova nella storia." },
-            { id:"it_cre", continente:"Europe", nazione:"Italy", citta:"Cremona", giornale:"La Provincia", coords:[45.13, 10.02], img:"img/38.jpg", analisi:"Luna: ce l'hanno fatta!" },
-            { id:"it_vic", continente:"Europe", nazione:"Italy", citta:"Vicenza", giornale:"Voce dei Berici", coords:[45.55, 11.53], img:"img/24.jpg", analisi:"La fantascienza diventa realtà." },
+            { id:"it_mil", continent:"Europe", country:"Italy", city:"Milan", newspaper:"Corriere della Sera", coords:[45.46, 9.19], img:"img/35.jpg", analysis:"L'uomo è sulla luna." },
+            { id:"it_mil2", continent:"Europe", country:"Italy", city:"Milan", newspaper:"Corriere d'Inf.", coords:[45.48, 9.20], img:"img/4.jpg", analysis:"Missione Luna: Partiti!" },
+            { id:"it_tur", continent:"Europe", country:"Italy", city:"Turin", newspaper:"Stampa Sera", coords:[45.07, 7.68], img:"img/5.jpg", analysis:"I due astronauti camminano." },
+            { id:"it_bol", continent:"Europe", country:"Italy", city:"Bologna", newspaper:"Resto del Carlino", coords:[44.49, 11.34], img:"img/2.jpg", analysis:"L'uomo è sulla luna." },
+            { id:"it_rom", continent:"Europe", country:"Italy", city:"Rome", newspaper:"Il Tempo", coords:[41.90, 12.49], img:"img/13.jpg", analysis:"Esplorata la luna." },
+            { id:"it_nap", continent:"Europe", country:"Italy", city:"Naples", newspaper:"Il Mattino", coords:[40.85, 14.26], img:"img/28.jpg", analysis:"Un'era nuova nella storia." },
+            { id:"it_cre", continent:"Europe", country:"Italy", city:"Cremona", newspaper:"La Provincia", coords:[45.13, 10.02], img:"img/38.jpg", analysis:"Luna: ce l'hanno fatta!" },
+            { id:"it_vic", continent:"Europe", country:"Italy", city:"Vicenza", newspaper:"Voce dei Berici", coords:[45.55, 11.53], img:"img/24.jpg", analysis:"La fantascienza diventa realtà." },
 
             // USSR
-            { id:"ussr_mo", continente:"USSR", nazione:"USSR", citta:"Moscow", giornale:"Izvestia", coords:[55.75, 37.61], img:"img/51.png", analisi:"Acknowledges the feat while stripping away the 'space race' victory narrative.", visual: "The news is placed 'below the fold' or in secondary positions; images are small and utilitarian.", tone: "Strictly factual and bureaucratic; avoids any language that could be seen as celebrating the US." },
-            { id:"ussr_le", continente:"USSR", nazione:"USSR", citta:"Leningrad", giornale:"Zemlya", coords:[59.93, 30.33], img:"img/52.png", analisi:"Framing the landing as scientific progress rather than a geopolitical win.", visual: "Heavy text columns with technical diagrams. The 'Moon' is a scientific object, not a heroic destination.", tone: "Technical and clinical, emphasizing the mechanics of flight over the drama of the landing." },
-            { id:"ussr_no", continente:"USSR", nazione:"USSR", citta:"Novosibirsk", giornale:"Pravda", coords:[55.00, 82.93], img:"img/53.jpg", analisi:"Emphasizing collective scientific achievement while avoiding praise of the US political system.", visual: "Rigid, official state layout where the Moon landing must compete with domestic agricultural news.", tone: "Formal and ideological; frames the event as a victory for 'human science' in a general sense." },
+            { id:"ussr_mo", continent:"USSR", country:"USSR", city:"Moscow", newspaper:"Izvestia", coords:[55.75, 37.61], img:"img/51.png", analysis:"Acknowledges the feat while stripping away the 'space race' victory narrative.", visual: "The news is placed 'below the fold' or in secondary positions; images are small and utilitarian.", tone: "Strictly factual and bureaucratic; avoids any language that could be seen as celebrating the US." },
+            { id:"ussr_le", continent:"USSR", country:"USSR", city:"Leningrad", newspaper:"Zemlya", coords:[59.93, 30.33], img:"img/52.png", analysis:"Framing the landing as scientific progress rather than a geopolitical win.", visual: "Heavy text columns with technical diagrams. The 'Moon' is a scientific object, not a heroic destination.", tone: "Technical and clinical, emphasizing the mechanics of flight over the drama of the landing." },
+            { id:"ussr_no", continent:"USSR", country:"USSR", city:"Novosibirsk", newspaper:"Pravda", coords:[55.00, 82.93], img:"img/53.jpg", analysis:"Emphasizing collective scientific achievement while avoiding praise of the US political system.", visual: "Rigid, official state layout where the Moon landing must compete with domestic agricultural news.", tone: "Formal and ideological; frames the event as a victory for 'human science' in a general sense." },
 
             // ASIA / OCEANIA / OTHERS
-            { id:"cn", continente:"Asia", nazione:"China", analisi:"In 1969, China largely ignored the moon landing for ideological and domestic reasons: in the midst of the Cultural Revolution, Mao Zedong’s regime refrained from celebrating a success achieved by its arch-enemy, the 'imperialist' United States, preferring instead to downplay the news or dismiss it as propaganda. Furthermore, the absence of diplomatic relations between Beijing and Washington and the weakness of China’s space program at the time—hampered by political instability—made the Moon a technologically and politically out-of-reach goal.", coords:[39.90, 116.40] },
-            { id:"nz", continente:"Oceania", nazione:"New Zealand", citta:"Auckland", giornale:"Auckland Star", coords:[-36.84, 174.76], img:"img/7.jpg", analisi:"Man's Walk on the Moon." }
+            { id:"cn", continent:"Asia", country:"China", analysis:"In 1969, China largely ignored the moon landing for ideological and domestic reasons: in the midst of the Cultural Revolution, Mao Zedong’s regime refrained from celebrating a success achieved by its arch-enemy, the 'imperialist' United States, preferring instead to downplay the news or dismiss it as propaganda. Furthermore, the absence of diplomatic relations between Beijing and Washington and the weakness of China’s space program at the time—hampered by political instability—made the Moon a technologically and politically out-of-reach goal.", coords:[39.90, 116.40] },
+            { id:"nz", continent:"Oceania", country:"New Zealand", city:"Auckland", newspaper:"Auckland Star", coords:[-36.84, 174.76], img:"img/7.jpg", analysis:"Man's Walk on the Moon." }
         ];
 
         const markers = L.featureGroup();
-        testate.forEach(t => {
+        publications.forEach(t => {
             let color;
-            if (t.nazione === "USA") color = "var(--usa-red)";
-            else if (t.nazione === "USSR") color = "var(--urss-yellow)";
-            else if (t.nazione === "UK") color = "var(--uk-purple)";
-            else if (t.nazione === "China") color = "var(--china-green)";
+            if (t.country === "USA") color = "var(--usa-red)";
+            else if (t.country === "USSR") color = "var(--ussr-yellow)";
+            else if (t.country === "UK") color = "var(--uk-purple)";
+            else if (t.country === "China") color = "var(--china-green)";
             else color = "var(--others-gray)";
 
             const m = L.circleMarker(t.coords, { radius: 7, fillColor: color, stroke: false, fillOpacity: 0.9 }).addTo(markers);
             
-            if (t.nazione === "China") {
-                m.bindPopup(`<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;">${t.analisi}</div>`);
+            if (t.country === "China") {
+                m.bindPopup(`<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;">${t.analysis}</div>`);
             } else {
                 m.bindPopup(`
                     <div style="width:180px">
-                        <strong>${t.giornale}</strong><br><small>${t.citta}, ${t.nazione}</small>
+                        <strong>${t.newspaper}</strong><br><small>${t.city}, ${t.country}</small>
                         <div class="popup-img-container"><img src="${t.img}" class="zoomable"></div>
                     </div>
                 `);
             }
         });
 
-        function creaPonte(id1, id2) {
-            const t1 = testate.find(t => t.id === id1);
-            const t2 = testate.find(t => t.id === id2);
+        function createBridge(id1, id2) {
+            const t1 = publications.find(t => t.id === id1);
+            const t2 = publications.find(t => t.id === id2);
             
             // Fallback safety if id changed
             if(!t1 || !t2) return; 
@@ -375,24 +375,24 @@
             curva.on('click', () => {
                 const getColor = (n) => {
                     if (n === "USA") return "var(--usa-red)";
-                    if (n === "USSR") return "var(--urss-yellow)";
+                    if (n === "USSR") return "var(--ussr-yellow)";
                     if (n === "UK") return "var(--uk-purple)";
                     return "#888";
                 };
-                const c1 = getColor(t1.nazione);
-                const c2 = getColor(t2.nazione);
+                const c1 = getColor(t1.country);
+                const c2 = getColor(t2.country);
 
                 const renderCard = (t, color) => `
                     <div class="card-header">
                         <div class="header-left">
                             <div class="dot" style="background:${color}"></div>
-                            <span class="journal-name">${t.giornale}</span>
+                            <span class="journal-name">${t.newspaper}</span>
                         </div>
                     </div>
                     <div class="image-box"><img src="${t.img}"></div>
                     <div class="card-footer">
-                        <div class="footer-label" style="color:${color}">${t.giornale} • ${t.citta}, ${t.nazione}</div>
-                        <div class="footer-desc"><strong>Analysis</strong>${t.analisi}</div>
+                        <div class="footer-label" style="color:${color}">${t.newspaper} • ${t.city}, ${t.country}</div>
+                        <div class="footer-desc"><strong>Analysis</strong>${t.analysis}</div>
                         ${t.visual ? `<div class="footer-desc"><strong>Visual Hierarchy</strong>${t.visual}</div>` : ''}
                         ${t.tone ? `<div class="footer-desc"><strong>Rhetorical Tone</strong>${t.tone}</div>` : ''}
                     </div>`;
@@ -401,7 +401,7 @@
                 b1.style.borderTopColor = c1;
                 b1.innerHTML = renderCard(t1, c1);
 
-                const b2 = document.getElementById('box-urss');
+                const b2 = document.getElementById('box-ussr');
                 b2.style.borderTopColor = c2;
                 b2.innerHTML = renderCard(t2, c2);
 
@@ -409,11 +409,11 @@
             });
         }
 
-        // Collegamenti significativi: contrasto visivo e politico (USA vs USSR)
-        creaPonte("id", "ussr_le");     // Idaho (Titolo a tutta pagina "MAN ON MOON") vs Leningrado (Focus tecnico)
-        creaPonte("us_gen", "ussr_no"); // Washington (Politica "WALK ON MOON") vs Novosibirsk (Prima spedizione)
-        creaPonte("uk", "ar");          // Londra (Sollievo "Breathing again") vs Arkansas (Celebrazione globale "Earthmen Unite")
-        creaPonte("uk_2", "ussr_mo");   // Manchester (The Guardian) vs Moscow (Izvestia)
+        // Significant connections: visual and political contrast (USA vs USSR)
+        createBridge("id", "ussr_le");     // Idaho (Full page title "MAN ON MOON") vs Leningrad (Technical focus)
+        createBridge("us_gen", "ussr_no"); // Washington (Politics "WALK ON MOON") vs Novosibirsk (First expedition)
+        createBridge("uk", "ar");          // London (Relief "Breathing again") vs Arkansas (Global celebration "Earthmen Unite")
+        createBridge("uk_2", "ussr_mo");   // Manchester (The Guardian) vs Moscow (Izvestia)
 
         markers.addTo(map);
         map.fitBounds(markers.getBounds().pad(0.1));
@@ -427,7 +427,7 @@
             }
         });
 
-        function chiudiConfronto() { document.getElementById('comparison-overlay').style.display = 'none'; }
+        function closeComparison() { document.getElementById('comparison-overlay').style.display = 'none'; }
         
         /* --- PURPOSE MODAL LOGIC --- */
         const purposeBtn = document.getElementById('purpose-btn');
@@ -448,7 +448,7 @@
         });
 
         // Global Escape Key Handler
-        window.addEventListener('keydown', (e) => { if(e.key === "Escape") { chiudiConfronto(); document.getElementById('lightbox').style.display = 'none'; closePurposeModal(); }});
+        window.addEventListener('keydown', (e) => { if(e.key === "Escape") { closeComparison(); document.getElementById('lightbox').style.display = 'none'; closePurposeModal(); }});
 
         /* --- ARCHIVE LOGIC --- */
         function showView(viewName) {
@@ -472,25 +472,25 @@
             const container = document.getElementById('archive-view');
             if(container.innerHTML.trim() !== "") return; 
 
-            const continents = [...new Set(testate.map(t => t.continente))];
+            const continents = [...new Set(publications.map(t => t.continent))];
             let fullHtml = "";
             
             continents.forEach(cont => {
-                const items = testate.filter(t => t.continente === cont);
+                const items = publications.filter(t => t.continent === cont);
                 if(items.filter(t => t.img).length === 0) return;
 
                 let html = `<div class="continent-block"><div class="continent-title">${cont}</div>`;
                 
-                const countries = [...new Set(items.map(i => i.nazione))];
+                const countries = [...new Set(items.map(i => i.country))];
                 countries.forEach(country => {
-                    const cItems = items.filter(t => t.nazione === country && t.img);
+                    const cItems = items.filter(t => t.country === country && t.img);
                     if(cItems.length === 0) return;
 
                     html += `<div class="country-block"><div class="country-title">${country}</div><div class="grid-container">`;
                     cItems.forEach(t => {
                         html += `<div class="grid-item" onclick="document.getElementById('lightbox-img').src='${t.img}'; document.getElementById('lightbox').style.display='flex'">
                                     <div class="grid-img-wrapper"><img src="${t.img}"></div>
-                                    <div class="grid-info"><div class="grid-journal">${t.giornale}</div><div class="grid-city">${t.citta}</div></div>
+                                    <div class="grid-info"><div class="grid-journal">${t.newspaper}</div><div class="grid-city">${t.city}</div></div>
                                  </div>`;
                     });
                     html += `</div></div>`;
