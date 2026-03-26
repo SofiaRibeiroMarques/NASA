@@ -386,14 +386,22 @@
             // Fallback safety if id changed
             if(!t1 || !t2) return; 
 
-            const curva = L.curve(['M', t1.coords, 'Q', [t1.coords[0]+5, (t1.coords[1]+t2.coords[1])/2], t2.coords], {
-                color: 'var(--bridge-blue)', weight: 1.5, opacity: 0.4, fill: false
+            const pathData = ['M', t1.coords, 'Q', [t1.coords[0]+5, (t1.coords[1]+t2.coords[1])/2], t2.coords];
+
+            // Visible curve (thin)
+            const visibleCurva = L.curve(pathData, {
+                color: 'var(--bridge-blue)', weight: 1.5, opacity: 0.4, fill: false, interactive: false
             }).addTo(map);
 
-            curva.on('mouseover', function() { this.setStyle({opacity:1, weight:2, color:'#fff'}); });
-            curva.on('mouseout', function() { this.setStyle({opacity:0.4, weight:1.5, color:'var(--bridge-blue)'}); });
+            // Interaction area (invisible but wide for easy clicking)
+            const interactionCurva = L.curve(pathData, {
+                color: 'transparent', weight: 20, opacity: 0, fill: false, interactive: true
+            }).addTo(map);
+
+            interactionCurva.on('mouseover', () => { visibleCurva.setStyle({opacity:1, weight:2, color:'#fff'}); });
+            interactionCurva.on('mouseout', () => { visibleCurva.setStyle({opacity:0.4, weight:1.5, color:'var(--bridge-blue)'}); });
             
-            curva.on('click', () => {
+            interactionCurva.on('click', () => {
                 const getColor = (n) => {
                     if (n === "USA") return "var(--usa-red)";
                     if (n === "USSR") return "var(--ussr-yellow)";
