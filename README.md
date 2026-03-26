@@ -13,7 +13,6 @@ Autore: Sofia Marques \
 Il sito visualizza come lo sbarco sulla Luna sia stato narrato dai giornali di diversi paesi il 21 luglio 1969.
 Piuttosto che funzionare come un semplice archivio, la piattaforma analizza le scelte editoriali fatte dalle diverse testate.
 Attraverso una mappa interattiva, gli utenti possono esplorare le prime pagine dei quotidiani di vari paesi.
-
 Attraverso visualizzazioni dei dati, il progetto mostra come lo stesso evento storico sia stato interpretato e raccontato in modi diversi a seconda del contesto culturale e politico.
 L’esperienza integra inoltre un archivio di telecronache storiche e comunicazioni audio tra gli astronauti e Houston, sincronizzate con i momenti chiave dell’evento, permettendo di confrontare l’evento reale con la narrazione costruita dai media.
 Il progetto diventa così non solo un archivio, ma un’indagine interattiva su come i media globali hanno costruito il significato di uno degli eventi più iconici della storia contemporanea.
@@ -25,7 +24,7 @@ Il progetto diventa così non solo un archivio, ma un’indagine interattiva su 
 
 
 ## Design dell’interfaccia e modalità di interazione
-(indicare qual'è il tipo di layout che ho utilizzato, come ho strutturato la pagina(es. interazione di click e passaggio da pagina a pagina con un menu), come si interagisce con le diverse pagine. allegare delle immagini/video per mostrare l'interfaccia(almeno 1 video).)
+(indicare qual'è il tipo di layout che ho utilizzato, come ho strutturato la pagina(es. interazione di click e passaggio da pagina a pagina con un menu), come si interagisce con le diverse pagine. allegare delle immagini/video per mostrare l'interfaccia(almeno 1 video))
 
 
 
@@ -59,6 +58,8 @@ image.src = url;
 
 
 ## Target e contesto d’uso
+Il progetto è rivolto principalmente a studenti, ricercatori, storici che studiano media e giornalismo interessati ad analizzare come i media di diversi paesi hanno interpretato lo sbarco sulla Luna.
+
 (... contesto ideale per fruire della pagina.)
 
 
