@@ -148,12 +148,12 @@
         }
         .continent-block { margin-bottom: 60px; }
         .continent-title { 
-            font-size: 18px; font-weight: 700; letter-spacing: 3px; color: #333; 
-            border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 25px; 
+            font-size: 18px; font-weight: 500; letter-spacing: 3px; color: #333; 
+            border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 25px; 
             text-transform: uppercase;
         }
         .country-block { margin-bottom: 30px; }
-        .country-title { font-size: 14px; font-weight: 600; color: #555; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1.5px; border-left: 3px solid #ccc; padding-left: 10px; }
+        .country-title { font-size: 14px; font-weight: 500; color: #555; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1.5px; border-left: 2px solid #ccc; padding-left: 10px; }
         .grid-container {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px;
         }
@@ -357,8 +357,6 @@
                 `);
             }
         });
-        markers.addTo(map);
-        map.fitBounds(markers.getBounds().pad(0.1));
 
         function creaPonte(id1, id2) {
             const t1 = testate.find(t => t.id === id1);
@@ -416,6 +414,9 @@
         creaPonte("us_gen", "ussr_no"); // Washington (Politica "WALK ON MOON") vs Novosibirsk (Prima spedizione)
         creaPonte("uk", "ar");          // Londra (Sollievo "Breathing again") vs Arkansas (Celebrazione globale "Earthmen Unite")
         creaPonte("uk_2", "ussr_mo");   // Manchester (The Guardian) vs Moscow (Izvestia)
+
+        markers.addTo(map);
+        map.fitBounds(markers.getBounds().pad(0.1));
 
         document.addEventListener('click', function (e) {
             if (e.target.tagName === 'IMG' && (e.target.closest('.popup-img-container') || e.target.closest('.image-box'))) {
