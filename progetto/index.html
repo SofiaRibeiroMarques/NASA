@@ -137,6 +137,24 @@
         .close-btn { position: fixed; top: 60px; right: 40px; background: rgba(230,230,230,0.8); border: 1px solid #999; padding: 10px 20px; color: #333; cursor: pointer; font-size: 11px; letter-spacing: 2px; z-index: 10001; transition: all 0.3s; }
         .close-btn:hover { background: #333; color: #fff; border-color: #333; }
 
+        /* --- MAP INSTRUCTIONS --- */
+        #map-instructions {
+            position: absolute;
+            top: 110px;
+            left: 25px;
+            z-index: 1000;
+            background: rgba(10, 10, 11, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 12px 18px;
+            border: 1px solid #252520;
+            color: #aaa;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            line-height: 1.8;
+            pointer-events: none;
+
+        }
+
         .leaflet-popup-content-wrapper { background: #111; color: white; border-radius: 0; border: 1px solid #444; }
         .leaflet-popup-tip { background: #111; }
 
@@ -191,26 +209,24 @@
             position: fixed;
             top: auto;
             bottom: 30px;
-            left: 20px;
-            width: 30px;
-            height: 30px;
-            background: #fff;
-            border: 1px solid #ccc;
-            border-radius: 50%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            color: #555;
-            font-size: 16px;
-            font-weight: bold;
+            left: 25px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 10px 20px;
+            border: 1px solid #252520;
+            color: #454545;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
             cursor: pointer;
-            z-index: 4000;
-            transition: all 0.2s;
-            font-family: Arial, Helvetica, sans-serif;
+            z-index: 11000;
+            transition: all 0.3s;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
         }
         #purpose-btn:hover {
-            transform: scale(1.05);
-            background: #333;
-            color: #fff;
-            border-color: #333;
+            background: #dddddd;
+            color: #000;
+            border-color: #000000;
         }
 
         #purpose-overlay {
@@ -257,6 +273,11 @@
 
     <div id="map"></div>
 
+    <div id="map-instructions">
+        • Click on markers to view newspaper front pages<br>
+        • Click on connecting lines to compare perspectives
+    </div>
+
     <div id="comparison-overlay">
         <button class="close-btn" onclick="closeComparison()">Close</button>
         <div class="comparison-container">
@@ -266,7 +287,7 @@
         </div>
     </div>
 
-    <button id="purpose-btn">?</button>
+    <button id="purpose-btn">Purpose</button>
 
     <div id="purpose-overlay">
         <div id="purpose-modal">
@@ -457,8 +478,10 @@
 
             document.getElementById('archive-view').style.display = 'none';
             document.getElementById('video-view').style.display = 'none';
+            document.getElementById('map-instructions').style.display = 'none';
 
             if(viewName === 'map') {
+                document.getElementById('map-instructions').style.display = 'block';
             } else if(viewName === 'archive') {
                 renderArchive();
                 document.getElementById('archive-view').style.display = 'block';
