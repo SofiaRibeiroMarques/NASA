@@ -82,16 +82,16 @@
         #comparison-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(230, 230, 230, 0.98); backdrop-filter: blur(12px);
-            align-items: center; justify-content: center; z-index: 9999;
+            align-items: flex-start; justify-content: center; z-index: 9999;
             animation: fadeIn 0.4s ease;
             overflow-y: auto;
-            padding: 80px 0;
+            padding: 60px 0;
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .comparison-container {
-            display: flex; align-items: stretch; width: 90%; max-width: 1000px; position: relative;
+            display: flex; align-items: stretch; width: 94%; max-width: 1050px; position: relative;
         }
 
         .newspaper-card {
@@ -112,7 +112,7 @@
         .journal-name { font-weight: 600; font-size: 15px; color: #222; }
 
         .image-box {
-            height: 42vh; background: #f4f4f4; display: flex;
+            height: 55vh; background: #f4f4f4; display: flex;
             align-items: flex-start; justify-content: center; position: relative; border-bottom: 1px solid #eee;
         }
         .image-box img { width: 100%; height: 100%; object-fit: contain; object-position: top; cursor: zoom-in; }
@@ -306,6 +306,7 @@
 
             // EUROPE
             { id:"uk", continente:"Europe", nazione:"UK", citta:"London", giornale:"Daily Mirror", coords:[51.50, -0.12], img:"img/10.jpeg", analisi:"Focuses on the global relief and the shared human stake in the mission's safety.", visual: "Tabloid style with high-contrast, dramatic photography focusing on the faces of the astronauts.", tone: "Intimate and emotional; the headline 'We're breathing again' speaks to the tension of the era." },
+            { id:"uk_2", continente:"Europe", nazione:"UK", citta:"London", giornale:"The Guardian", coords:[51.51, -0.13], img:"img/60.jpeg", analisi:"A broadsheet perspective on the lunar landing, emphasizing the scientific and historical significance of the mission.", visual: "Traditional broadsheet layout with detailed technical reports and a central focus on the lunar landscape.", tone: "Measured and historical, framing the event as a monumental leap for science and mankind." },
             { id:"fr_mul", continente:"Europe", nazione:"France", citta:"Mulhouse", giornale:"L'Alsace", coords:[47.75, 7.33], img:"img/30.jpg", analisi:"FANTASTIC." },
             { id:"fr_par", continente:"Europe", nazione:"France", citta:"Paris", giornale:"Le Figaro", coords:[48.85, 2.35], img:"img/33.jpg", analisi:"Ils ont marché sur la lune." },
             { id:"be", continente:"Europe", nazione:"Belgium", citta:"Brussels", giornale:"Le Soir", coords:[50.85, 4.35], img:"img/16.jpeg", analisi:"L'homme marche sur la lune." },
@@ -415,6 +416,7 @@
         creaPonte("id", "ussr_le");     // Idaho (Titolo a tutta pagina "MAN ON MOON") vs Leningrado (Focus tecnico)
         creaPonte("us_gen", "ussr_no"); // Washington (Politica "WALK ON MOON") vs Novosibirsk (Prima spedizione)
         creaPonte("uk", "ar");          // Londra (Sollievo "Breathing again") vs Arkansas (Celebrazione globale "Earthmen Unite")
+        creaPonte("uk_2", "ussr_mo");   // London (The Guardian) vs Moscow (Izvestia)
 
         document.addEventListener('click', function (e) {
             if (e.target.tagName === 'IMG' && (e.target.closest('.popup-img-container') || e.target.closest('.image-box'))) {
