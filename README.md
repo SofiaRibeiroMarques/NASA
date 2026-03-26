@@ -4,9 +4,9 @@ Docenti: A. Gysin, G. Profeta
 
 Progetto 1: La conquista dello spazio
 
-# Titolo progetto
-Autore: Nome Cognome \
-[Titolo progetto](https://github.com/ixd-supsi/2026/tree/main/esempi/es06_array_7)
+# MOONPRINT
+Autore: Sofia Marques \
+[MOONPRINT](https://github.com/ixd-supsi/2026/tree/main/esempi/es06_array_7)
 
 
 ## Introduzione e tema
