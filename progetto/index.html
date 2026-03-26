@@ -166,6 +166,23 @@
         .grid-journal { font-weight: bold; font-size: 14px; color: #111; margin-bottom: 4px; }
         .grid-city { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
 
+        /* ─── VIDEO VIEW ─── */
+        #video-view {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #e6e6e6; z-index: 9000; overflow-y: auto;
+            padding: 90px 10% 40px; box-sizing: border-box;
+        }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+        .video-card { background: #fff; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background: #000; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .video-title { margin-top: 15px; font-size: 13px; font-weight: 700; color: #333; letter-spacing: 0.5px; text-transform: uppercase; }
+        .nasa-card { grid-column: 1 / -1; background: #111; color: #fff; padding: 40px; text-align: center; margin-top: 20px; }
+        .nasa-card h3 { font-size: 18px; letter-spacing: 2px; margin-bottom: 10px; }
+        .nasa-card p { font-size: 14px; color: #888; margin-bottom: 25px; }
+        .nasa-btn { display: inline-block; padding: 12px 30px; border: 1px solid #fff; color: #fff; text-decoration: none; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; transition: all 0.3s; }
+        .nasa-btn:hover { background: #fff; color: #000; }
+
         /* --- PURPOSE MODAL --- */
         #purpose-btn {
             position: fixed;
@@ -221,11 +238,15 @@
   <div>
     <button class="nav-tab active" onclick="showView('map')">Map</button>
     <button class="nav-tab" onclick="showView('archive')">Newspapers</button>
+    <button class="nav-tab" onclick="showView('video')">Videos</button>
   </div>
 </nav>
 
     <!-- ARCHIVE -->
     <div id="archive-view"></div>
+
+    <!-- VIDEOS -->
+    <div id="video-view"></div>
 
     <div id="lightbox" onclick="this.style.display='none'">
         <img id="lightbox-img" src="" alt="Zoom">
@@ -248,7 +269,7 @@
         <div id="purpose-modal">
             <h2>MoonPrint</h2>
             <p>This interactive archive explores how global media reported the Apollo 11 moon landing in July 1969. It visualizes the geopolitical narratives of the Cold War, contrasting the triumphant tone of the West with the more subdued, technical coverage from the Soviet bloc.</p>
-            <p>Use the <strong>Map</strong> to see the direct comparisons between rival nations or browse the <strong>Newspapers</strong> archive to see the front pages for yourself.</p>
+            <p>Use the <strong>Map</strong> to see direct comparisons, browse the <strong>Newspapers</strong> for front pages, or watch historical <strong>Videos</strong> of the landing.</p>
             <button class="close-purpose-btn">Close</button>
         </div>
     </div>
@@ -420,11 +441,16 @@
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
 
+            document.getElementById('archive-view').style.display = 'none';
+            document.getElementById('video-view').style.display = 'none';
+
             if(viewName === 'map') {
-                document.getElementById('archive-view').style.display = 'none';
-            } else {
+            } else if(viewName === 'archive') {
                 renderArchive();
                 document.getElementById('archive-view').style.display = 'block';
+            } else if(viewName === 'video') {
+                renderVideos();
+                document.getElementById('video-view').style.display = 'block';
             }
         }
 
@@ -459,6 +485,40 @@
                 fullHtml += html;
             });
             container.innerHTML = fullHtml;
+        }
+
+        function renderVideos() {
+            const container = document.getElementById('video-view');
+            if(container.innerHTML.trim() !== "") return;
+
+            container.innerHTML = `
+                <div class="continent-title">Video Archives</div>
+                <div class="video-grid">
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/cwZb2mqId0A" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-title">Neil Armstrong - First Moon Landing 1969</div>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/S9HdPi9Ikhk" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-title">Restored Apollo 11 Moonwalk - Original NASA EVA Mission Video</div>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/hzApsIPHRwo" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-title">WATCH: Footage from the 1969 Apollo 11 moon landing</div>
+                    </div>
+                    <div class="nasa-card">
+                        <h3>NASA's videos</h3>
+                        <p>Access the official NASA digital archive for high-definition footage of the Apollo 11 mission and beyond.</p>
+                        <a href="https://plus.nasa.gov/?s=apollo+11" target="_blank" class="nasa-btn">Visit NASA Plus</a>
+                    </div>
+                </div>
+            `;
         }
     </script>
 </body>
