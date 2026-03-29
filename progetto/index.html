@@ -50,6 +50,8 @@
     border: none;
     background: none;
     border-right: 1px solid #252520;
+    text-decoration: none;
+    display: inline-block;
     transition: all 0.2s;
   }
   .nav-tab:hover, .nav-tab.active { color: var(--moon-hi); background: rgba(200,192,168,0.04); }
@@ -107,8 +109,6 @@
 
         .header-left { display: flex; align-items: center; gap: 10px; }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .dot-usa { background: var(--usa-red); }
-        .dot-ussr { background: var(--ussr-yellow); }
         .journal-name { font-weight: 600; font-size: 15px; color: #222; }
 
         .image-box {
@@ -164,24 +164,6 @@
         .close-btn { position: fixed; top: 60px; right: 40px; background: rgba(230,230,230,0.8); border: 1px solid #999; padding: 10px 20px; color: #333; cursor: pointer; font-size: 11px; letter-spacing: 2px; z-index: 10001; transition: all 0.3s; }
         .close-btn:hover { background: #333; color: #fff; border-color: #333; }
 
-        /* --- MAP INSTRUCTIONS --- */
-        #map-instructions {
-            position: absolute;
-            top: 110px;
-            left: 25px;
-            z-index: 1000;
-            background: rgba(10, 10, 11, 0.7);
-            backdrop-filter: blur(4px);
-            padding: 12px 18px;
-            border: 1px solid #252520;
-            color: #aaa;
-            font-size: 9px;
-            letter-spacing: 1.5px;
-            line-height: 1.8;
-            pointer-events: none;
-
-        }
-
         .leaflet-popup-content-wrapper { background: #111; color: white; border-radius: 0; border: 1px solid #444; }
         .leaflet-popup-tip { background: #111; }
 
@@ -193,22 +175,15 @@
         }
         .continent-block { margin-bottom: 60px; }
         .continent-title { 
-            font-size: 18px; font-weight: 500; letter-spacing: 3px; color: #333; 
-            border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 25px; 
-            text-transform: uppercase;
+            font-size: 18px; font-weight: 500; letter-spacing: 3px; color: #333; border-bottom: 1px solid #ccc; 
+            padding-bottom: 10px; margin-bottom: 25px; text-transform: uppercase;
         }
         .country-block { margin-bottom: 30px; }
         .country-title { font-size: 14px; font-weight: 500; color: #555; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1.5px; border-left: 2px solid #ccc; padding-left: 10px; }
         .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 15px;
-            align-items: start;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; align-items: start;
         }
-        .grid-item { 
-            cursor: pointer; transition: all 0.2s; position: relative; 
-            border: 2px solid transparent; padding: 5px; border-radius: 4px;
-        }
+        .grid-item { cursor: pointer; transition: all 0.2s; position: relative; border: 2px solid transparent; padding: 5px; border-radius: 4px; }
         .grid-item:hover { transform: translateY(-5px); }
         .grid-item.selected { border-color: var(--usa-red); background: rgba(192, 57, 43, 0.05); }
         
@@ -256,23 +231,6 @@
         .grid-analysis { font-size: 11px; color: #555; margin-top: 8px; line-height: 1.4; }
         .grid-analysis:first-of-type { border-top: 1px solid #ddd; padding-top: 8px; }
         .grid-analysis strong { color: #222; text-transform: uppercase; font-size: 9px; letter-spacing: 0.5px; display: block; margin-bottom: 2px; }
-
-        /* ─── VIDEO VIEW ─── */
-        #video-view {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #e6e6e6; z-index: 9000; overflow-y: auto;
-            padding: 50px 10% 40px; box-sizing: border-box;
-        }
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
-        .video-card { background: #fff; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background: #000; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .video-title { margin-top: 15px; font-size: 13px; font-weight: 700; color: #333; letter-spacing: 0.5px; text-transform: uppercase; }
-        .nasa-card { grid-column: 1 / -1; background: #111; color: #fff; padding: 40px; text-align: center; margin-top: 20px; }
-        .nasa-card h3 { font-size: 18px; letter-spacing: 2px; margin-bottom: 10px; }
-        .nasa-card p { font-size: 14px; color: #888; margin-bottom: 25px; }
-        .nasa-btn { display: inline-block; padding: 12px 30px; border: 1px solid #fff; color: #fff; text-decoration: none; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; transition: all 0.3s; }
-        .nasa-btn:hover { background: #fff; color: #000; }
 
         /* --- PURPOSE MODAL --- */
         #purpose-btn {
@@ -327,26 +285,18 @@
   <div>
     <button class="nav-tab active" onclick="showView('map')">Map</button>
     <button class="nav-tab" onclick="showView('archive')">Newspapers</button>
-    <button class="nav-tab" onclick="showView('video')">Videos</button>
+    <a href="https://plus.nasa.gov/?s=apollo+11" target="_blank" class="nav-tab">videos</a>
   </div>
 </nav>
 
     <!-- ARCHIVE -->
     <div id="archive-view"></div>
 
-    <!-- VIDEOS -->
-    <div id="video-view"></div>
-
     <div id="lightbox" onclick="this.style.display='none'">
         <img id="lightbox-img" src="" alt="Zoom">
     </div>
 
     <div id="map"></div>
-
-    <div id="map-instructions">
-        • Click on markers to view newspaper front pages<br>
-        • Click two markers to compare perspectives
-    </div>
 
     <div id="comparison-overlay">
         <button class="close-btn" onclick="closeComparison()">Close</button>
@@ -363,7 +313,11 @@
         <div id="purpose-modal">
             <h2>MoonPrint</h2>
             <p>This interactive archive explores how global media reported the Apollo 11 moon landing in July 1969. It visualizes the geopolitical narratives of the Cold War, contrasting the triumphant tone of the West with the more subdued, technical coverage from the Soviet bloc.</p>
-            <p>Use the <strong>Map</strong> to see direct comparisons, browse the <strong>Newspapers</strong> for front pages, or watch historical <strong>Videos</strong> of the landing.</p>
+            <p style="font-size: 14px; color: #555; line-height: 1.6; margin-top: 20px;">
+                <strong>Instructions:</strong><br>
+                • Click on map markers to view newspaper front pages.<br>
+                • Select two markers to compare different perspectives.
+            </p>
             <button class="close-purpose-btn">Close</button>
         </div>
     </div>
@@ -378,7 +332,6 @@
             maxBoundsViscosity: 1.0,
             bounceAtZoomLimits: false
         });
-        L.control.zoom({ position: 'bottomright' }).addTo(map);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
         const publications = [
@@ -428,11 +381,8 @@
         let selection = [];
 
         function getPubColor(t) {
-            if (t.country === "USA") return "var(--usa-red)";
-            if (t.country === "USSR") return "var(--ussr-yellow)";
-            if (t.country === "UK") return "var(--uk-purple)";
-            if (t.country === "China") return "var(--china-green)";
-            return "var(--others-gray)";
+            const colors = { USA: "var(--usa-red)", USSR: "var(--ussr-yellow)", UK: "var(--uk-purple)", China: "var(--china-green)" };
+            return colors[t.country] || "var(--others-gray)";
         }
 
         let currentImportanceFilter = 'all';
@@ -440,15 +390,7 @@
         const markers = L.featureGroup();
         publications.forEach(t => {
             const color = getPubColor(t);
-
-            const m = L.circleMarker(t.coords, { 
-                radius: 7, 
-                fillColor: color, 
-                stroke: true, 
-                color: '#fff', 
-                weight: 0, 
-                fillOpacity: 0.9 
-            }).addTo(markers);
+            const m = L.circleMarker(t.coords, { radius: 7, fillColor: color, stroke: true, color: '#fff', weight: 0, fillOpacity: 0.9 }).addTo(markers);
             
             m.pubData = t;
 
@@ -471,15 +413,10 @@
                 }
             });
 
-            if (t.country === "China") {
-                m.bindPopup(`<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;"><strong style="color:#eee; font-size:8px; display:block; margin-bottom:5px; text-transform:uppercase;">Analysis</strong>${t.analysis}</div>`);
-            } else {
-                m.bindPopup(`
-                    <div style="width:180px">
-                        <strong>${t.newspaper}</strong><br><small>${t.city}, ${t.country}</small>
-                        <div class="popup-img-container"><img src="${t.img}" class="zoomable"></div>
-                    </div>`);
-            }
+            const popupHtml = t.country === "China" 
+                ? `<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;"><strong style="color:#eee; font-size:8px; display:block; margin-bottom:5px; text-transform:uppercase;">Analysis</strong>${t.analysis}</div>`
+                : `<div style="width:180px"><strong>${t.newspaper}</strong><br><small>${t.city}, ${t.country}</small><div class="popup-img-container"><img src="${t.img}" class="zoomable"></div></div>`;
+            m.bindPopup(popupHtml);
         });
 
         const renderCard = (t, color) => `
@@ -502,17 +439,12 @@
                 </div>`;
 
         function openComparison(t1, t2) {
-            const c1 = getPubColor(t1);
-            const c2 = getPubColor(t2);
-
-            const b1 = document.getElementById('box-usa');
-            b1.style.borderTopColor = c1;
-            b1.innerHTML = renderCard(t1, c1);
-
-            const b2 = document.getElementById('box-ussr');
-            b2.style.borderTopColor = c2;
-            b2.innerHTML = renderCard(t2, c2);
-
+            [[t1, 'box-usa'], [t2, 'box-ussr']].forEach(([t, id]) => {
+                const color = getPubColor(t);
+                const el = document.getElementById(id);
+                el.style.borderTop = `3px solid ${color}`;
+                el.innerHTML = renderCard(t, color);
+            });
             document.getElementById('comparison-overlay').style.display = 'flex';
         }
 
@@ -520,22 +452,17 @@
             const t = publications.find(p => p.id === pubId);
             const color = getPubColor(t);
             const b = document.getElementById('detail-card');
-            b.style.borderTopColor = color;
+            b.style.borderTop = `3px solid ${color}`;
             b.innerHTML = renderCard(t, color);
             document.getElementById('detail-overlay').style.display = 'flex';
         }
-
-        function closeDetail() {
-            document.getElementById('detail-overlay').style.display = 'none';
-        }
+        const closeDetail = () => document.getElementById('detail-overlay').style.display = 'none';
 
         function toggleGridSelection(pubId, event) {
             event.stopPropagation();
             const pub = publications.find(p => p.id === pubId);
-            
-            if (selection.includes(pub)) {
-                selection = selection.filter(p => p !== pub);
-            } else {
+            if (selection.includes(pub)) selection = selection.filter(p => p !== pub);
+            else {
                 selection.push(pub);
                 if (selection.length === 2) {
                     openComparison(selection[0], selection[1]);
@@ -591,22 +518,9 @@
 
         /* --- ARCHIVE LOGIC --- */
         function showView(viewName) {
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-
-            document.getElementById('archive-view').style.display = 'none';
-            document.getElementById('video-view').style.display = 'none';
-            document.getElementById('map-instructions').style.display = 'none';
-
-            if(viewName === 'map') {
-                document.getElementById('map-instructions').style.display = 'block';
-            } else if(viewName === 'archive') {
-                renderArchive();
-                document.getElementById('archive-view').style.display = 'block';
-            } else if(viewName === 'video') {
-                renderVideos();
-                document.getElementById('video-view').style.display = 'block';
-            }
+            document.querySelectorAll('.nav-tab[onclick]').forEach(t => t.classList.toggle('active', t.getAttribute('onclick').includes(viewName)));
+            document.getElementById('archive-view').style.display = viewName === 'archive' ? 'block' : 'none';
+            if (viewName === 'archive') renderArchive();
         }
 
         function renderArchive() {
@@ -665,40 +579,6 @@
                 fullHtml += html;
             });
             container.insertAdjacentHTML('beforeend', fullHtml);
-        }
-
-        function renderVideos() {
-            const container = document.getElementById('video-view');
-            if(container.innerHTML.trim() !== "") return;
-
-            container.innerHTML = `
-                <div class="continent-title">Video Archives</div>
-                <div class="video-grid">
-                    <div class="video-card">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/cwZb2mqId0A" allowfullscreen></iframe>
-                        </div>
-                        <div class="video-title">Neil Armstrong - First Moon Landing 1969</div>
-                    </div>
-                    <div class="video-card">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/S9HdPi9Ikhk" allowfullscreen></iframe>
-                        </div>
-                        <div class="video-title">Restored Apollo 11 Moonwalk - Original NASA EVA Mission Video</div>
-                    </div>
-                    <div class="video-card">
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/hzApsIPHRwo" allowfullscreen></iframe>
-                        </div>
-                        <div class="video-title">WATCH: Footage from the 1969 Apollo 11 moon landing</div>
-                    </div>
-                    <div class="nasa-card">
-                        <h3>NASA's videos</h3>
-                        <p>Access the official NASA digital archive for high-definition footage of the Apollo 11 mission and beyond.</p>
-                        <a href="https://plus.nasa.gov/?s=apollo+11" target="_blank" class="nasa-btn">Visit NASA Plus</a>
-                    </div>
-                </div>
-            `;
         }
     </script>
 
