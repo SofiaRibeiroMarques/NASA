@@ -113,10 +113,10 @@
 
         .image-box {
             height: 55vh; min-height: 200px; background: #f4f4f4; display: flex;
-            align-items: flex-start; justify-content: center; position: relative; border-bottom: 1px solid #eee;
+            align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #eee;
             overflow-y: auto;
         }
-        .image-box img { width: 100%; height: 100%; object-fit: contain; object-position: top; cursor: zoom-in; }
+        .image-box img { width: 100%; height: 100%; object-fit: contain; object-position: center; cursor: zoom-in; }
 
         .card-footer { padding: 0; flex: 1; display: flex; flex-direction: column; border-top: 1px solid #eee; overflow: hidden; }
         .footer-label { padding: 20px 25px 8px; font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; border-bottom: 1px solid #eee; flex-shrink: 0; background: #fff; }
@@ -232,6 +232,36 @@
         .grid-analysis:first-of-type { border-top: 1px solid #ddd; padding-top: 8px; }
         .grid-analysis strong { color: #222; text-transform: uppercase; font-size: 9px; letter-spacing: 0.5px; display: block; margin-bottom: 2px; }
 
+        /* --- MAP LEGEND --- */
+        #map-legend {
+            position: fixed;
+            bottom: 30px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 12px 15px;
+            border: 1px solid #252520;
+            z-index: 1000;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .legend-title {
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #454545;
+            margin-bottom: 2px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 9px; color: #333; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .legend-note { 
+            margin-top: 4px; font-size: 10px; color: #666; font-style: italic; 
+            border-top: 1px solid rgba(0,0,0,0.1); padding-top: 6px; max-width: 150px; line-height: 1.2;
+        }
+
         /* --- PURPOSE MODAL --- */
         #purpose-btn {
             position: fixed;
@@ -298,6 +328,17 @@
 
     <div id="map"></div>
 
+    <!-- MAP LEGEND -->
+    <div id="map-legend">
+        <div class="legend-title">World Powers 1969</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--usa-red)"></div><span>USA</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--ussr-yellow)"></div><span>USSR</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--uk-purple)"></div><span>UK</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--china-green)"></div><span>China</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--others-gray)"></div><span>Others</span></div>
+        <div class="legend-note">The colored dots are the powers of the era</div>
+    </div>
+
     <div id="comparison-overlay">
         <button class="close-btn" onclick="closeComparison()">Close</button>
         <div class="comparison-container">
@@ -362,7 +403,7 @@
             { id:"it_mil", continent:"Europe", country:"Italy", city:"Milan", newspaper:"Corriere della Sera", coords:[45.46, 9.19], img:"img/35.jpg", analysis:"Italy’s main daily newspaper treats the event as a philosophical turning point, emphasizing the end of an era and the start of a new one. Coverage is deep and reflective, focusing on existential implications and cultural impact, positioning the landing as an epochal moment in human thought.", visual: "Masterful layout with a wide lunar panorama across the top, creating a sense of vastness. The ’L’UOMO È SULLA LUNA’ headline is imposing, balanced by images of the module and astronauts that mix grandeur with concrete details.", tone: "Elegiac and profound, underlining the historical weight as the end of spatial prehistory. The tone is solemn and contemplative, inviting reflection on the human condition and our place in the universe.", importance: 1, main_headline: "L’UOMO È SULLA LUNA", headline_description: "Large central headline.", tone_category: "informative", language_category: "pragmatic", main_headline_en: "MAN IS ON THE MOON" },
             { id:"it_mil2", continent:"Europe", country:"Italy", city:"Milan", newspaper:"Corriere d’Inf.", coords:[45.48, 9.20], img:"img/4.jpg", analysis:"An extraordinary edition focused on news speed and the event’s immediacy. The paper captures the take-off’s adrenaline, conveying a sense of direct participation. Coverage is concise but high-impact, designed to inform readers quickly about the start of a historic feat.", visual: "Bold black headlines on a white background with ’Missione Luna: PARTITI!’ (Moon Mission: OFF!) dominating. Minimal secondary images to maintain focus on the text and urgency. The layout is essential but effective.", tone: "Urgently informative, capturing the launch’s adrenaline. The tone is hurried and direct, transmitting a sense of participation as if the reader were present at the launch site.", importance: 1, main_headline: "Missione Luna: PARTITI!", headline_description: "High importance but not exclusive.", tone_category: "informative", language_category: "pragmatic", main_headline_en: "Moon Mission: DEPARTED!" },
             { id:"it_tur", continent:"Europe", country:"Italy", city:"Turin", newspaper:"Stampa Sera", coords:[45.07, 7.68], img:"img/5.jpg", analysis:"Reflects Turin’s industrial and pragmatic spirit, viewing the mission as an engineering triumph and human capacity to overcome complex technical challenges. Focus is on practical realization, celebrating the ingenuity behind the feat with admiration.", visual: "Focus on human figures and the LEM module, with a prominent image of an astronaut in the foreground. The “CAMMINANO!” (THEY WALK!) headline is large and direct, flanked by text blocks narrating the lunar walk details.", tone: "Sober but admired, focusing on the astronauts’ physical action. The tone is respectful toward human ingenuity, emphasizing the mission’s precision and complexity, making it accessible to a non-specialist audience.", importance: 1, main_headline: "CAMMINANO!", headline_description: "Above-the-fold coverage.", tone_category: "informative", language_category: "pragmatic", main_headline_en: "THEY ARE WALKING!" },
-            { id:"it_bol", continent:"Europe", country:"Italy", city:"Bologna", newspaper:"Resto del Carlino", coords:[44.49, 11.34], img:"img/2.jpg", analysis:"Uses classical rhetoric to describe an avant-garde event, linking scientific progress to wonder and dreams. It targets the heart of local readers, turning the landing into a fairy tale come true, with language evoking awe and grandeur linked to narrative tradition.", visual: "Headline framing the page with ’L’UOMO E’ SULLA LUNA’ in imposing characters. The main image shows the lunar module detaching from the surface, creating a sense of dynamism. The layout balances news with broader commentary.", tone: "Dreamy and grand, speaking to local readers as a fable turned real. The tone is of wonder and inspiration, elevating the event to an almost poetic level, highlighting its capacity to spark imagination beyond limits.", importance: 1, main_headline: "L’UOMO E’ SULLA LUNA", headline_description: "Dominant headline.", tone_category: "informative", language_category: "pragmatic", main_headline_en: "MAN IS ON THE MOON" },
+            { id:"it_bol", continent:"Europe", country:"Italy", city:"Bologna", newspaper:"Resto del Carlino", coords:[44.49, 11.34], img:"img/2.jpg", analysis:"Uses classical rhetoric to describe an avant-garde event, linking scientific progress to wonder and dreams. It targets the heart of local readers, turning the landing into a fairy tale come true, with language evoking awe and grandeur linked to narrative tradition.", visual: "Headline framing the page with ’I PIEDI SULLA LUNA’ in imposing characters. The main image shows the lunar module detaching from the surface, creating a sense of dynamism. The layout balances news with broader commentary.", tone: "Dreamy and grand, speaking to local readers as a fable turned real. The tone is of wonder and inspiration, elevating the event to an almost poetic level, highlighting its capacity to spark imagination beyond limits.", importance: 1, main_headline: "I PIEDI SULLA LUNA", headline_description: "Dominant headline.", tone_category: "informative", language_category: "pragmatic", main_headline_en: "FEET ON THE MOON" },
             { id:"it_rom", continent:"Europe", country:"Italy", city:"Rome", newspaper:"Il Tempo", coords:[41.90, 12.49], img:"img/13.jpg", analysis:"The Roman perspective joins ancient history to new exploration, framing the landing within the long tradition of great human conquests. It celebrates with a solemn tone, eyeing global political reach and future implications for civilization. Coverage is dense and rich with historical references.", visual: "Dense, almost monumental composition with headlines evoking past conquests like “ESPLORATA LA LUNA”. A central image of an astronaut with the US flag is flanked by detailed text blocks on mission specifics and historical importance.", tone: "Solemn and celebratory, with a focus on world political reach. The tone is respectful and admiring, underlining the feat’s popularity within a context of continuity with the great civilizations of the past.", importance: 1, main_headline: "ESPLORATA LA LUNA", headline_description: "Medium importance.", tone_category: "informative", language_category: "pragmatic", main_headline_en: "THE MOON EXPLORED" },
             { id:"it_nap", continent:"Europe", country:"Italy", city:"Naples", newspaper:"Il Mattino", coords:[40.85, 14.26], img:"img/28.jpg", analysis:"Frames the event as the beginning of a ’New Era’ for the common man, focusing on social and cultural implications. It addresses readers with visionary and prophetic language, looking at Earth’s civilization future and space conquest possibilities. Coverage is modern and bold.", visual: "Modern design for its time, with bold use of white space around the headline “UN’ERA NUOVA NELLA STORIA DELL’UMANITÀ”. The main image shows the lunar module in action with high visual impact. The layout is clean and dynamic, communicating innovation.", tone: "Visionary and prophetic, looking at the future of Earthly civilization. The tone is of hope and optimism, evoking wonder and possibility, underlining the human capacity to exceed limits and explore new horizons.", importance: 1, main_headline: "Sono sulla Luna", headline_description: "Strong historical emphasis.", tone_category: "celebratory", language_category: "celebratory", main_headline_en: "They are on the Moon" },
             { id:"it_cre", continent:"Europe", country:"Italy", city:"Cremona", newspaper:"La Provincia", coords:[45.13, 10.02], img:"img/38.jpg", analysis:"The relief of an Italian province following the event with bated breath, celebrating success with popular, participatory language. The paper shares joy for the mission’s success with a tone reflecting closeness to the local community. Coverage is simple but effective at capturing collective feeling.", visual: "Classic local daily layout but transformed by the main headline “LUNA: ce l’hanno fatta!” (THEY DID IT!). Images show the astronauts and module with a balance between news and emotional participation. Functional design with a touch of drama.", tone: "Popular and participatory, using language close to the people. The tone is of joy and relief, expressing a sense of sharing and belonging, making the event a moment of collective celebration for the local community.", importance: 1, main_headline: "LUNA: ce l’hanno fatta!", headline_description: "Dominant headline.", tone_category: "celebratory", language_category: "celebratory", main_headline_en: "MOON: they made it!" },
@@ -539,6 +580,7 @@
         function showView(viewName) {
             document.querySelectorAll('.nav-tab[onclick]').forEach(t => t.classList.toggle('active', t.getAttribute('onclick').includes(viewName)));
             document.getElementById('archive-view').style.display = viewName === 'archive' ? 'block' : 'none';
+            document.getElementById('map-legend').style.display = viewName === 'archive' ? 'none' : 'flex';
             if (viewName === 'archive') renderArchive();
         }
 
