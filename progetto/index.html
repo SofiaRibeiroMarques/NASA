@@ -185,7 +185,7 @@
         }
         .grid-item { cursor: pointer; transition: all 0.2s; position: relative; border: 2px solid transparent; padding: 5px; border-radius: 4px; }
         .grid-item:hover { transform: translateY(-5px); }
-        .grid-item.selected { border-color: var(--usa-red); background: rgba(192, 57, 43, 0.05); }
+        .grid-item.selected { border-color: rgb(0, 28, 139); background: rgba(135, 206, 235, 0.1); }
         
         .compare-badge {
             position: absolute; top: 10px; right: 10px; width: 20px; height: 20px;
@@ -193,7 +193,7 @@
             z-index: 5; display: flex; align-items: center; justify-content: center;
             font-size: 10px; font-weight: bold; color: #999;
         }
-        .grid-item.selected .compare-badge { background: var(--usa-red); border-color: var(--usa-red); color: white; }
+        .grid-item.selected .compare-badge { background: rgb(0, 15, 183); border-color: rgb(7, 0, 206); color: white; }
         .grid-item.selected .compare-badge::after { content: '✓'; }
 
         .grid-img-wrapper {
@@ -399,15 +399,15 @@
 
                 if (selection.includes(pub)) {
                     selection = selection.filter(p => p !== pub);
-                    this.setStyle({ weight: 0 });
+                    this.setStyle({ weight: 0, color: '#fff' });
                 } else {
                     selection.push(pub);
-                    this.setStyle({ weight: 3 });
+                    this.setStyle({ weight: 3, color: 'white' });
 
                     if (selection.length === 2) {
                         openComparison(selection[0], selection[1]);
                         // Reset highlights after opening
-                        markers.eachLayer(layer => { if (layer.setStyle) layer.setStyle({ weight: 0 }); });
+                        markers.eachLayer(layer => { if (layer.setStyle) layer.setStyle({ weight: 0, color: '#fff' }); });
                         selection = [];
                     }
                 }
@@ -415,7 +415,7 @@
 
             const popupHtml = t.country === "China" 
                 ? `<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;"><strong style="color:#eee; font-size:8px; display:block; margin-bottom:5px; text-transform:uppercase;">Analysis</strong>${t.analysis}</div>`
-                : `<div style="width:180px"><strong>${t.newspaper}</strong><br><small>${t.city}, ${t.country}</small><div class="popup-img-container"><img src="${t.img}" class="zoomable"></div></div>`;
+                : `<div style="width:180px"><strong>${t.newspaper}</strong><br><small>${t.city}, ${t.country}</small><div class="popup-img-container"><img src="${t.img}" data-pub-id="${t.id}"></div></div>`;
             m.bindPopup(popupHtml);
         });
 
@@ -481,7 +481,15 @@
         map.fitBounds(markers.getBounds().pad(0.1));
 
         document.addEventListener('click', function (e) {
-            if (e.target.tagName === 'IMG' && (e.target.closest('.popup-img-container') || e.target.closest('.image-box'))) {
+            // Se l'immagine cliccata è nel popup della mappa, apri la scheda di dettaglio
+            if (e.target.tagName === 'IMG' && e.target.closest('.popup-img-container')) {
+                const pubId = e.target.getAttribute('data-pub-id');
+                if (pubId) {
+                    openDetail(pubId);
+                }
+            }
+            // Se l'immagine è dentro una scheda (dettaglio o comparazione), apri il lightbox per lo zoom
+            else if (e.target.tagName === 'IMG' && e.target.closest('.image-box')) {
                 const lightbox = document.getElementById('lightbox');
                 const lightboxImg = document.getElementById('lightbox-img');
                 lightboxImg.src = e.target.src;
@@ -492,7 +500,7 @@
         function closeComparison() { 
             document.getElementById('comparison-overlay').style.display = 'none'; 
             selection = [];
-            markers.eachLayer(layer => { if (layer.setStyle) layer.setStyle({ weight: 0 }); });
+            markers.eachLayer(layer => { if (layer.setStyle) layer.setStyle({ weight: 0, color: '#fff' }); });
         }
         
         /* --- PURPOSE MODAL LOGIC --- */
