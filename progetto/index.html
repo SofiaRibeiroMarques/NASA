@@ -470,14 +470,13 @@
                     ${t.img ? `<img src="${t.img}">` : `<div style="padding:40px; color:#333; font-size:14px; line-height:1.6; text-align:left;">${t.analysis}</div>`}
                 </div>
                 <div class="card-footer">
-                    <div class="footer-label" style="color:${color}">${t.country} • ${t.continent}</div>
+                    <div class="footer-label" style="color:${color}">${t.newspaper || t.country} • ${t.city || t.continent}</div>
                     <div class="footer-scroll-area">
                         ${t.main_headline ? `
                             <div class="footer-desc">
                                 <strong>Front Page Headline</strong> “${t.main_headline}”
                                 ${t.main_headline_en && t.main_headline_en !== t.main_headline ? `<br><span style="font-style: italic; font-size: 0.9em; color: #666;">“${t.main_headline_en}”</span>` : ''}
                             </div>` : ''}
-                        ${t.country ? `<div class="footer-desc"><strong>Country</strong> ${t.country}</div>` : ''}
                         <div class="footer-desc"><strong>Analysis</strong> ${t.analysis || '—'}</div>
                         <div class="footer-desc"><strong>Visual Hierarchy</strong> ${t.visual || '—'}</div>
                         <div class="footer-desc"><strong>Rhetorical Tone</strong> ${t.tone || '—'}</div>
