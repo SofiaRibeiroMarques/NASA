@@ -207,7 +207,7 @@
             z-index: 1000;
             background: #e6e6e6;
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px; padding: 40px 0 15px; ;
+            padding: 40px 0 15px;
         }
         .archive-filters { display: flex; align-items: center; gap: 15px; }
         .filter-label { font-size: 10px; font-weight: 800; color: #666; text-transform: uppercase; letter-spacing: 1px; }
@@ -221,7 +221,7 @@
         .filter-btn:hover { border-color: #999; color: #333; }
         .filter-btn.active { border-color: #333; color: #333; background: rgba(0,0,0,0.05); }
 
-        .compare-hint { font-size: 11px; color: #888; font-style: italic; }
+        .compare-hint { font-size: 11px; color: #888; font-style: italic; margin-bottom: 25px; display: block; }
 
         .grid-img-wrapper img { width: 100%; height: auto; display: block; filter: grayscale(100%); transition: filter 0.3s; }
         .grid-item:hover img { filter: grayscale(0%); }
@@ -599,9 +599,10 @@
                         <button class="filter-btn ${currentImportanceFilter === '3' ? 'active' : ''}" onclick="filterImportance('3')">Brief</button>
                     </div>
                 </div>
-                <div class="compare-hint">Select two to compare perspectives</div>
             `;
             container.appendChild(toolbar);
+
+            container.insertAdjacentHTML('beforeend', '<div class="compare-hint">Select two images by clicking the circle icon in their corner to compare different perspectives.</div>');
 
             const filteredPubs = currentImportanceFilter === 'all' 
                 ? publications 
