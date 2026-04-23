@@ -34,32 +34,13 @@ Il progetto diventa così non solo un archivio, ma un’indagine interattiva su 
 
 
 ```JavaScript
-const image = new Image();
-image.onload = () => {
-	gl.bindTexture(gl.TEXTURE_2D, texture);
-	gl.texImage2D(
-		gl.TEXTURE_2D,
-		level,
-		internalFormat,
-		srcFormat,
-		srcType,
-		image
-	);
-	if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-		gl.generateMipmap(gl.TEXTURE_2D);
-	} else {
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-	}
-};
-image.src = url;
+ // NORTH AMERICA
+  { id:"fl", continent:"North America", country:"USA", city:"St. Petersburg, FL", newspaper:"St. Petersburg Times", coords:[27.76, -82.64], img:"img/1.jpg", analysis:"A bold celebration that brings lunar success ’close to home’ given its proximity to Cape Canaveral. The paper emphasizes the American triumph, linking the space endeavor directly to local and national pride. The narrative is steeped in evident patriotism, turning the moon landing into a personal event for every reader.", visual: "Giant headline occupying nearly half the upper section, with ’Moon, We’re Onto You’ in massive characters. Below, close-up photos of the astronauts’ faces and a moonwalk simulation balance visual impact with human details.", tone: "Colloquial and triumphant, treating the Moon like a newly conquered territory. The language is direct and engaging, celebrating the mission’s audacity and success.", importance: 1, main_headline: "Moon, We’re Onto You", headline_description: "Moon, We’re Onto You.", tone_category: "celebratory", language_category: "celebratory", main_headline_en: "Moon, We’re Onto You" },
 ```
 
 
 ## Target e contesto d’uso
 Il progetto è rivolto principalmente a studenti, ricercatori, storici che studiano media e giornalismo interessati ad analizzare come i media di diversi paesi hanno interpretato lo sbarco sulla Luna.
-
-(... contesto ideale per fruire della pagina.)
+Può essere utilizzato sia in ambito didattico, come supporto a corsi universitari, sia per attività di ricerca e approfondimento, favorendo una comprensione più ampia delle differenze culturali, politiche e comunicative nella narrazione di un evento globale.
 
 
