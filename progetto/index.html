@@ -30,7 +30,7 @@
     top: 0;
     left:0;
     width: 100%;
-    z-index: 10000;
+    z-index: 13000; /* Superiore all'overlay di comparazione */
     background: rgba(10,10,11,0.92);
     backdrop-filter: blur(8px);
     display: flex;
@@ -81,7 +81,7 @@
         #comparison-overlay, #detail-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(230, 230, 230, 0.98); backdrop-filter: blur(12px);
-            align-items: flex-start; justify-content: center; z-index: 9999;
+            align-items: flex-start; justify-content: center; z-index: 12000;
             animation: fadeIn 0.4s ease;
             overflow-y: auto;
             padding: 60px 0;
@@ -159,7 +159,7 @@
         .card-usa { border-top: 3px solid var(--usa-red); }
         .card-ussr { border-top: 3px solid var(--ussr-yellow); }
 
-        .close-btn { position: fixed; top: 60px; right: 40px; background: rgba(230,230,230,0.8); border: 1px solid #999; padding: 10px 20px; color: #333; cursor: pointer; font-size: 11px; letter-spacing: 2px; z-index: 10001; transition: all 0.3s; }
+        .close-btn { position: fixed; top: 60px; right: 40px; background: rgba(230,230,230,0.8); border: 1px solid #999; padding: 10px 20px; color: #333; cursor: pointer; font-size: 11px; letter-spacing: 2px; z-index: 12001; transition: all 0.3s; }
         .close-btn:hover { background: #333; color: #fff; border-color: #333; }
 
         .leaflet-popup-content-wrapper { background: #111; color: white; border-radius: 0; border: 1px solid #444; }
@@ -440,7 +440,6 @@
   <div>
     <button class="nav-tab active" onclick="showView('map')">Map</button>
     <button class="nav-tab" onclick="showView('archive')">Newspapers</button>
-    <button class="nav-tab" id="compare-mode-btn" onclick="toggleCompareMode()">Compare Mode</button>
     <a href="https://plus.nasa.gov/?s=apollo+11" target="_blank" class="nav-tab">videos</a>
   </div>
 </nav>
@@ -556,7 +555,6 @@
         
         // New elements references
         const compareSelectBtn = document.getElementById('compare-select-btn'); // The new floating button
-        const navCompareBtn = document.getElementById('compare-mode-btn'); // The existing nav button
         const comparePreviewArea = document.getElementById('compare-preview-area');
         const comparePreviewSlot1 = document.getElementById('compare-preview-slot-1');
         const comparePreviewSlot2 = document.getElementById('compare-preview-slot-2');
@@ -647,17 +645,14 @@
         function _toggleCompareModeInternal(activate) {
             compareMode = (activate === undefined) ? !compareMode : activate; // Toggle or set explicitly
             
-            navCompareBtn.classList.toggle('active', compareMode);
             compareSelectBtn.classList.toggle('active', compareMode);
             
             if (compareMode) {
                 showView('map');
-                compareSelectContainer.style.display = 'flex'; // Assicura che il contenitore sia visibile
             } else {
                 selection = [];
                 markers.eachLayer(l => { if(l.setStyle) l.setStyle({weight: 0}); });
                 clearAllComparePreviews(); // Clear previews when exiting
-                compareSelectContainer.style.display = 'none'; // Nasconde il contenitore
             }
         }
 
@@ -738,6 +733,8 @@
                 el.innerHTML = renderCard(t, color);
             });
             document.getElementById('comparison-overlay').style.display = 'flex';
+            compareSelectContainer.style.display = 'none';
+            document.getElementById('purpose-btn').style.display = 'none';
         }
 
         function openDetail(pubId) {
@@ -747,8 +744,17 @@
             b.style.borderTop = `3px solid ${color}`;
             b.innerHTML = renderCard(t, color);
             document.getElementById('detail-overlay').style.display = 'flex';
+            compareSelectContainer.style.display = 'none';
+            document.getElementById('purpose-btn').style.display = 'none';
         }
-        const closeDetail = () => document.getElementById('detail-overlay').style.display = 'none';
+
+        const closeDetail = () => {
+            document.getElementById('detail-overlay').style.display = 'none';
+            if (document.getElementById('archive-view').style.display === 'none') {
+                compareSelectContainer.style.display = 'flex';
+                document.getElementById('purpose-btn').style.display = 'block';
+            }
+        };
 
         function toggleGridSelection(pubId, event) {
             event.stopPropagation();
@@ -797,6 +803,10 @@
             }
             selection = [];
             markers.eachLayer(layer => { if (layer.setStyle) layer.setStyle({ weight: 0, color: '#fff' }); });
+            if (document.getElementById('archive-view').style.display === 'none') {
+                compareSelectContainer.style.display = 'flex';
+                document.getElementById('purpose-btn').style.display = 'block';
+            }
         }
         
         /* --- PURPOSE MODAL LOGIC --- */
