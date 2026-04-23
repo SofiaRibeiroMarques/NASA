@@ -9,11 +9,9 @@
     
     <style>
         :root {
-            --usa-red: #c0392b;   
-            --ussr-yellow: #d68910; 
-            --uk-purple: #a562c1;
-            --china-green: #1ba112;
-            --others-gray: #95a5a6;
+            --imp-high: #FC3D21; 
+            --imp-med: #005DAB;  
+            --imp-low: #A7A9AC;
             --bg-dark: #050505;
             --text-gray: #ccc;
             --card-bg: #111;
@@ -305,6 +303,133 @@
             font-size: 11px; letter-spacing: 1px; transition: background 0.2s;
         }
         .close-purpose-btn:hover { background: #000; }
+
+        /* --- COMPARE/SELECT BUTTON AND PREVIEW --- */
+        #compare-select-container {
+            position: fixed;
+            bottom: 30px;
+            left: 135px; /* Avvicinato al bottone Purpose per un migliore allineamento */
+            z-index: 11000;
+            display: flex;
+            align-items: flex-end; /* Allinea tutti gli elementi del flexbox al basso */
+            gap: 10px;
+        }
+        #compare-select-btn {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid #252520;
+            color: #454545;
+            padding: 10px 20px; /* Match purpose-btn padding */
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        #compare-select-btn:hover {
+            background: #dddddd;
+            color: #000;
+            border-color: #000000;
+        }
+        #compare-select-btn.active {
+            background: #333;
+            color: #fff;
+            border-color: #333;
+        }
+        #compare-preview-area {
+            display: flex;
+            gap: 5px;
+            height: auto;
+            visibility: hidden; /* Hidden by default */
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s linear;
+            background: rgba(255, 255, 255, 0.4); /* Sfondo più trasparente */
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(37, 37, 32, 0.3);
+            padding: 5px;
+        }
+        #compare-select-btn.active + #compare-preview-area {
+            visibility: visible;
+            opacity: 1;
+        }
+        .compare-preview-slot {
+            width: 80px; /* Anteprima più grande */
+            height: 110px; /* Formato verticale tipo quotidiano */
+            background-color: #eee;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .compare-preview-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        .compare-preview-slot .newspaper-name-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 7px;
+            text-align: center;
+            padding: 4px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        /* Botton per rimuovere la selezione nell'anteprima */
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 18px;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #252520;
+            color: #000;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            padding: 0;
+        }
+        .remove-btn:hover { background: #000; color: #fff; }
+
+        /* Bottone select nel popup della mappa */
+        .popup-select-btn {
+            margin-top: 10px;
+            width: 100%;
+            background: #0026ff; /* Grigio quasi bianco per massimo contrasto */
+            color: #ffffff;
+            border: none;
+            padding: 8px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .popup-select-btn:hover { background: #ffffff; color: #000000; }
+        
+        /* Stato "Remove" più visibile */
+        .popup-select-btn.is-remove {
+            background: var(--imp-high); /* Rosso per l'azione di rimozione */
+            color: #fff;
+            border-color: var(--imp-high);
+        }
+        .popup-select-btn.is-remove:hover { background: #d6301a; }
     </style>
 </head>
 <body>
@@ -315,6 +440,7 @@
   <div>
     <button class="nav-tab active" onclick="showView('map')">Map</button>
     <button class="nav-tab" onclick="showView('archive')">Newspapers</button>
+    <button class="nav-tab" id="compare-mode-btn" onclick="toggleCompareMode()">Compare Mode</button>
     <a href="https://plus.nasa.gov/?s=apollo+11" target="_blank" class="nav-tab">videos</a>
   </div>
 </nav>
@@ -330,13 +456,11 @@
 
     <!-- MAP LEGEND -->
     <div id="map-legend">
-        <div class="legend-title">World Powers 1969</div>
-        <div class="legend-item"><div class="legend-dot" style="background: var(--usa-red)"></div><span>USA</span></div>
-        <div class="legend-item"><div class="legend-dot" style="background: var(--ussr-yellow)"></div><span>USSR</span></div>
-        <div class="legend-item"><div class="legend-dot" style="background: var(--uk-purple)"></div><span>UK</span></div>
-        <div class="legend-item"><div class="legend-dot" style="background: var(--china-green)"></div><span>China</span></div>
-        <div class="legend-item"><div class="legend-dot" style="background: var(--others-gray)"></div><span>Others</span></div>
-        <div class="legend-note">The colored dots are the powers of the era</div>
+        <div class="legend-title">News Importance</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--imp-high)"></div><span>Full Page</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--imp-med)"></div><span>Significant</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--imp-low)"></div><span>Brief / Marginal</span></div>
+        <div class="legend-note">Colors represent the visual prominence given to the story on the original front page.</div>
     </div>
 
     <div id="comparison-overlay">
@@ -349,6 +473,15 @@
     </div>
 
     <button id="purpose-btn">Purpose</button>
+    
+    <!-- NEW COMPARE/SELECT BUTTON AND PREVIEW AREA -->
+    <div id="compare-select-container">
+        <button id="compare-select-btn" onclick="toggleCompareMode()">Compare/Select</button>
+        <div id="compare-preview-area">
+            <div class="compare-preview-slot" id="compare-preview-slot-1"></div>
+            <div class="compare-preview-slot" id="compare-preview-slot-2"></div>
+        </div>
+    </div>
 
     <div id="purpose-overlay">
         <div id="purpose-modal">
@@ -419,10 +552,118 @@
         ];
 
         let selection = [];
+        let compareMode = false;
+        
+        // New elements references
+        const compareSelectBtn = document.getElementById('compare-select-btn'); // The new floating button
+        const navCompareBtn = document.getElementById('compare-mode-btn'); // The existing nav button
+        const comparePreviewArea = document.getElementById('compare-preview-area');
+        const comparePreviewSlot1 = document.getElementById('compare-preview-slot-1');
+        const comparePreviewSlot2 = document.getElementById('compare-preview-slot-2');
 
         function getPubColor(t) {
-            const colors = { USA: "var(--usa-red)", USSR: "var(--ussr-yellow)", UK: "var(--uk-purple)", China: "var(--china-green)" };
-            return colors[t.country] || "var(--others-gray)";
+            if (t.importance == 1) return "var(--imp-high)";
+            if (t.importance == 2) return "var(--imp-med)";
+            return "var(--imp-low)"; // Default for importance 3 or undefined (e.g., China)
+        }
+        
+        function updateComparePreview(pub, slotElement, index) {
+            if (pub && pub.img) {
+                slotElement.innerHTML = `<button class="remove-btn" onclick="removeFromSelection(${index})">−</button><img src="${pub.img}" alt="${pub.newspaper}"><div class="newspaper-name-overlay">${pub.newspaper}</div>`;
+            } else if (pub && pub.country === "China") {
+                slotElement.innerHTML = `<button class="remove-btn" onclick="removeFromSelection(${index})">−</button><div class="newspaper-name-overlay">China (No Data)</div>`;
+            } else {
+                slotElement.innerHTML = ''; // Clear if no image or specific data
+            }
+        }
+
+        function refreshPreviews() {
+            clearAllComparePreviews();
+            if (selection[0]) updateComparePreview(selection[0], comparePreviewSlot1, 0);
+            if (selection[1]) updateComparePreview(selection[1], comparePreviewSlot2, 1);
+        }
+
+        function clearComparePreviewSlot(slotElement) {
+            slotElement.innerHTML = '';
+        }
+
+        function clearAllComparePreviews() {
+            clearComparePreviewSlot(comparePreviewSlot1);
+            clearComparePreviewSlot(comparePreviewSlot2);
+        }
+
+        // Funzione per rimuovere un elemento dalla selezione tramite il tasto "-"
+        function removeFromSelection(index) {
+            const pubToRemove = selection[index];
+            if (!pubToRemove) return;
+
+            // Togliamo l'highlight dal marker sulla mappa
+            markers.eachLayer(layer => {
+                if (layer.pubData && layer.pubData.id === pubToRemove.id) {
+                    layer.setStyle({ weight: 0, color: '#fff' });
+                }
+            });
+
+            // Rimuoviamo dall'array e aggiorniamo le anteprime
+            selection.splice(index, 1);
+            refreshPreviews();
+        }
+
+        // Gestisce la selezione/deselezione tramite il bottone nel popup
+        function toggleSelection(pubId) {
+            const pub = publications.find(p => p.id === pubId);
+            if (!pub) return;
+
+            const isSelected = selection.includes(pub);
+            
+            if (isSelected) {
+                removeFromSelection(selection.indexOf(pub));
+            } else {
+                if (selection.length < 2) {
+                    selection.push(pub);
+                    markers.eachLayer(layer => {
+                        if (layer.pubData && layer.pubData.id === pubId) {
+                            layer.setStyle({ weight: 3, color: 'white' });
+                        }
+                    });
+                    refreshPreviews();
+                    checkAndOpenComparison();
+                }
+            }
+            map.closePopup();
+        }
+
+        function checkAndOpenComparison() {
+            if (selection.length === 2) {
+                setTimeout(() => {
+                    openComparison(selection[0], selection[1]);
+                    markers.eachLayer(layer => { if (layer.setStyle) layer.setStyle({ weight: 0, color: '#fff' }); });
+                    _toggleCompareModeInternal(false); // Disattiva la modalità compare, nascondendo bottone e anteprime
+                }, 300); // Piccolo ritardo per permettere all'utente di vedere la seconda anteprima prima dell'overlay
+            }
+        }
+
+        // Internal function to handle the core logic of toggling compare mode
+        function _toggleCompareModeInternal(activate) {
+            compareMode = (activate === undefined) ? !compareMode : activate; // Toggle or set explicitly
+            
+            navCompareBtn.classList.toggle('active', compareMode);
+            compareSelectBtn.classList.toggle('active', compareMode);
+            
+            if (compareMode) {
+                showView('map');
+                compareSelectContainer.style.display = 'flex'; // Assicura che il contenitore sia visibile
+            } else {
+                selection = [];
+                markers.eachLayer(l => { if(l.setStyle) l.setStyle({weight: 0}); });
+                clearAllComparePreviews(); // Clear previews when exiting
+                compareSelectContainer.style.display = 'none'; // Nasconde il contenitore
+            }
+        }
+
+        // Public function called by buttons
+        function toggleCompareMode() {
+            _toggleCompareModeInternal();
         }
 
         let currentImportanceFilter = 'all';
@@ -435,30 +676,33 @@
             m.pubData = t;
 
             m.on('click', function(e) {
-                const pub = this.pubData;
-
-                if (selection.includes(pub)) {
-                    selection = selection.filter(p => p !== pub);
-                    this.setStyle({ weight: 0, color: '#fff' });
-                } else {
-                    selection.push(pub);
-                    this.setStyle({ weight: 3, color: 'white' });
-
-                    if (selection.length === 2) {
-                        openComparison(selection[0], selection[1]);
-                        // Reset highlights after opening
-                        markers.eachLayer(layer => { if (layer.setStyle) layer.setStyle({ weight: 0, color: '#fff' }); });
-                        selection = [];
-                    }
+                if (!compareMode) {
+                    return;
                 }
+                // In compare mode, lasciamo che il popup si apra normalmente senza selezionare subito
             });
 
+            const selectBtnHtml = `<button class="popup-select-btn" data-id="${t.id}" onclick="toggleSelection('${t.id}')">Select</button>`;
+
             const popupHtml = t.country === "China" 
-                ? `<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;"><strong style="color:#eee; font-size:8px; display:block; margin-bottom:5px; text-transform:uppercase;">Analysis</strong>${t.analysis}</div>`
-                : `<div style="width:180px"><strong>${t.newspaper}</strong><br><small>${t.city}, ${t.country}</small><div class="popup-img-container"><img src="${t.img}" data-pub-id="${t.id}"></div></div>`;
+                ? `<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;"><strong style="color:#eee; font-size:8px; display:block; margin-bottom:5px; text-transform:uppercase;">Analysis</strong>${t.analysis}${selectBtnHtml}</div>`
+                : `<div style="width:180px"><strong>${t.newspaper}</strong><br><small>${t.city}, ${t.country}</small><div class="popup-img-container"><img src="${t.img}" data-pub-id="${t.id}"></div>${selectBtnHtml}</div>`;
             m.bindPopup(popupHtml);
         });
 
+        // Gestione dinamica del bottone Select nel popup in base alla modalità
+        map.on('popupopen', function(e) {
+            const container = e.popup._container;
+            const btn = container.querySelector('.popup-select-btn');
+            if (btn) {
+                btn.style.display = compareMode ? 'block' : 'none';
+                const pubId = btn.getAttribute('data-id');
+                const pub = publications.find(p => p.id === pubId);
+                const isSelected = selection.includes(pub);
+                btn.innerText = isSelected ? 'Remove' : 'Select';
+                btn.classList.toggle('is-remove', isSelected);
+            }
+        });
         const renderCard = (t, color) => `
                 <div class="card-header">
                     <div class="header-left">
@@ -546,7 +790,11 @@
         });
 
         function closeComparison() { 
-            document.getElementById('comparison-overlay').style.display = 'none'; 
+            document.getElementById('comparison-overlay').style.display = 'none';
+            // If compare mode was active, deactivate it
+            if (compareMode) {
+                _toggleCompareModeInternal(false); // Explicitly set to false
+            }
             selection = [];
             markers.eachLayer(layer => { if (layer.setStyle) layer.setStyle({ weight: 0, color: '#fff' }); });
         }
@@ -573,13 +821,25 @@
         });
 
         // Global Escape Key Handler
-        window.addEventListener('keydown', (e) => { if(e.key === "Escape") { closeComparison(); closeDetail(); document.getElementById('lightbox').style.display = 'none'; closePurposeModal(); }});
+        window.addEventListener('keydown', (e) => { 
+            if(e.key === "Escape") { 
+                closeComparison(); 
+                closeDetail(); 
+                document.getElementById('lightbox').style.display = 'none'; 
+                closePurposeModal(); 
+                // Also clear compare mode if active
+                if (compareMode) {
+                    _toggleCompareModeInternal(false); // Explicitly set to false
+                }
+            }
+        });
 
         /* --- ARCHIVE LOGIC --- */
         function showView(viewName) {
             document.querySelectorAll('.nav-tab[onclick]').forEach(t => t.classList.toggle('active', t.getAttribute('onclick').includes(viewName)));
             document.getElementById('archive-view').style.display = viewName === 'archive' ? 'block' : 'none';
             document.getElementById('map-legend').style.display = viewName === 'archive' ? 'none' : 'flex';
+            document.getElementById('compare-select-container').style.display = viewName === 'archive' ? 'none' : 'flex'; // Hide compare button in archive view
             if (viewName === 'archive') renderArchive();
         }
 
