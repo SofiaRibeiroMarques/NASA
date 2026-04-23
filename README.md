@@ -19,23 +19,38 @@ Il progetto diventa così non solo un archivio, ma un’indagine interattiva su 
 
 
 ## Riferimenti progettuali
-- indicare delle pagine web che mi hanno ispirato per realizzare il progetto e/o mi ha dato delle idee per le interazioni
+Per la parte della mappa interattiva mi sono ispirata al sito nicholsonconstruction.com (https://www.nicholsonconstruction.com/drill-down/the-hanford-nuclear-site) che al suo interno mostra delle mappe che hanno degli elementi cliccabili che contengono delle informazioni.
+Per la visualizzazione delle front pages, ho seguito il layout della pagina Artandculture google (https://artsandculture.google.com/category/artist) per avere una maggiore organizzazione dei contenuti per semplificare l'esperienza utenti.
 
 
 
 ## Design dell’interfaccia e modalità di interazione
-(indicare qual'è il tipo di layout che ho utilizzato, come ho strutturato la pagina(es. interazione di click e passaggio da pagina a pagina con un menu), come si interagisce con le diverse pagine. allegare delle immagini/video per mostrare l'interfaccia(almeno 1 video))
+Il sito utilizza un layout one-page organizzato in sezioni verticali, che consente una navigazione fluida sia tramite scroll sia attraverso un menu di navigazione. La struttura è pensata per guidare l’utente in modo chiaro tra le diverse aree tematiche, mantenendo una continuità visiva senza interruzioni tra una sezione e l’altra. L’interazione avviene principalmente tramite click su elementi del menu e su pannelli interattivi, che permettono di mostrare o nascondere contenuti senza ricaricare la pagina, favorendo un’esplorazione più dinamica e non lineare.
+Un elemento distintivo dell’interfaccia è la mappa interattiva, che rappresenta visivamente i diversi paesi coinvolti nell’analisi. Su di essa sono presenti dei pallini cliccabili, ciascuno associato a uno specifico contesto nazionale: selezionandoli, l’utente può accedere a contenuti dedicati, come articoli, immagini o approfondimenti relativi al modo in cui i media di quel paese hanno raccontato lo sbarco sulla Luna. Questo sistema rende l’esperienza più immediata e intuitiva, permettendo di passare rapidamente da un contesto all’altro attraverso un’interazione diretta e visiva.
 
 
 
 
 ## Tecnologia usata
-(spiegare quali sono le caratteristiche dal punto di vista tecnico che distingue il progetto dagli altri. le logiche che ho utilizzato per usufruire dell'interfaccia(es. panneli interattivi all'interno della pagina). Inserire una parte particolare del mio codice.)
+A differenza di altri archivi digitali tradizionali, il sito utilizza pannelli interattivi e sezioni navigabili all’interno della stessa pagina, permettendo all’utente di esplorare i contenuti senza ricaricare continuamente nuove pagine. Questa logica migliora l’esperienza utente e rende la consultazione più fluida e intuitiva.
 
 
 ```JavaScript
  // NORTH AMERICA
-  { id:"fl", continent:"North America", country:"USA", city:"St. Petersburg, FL", newspaper:"St. Petersburg Times", coords:[27.76, -82.64], img:"img/1.jpg", analysis:"A bold celebration that brings lunar success ’close to home’ given its proximity to Cape Canaveral. The paper emphasizes the American triumph, linking the space endeavor directly to local and national pride. The narrative is steeped in evident patriotism, turning the moon landing into a personal event for every reader.", visual: "Giant headline occupying nearly half the upper section, with ’Moon, We’re Onto You’ in massive characters. Below, close-up photos of the astronauts’ faces and a moonwalk simulation balance visual impact with human details.", tone: "Colloquial and triumphant, treating the Moon like a newly conquered territory. The language is direct and engaging, celebrating the mission’s audacity and success.", importance: 1, main_headline: "Moon, We’re Onto You", headline_description: "Moon, We’re Onto You.", tone_category: "celebratory", language_category: "celebratory", main_headline_en: "Moon, We’re Onto You" },
+  { id:"fl", 
+  continent:"North America", 
+  country:"USA", city:"St. Petersburg, FL", 
+  newspaper:"St. Petersburg Times", 
+  coords:[27.76, -82.64], 
+  img:"img/1.jpg", 
+  analysis:"A bold celebration that brings lunar success ’close to home’ given its proximity to Cape Canaveral. The paper emphasizes the American triumph, linking the space endeavor directly to local and national pride. The narrative is steeped in evident patriotism, turning the moon landing into a personal event for every reader.", 
+  visual: "Giant headline occupying nearly half the upper section, with ’Moon, We’re Onto You’ in massive characters. Below, close-up photos of the astronauts’ faces and a moonwalk simulation balance visual impact with human details.", 
+  tone: "Colloquial and triumphant, treating the Moon like a newly conquered territory. The language is direct and engaging, celebrating the mission’s audacity and success.", importance: 1, 
+  main_headline: "Moon, We’re Onto You", 
+  headline_description: "Moon, We’re Onto You.", 
+  tone_category: "celebratory", 
+  language_category: "celebratory", 
+  main_headline_en: "Moon, We’re Onto You" },
 ```
 
 
