@@ -32,7 +32,7 @@ Un elemento distintivo dell’interfaccia è la mappa interattiva, che rappresen
 
 https://github.com/user-attachments/assets/69db0ad4-2ba6-4391-8b2d-5d6cfcaff7fc
 
-
+https://github.com/user-attachments/assets/da578e60-9cf1-4eb7-8d75-cf54d04e1be5
 
 
 
