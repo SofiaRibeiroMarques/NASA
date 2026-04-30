@@ -44,6 +44,13 @@ A differenza di altri archivi digitali tradizionali, il sito utilizza pannelli i
 
 
 ```JavaScript
+function showView(view) {
+    document.getElementById('map').style.display = (view === 'map') ? 'block' : 'none';
+    document.getElementById('archive-view').style.display = (view === 'archive') ? 'block' : 'none';
+}
+```
+
+```JavaScript
  // NORTH AMERICA
   { id:"fl", 
   continent:"North America", 
