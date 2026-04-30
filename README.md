@@ -30,6 +30,14 @@ Un elemento distintivo dell’interfaccia è la mappa interattiva, che rappresen
 
 
 
+https://github.com/user-attachments/assets/69db0ad4-2ba6-4391-8b2d-5d6cfcaff7fc
+
+
+
+
+
+
+
 
 ## Tecnologia usata
 A differenza di altri archivi digitali tradizionali, il sito utilizza pannelli interattivi e sezioni navigabili all’interno della stessa pagina, permettendo all’utente di esplorare i contenuti senza ricaricare continuamente nuove pagine. Questa logica migliora l’esperienza utente e rende la consultazione più fluida e intuitiva.
