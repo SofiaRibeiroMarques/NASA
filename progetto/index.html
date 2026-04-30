@@ -260,6 +260,31 @@
             border-top: 1px solid rgba(0,0,0,0.1); padding-top: 6px; max-width: 150px; line-height: 1.2;
         }
 
+        /* --- LEGEND TOGGLE BUTTON --- */
+        #legend-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 25px;
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid #252520;
+            color: #454545;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 11000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        #legend-btn:hover {
+            background: #dddddd;
+            color: #000;
+        }
+
         /* --- PURPOSE MODAL --- */
         #purpose-btn {
             position: fixed;
@@ -354,8 +379,8 @@
             opacity: 1;
         }
         .compare-preview-slot {
-            width: 80px; /* Anteprima più grande */
-            height: 110px; /* Formato verticale tipo quotidiano */
+            width: 100px; /* Anteprima ulteriormente ingrandita */
+            height: 140px; /* Formato verticale mantenuto */
             background-color: #eee;
             border: 1px solid #ccc;
             display: flex;
@@ -438,8 +463,8 @@
 <nav class="section-nav" id="main-nav">
   <div class="site-title">MoonPrint</div>
   <div>
-    <button class="nav-tab active" onclick="showView('map')">Map</button>
-    <button class="nav-tab" onclick="showView('archive')">Newspapers</button>
+    <button class="nav-tab active" onclick="showView('map')">Map</button> 
+    <button class="nav-tab" onclick="showView('archive')">Archive</button>
     <a href="https://plus.nasa.gov/?s=apollo+11" target="_blank" class="nav-tab">videos</a>
   </div>
 </nav>
@@ -461,6 +486,8 @@
         <div class="legend-item"><div class="legend-dot" style="background: var(--imp-low)"></div><span>Brief / Marginal</span></div>
         <div class="legend-note">Colors represent the visual prominence given to the story on the original front page.</div>
     </div>
+
+    <button id="legend-btn" onclick="toggleLegend()">?</button>
 
     <div id="comparison-overlay">
         <button class="close-btn" onclick="closeComparison()">Close</button>
@@ -558,6 +585,12 @@
         const comparePreviewArea = document.getElementById('compare-preview-area');
         const comparePreviewSlot1 = document.getElementById('compare-preview-slot-1');
         const comparePreviewSlot2 = document.getElementById('compare-preview-slot-2');
+        const legendBtn = document.getElementById('legend-btn');
+
+        function toggleLegend() {
+            const legend = document.getElementById('map-legend');
+            legend.style.display = (legend.style.display === 'flex') ? 'none' : 'flex';
+        }
 
         function getPubColor(t) {
             if (t.importance == 1) return "var(--imp-high)";
@@ -735,6 +768,8 @@
             document.getElementById('comparison-overlay').style.display = 'flex';
             compareSelectContainer.style.display = 'none';
             document.getElementById('purpose-btn').style.display = 'none';
+            legendBtn.style.display = 'none';
+            document.getElementById('map-legend').style.display = 'none';
         }
 
         function openDetail(pubId) {
@@ -746,6 +781,8 @@
             document.getElementById('detail-overlay').style.display = 'flex';
             compareSelectContainer.style.display = 'none';
             document.getElementById('purpose-btn').style.display = 'none';
+            legendBtn.style.display = 'none';
+            document.getElementById('map-legend').style.display = 'none';
         }
 
         const closeDetail = () => {
@@ -753,6 +790,7 @@
             if (document.getElementById('archive-view').style.display === 'none') {
                 compareSelectContainer.style.display = 'flex';
                 document.getElementById('purpose-btn').style.display = 'block';
+                legendBtn.style.display = 'flex';
             }
         };
 
@@ -806,6 +844,7 @@
             if (document.getElementById('archive-view').style.display === 'none') {
                 compareSelectContainer.style.display = 'flex';
                 document.getElementById('purpose-btn').style.display = 'block';
+                legendBtn.style.display = 'flex';
             }
         }
         
@@ -831,7 +870,7 @@
         });
 
         // Global Escape Key Handler
-        window.addEventListener('keydown', (e) => { 
+        window.addEventListener('keydown', (e) => {
             if(e.key === "Escape") { 
                 closeComparison(); 
                 closeDetail(); 
@@ -848,8 +887,9 @@
         function showView(viewName) {
             document.querySelectorAll('.nav-tab[onclick]').forEach(t => t.classList.toggle('active', t.getAttribute('onclick').includes(viewName)));
             document.getElementById('archive-view').style.display = viewName === 'archive' ? 'block' : 'none';
-            document.getElementById('map-legend').style.display = viewName === 'archive' ? 'none' : 'flex';
             document.getElementById('compare-select-container').style.display = viewName === 'archive' ? 'none' : 'flex'; // Hide compare button in archive view
+            legendBtn.style.display = viewName === 'archive' ? 'none' : 'flex';
+            if (viewName === 'archive') document.getElementById('map-legend').style.display = 'none';
             if (viewName === 'archive') renderArchive();
         }
 
