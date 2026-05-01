@@ -102,22 +102,22 @@
 
         .card-header {
             padding: 10px 15px; display: flex; align-items: center;
-            background: #fafafa; border-bottom: 1px solid #eee;
+            background: #222; border-bottom: 1px solid #333;
         }
 
         .header-left { display: flex; align-items: center; gap: 10px; }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .journal-name { font-weight: 600; font-size: 15px; color: #222; }
+        .journal-name { font-weight: 600; font-size: 15px; color: #fff; }
 
         .image-box {
-            height: 55vh; min-height: 200px; background: #f4f4f4; display: flex;
-            align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #eee;
+            height: 55vh; min-height: 200px; background: #C1C1C1; display: flex;
+            align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #333;
             overflow-y: auto;
         }
         .image-box img { width: 100%; height: 100%; object-fit: contain; object-position: center; cursor: zoom-in; }
 
-        .card-footer { padding: 0; flex: 1; display: flex; flex-direction: column; border-top: 1px solid #eee; overflow: hidden; }
-        .footer-label { padding: 20px 25px 8px; font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; border-bottom: 1px solid #eee; flex-shrink: 0; background: #fff; }
+        .card-footer { padding: 0; flex: 1; display: flex; flex-direction: column; border-top: 1px solid #333; overflow: hidden; }
+        .footer-label { padding: 20px 25px 8px; font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; border-bottom: 1px solid #333; flex-shrink: 0; background: #222; }
         .footer-scroll-area { padding: 15px 25px 20px; overflow-y: auto; flex: 1; }
         
         .label-usa { color: var(--usa-red); }
@@ -156,8 +156,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .card-usa { border-top: 3px solid var(--usa-red); }
-        .card-ussr { border-top: 3px solid var(--ussr-yellow); }
 
         .close-btn { position: fixed; top: 60px; right: 40px; background: rgba(230,230,230,0.8); border: 1px solid #999; padding: 10px 20px; color: #333; cursor: pointer; font-size: 11px; letter-spacing: 2px; z-index: 12001; transition: all 0.3s; }
         .close-btn:hover { background: #333; color: #fff; border-color: #333; }
