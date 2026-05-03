@@ -32,7 +32,7 @@ Un elemento distintivo dell’interfaccia è la mappa interattiva, che rappresen
 
 https://github.com/user-attachments/assets/69db0ad4-2ba6-4391-8b2d-5d6cfcaff7fc
 
-
+https://github.com/user-attachments/assets/da578e60-9cf1-4eb7-8d75-cf54d04e1be5
 
 
 
@@ -44,6 +44,13 @@ A differenza di altri archivi digitali tradizionali, il sito utilizza pannelli i
 
 
 ```JavaScript
+function showView(view) {
+    document.getElementById('map').style.display = (view === 'map') ? 'block' : 'none';
+    document.getElementById('archive-view').style.display = (view === 'archive') ? 'block' : 'none';
+}
+```
+
+```JavaScript
  // NORTH AMERICA
   { id:"fl", 
   continent:"North America", 
@@ -53,7 +60,8 @@ A differenza di altri archivi digitali tradizionali, il sito utilizza pannelli i
   img:"img/1.jpg", 
   analysis:"A bold celebration that brings lunar success ’close to home’ given its proximity to Cape Canaveral. The paper emphasizes the American triumph, linking the space endeavor directly to local and national pride. The narrative is steeped in evident patriotism, turning the moon landing into a personal event for every reader.", 
   visual: "Giant headline occupying nearly half the upper section, with ’Moon, We’re Onto You’ in massive characters. Below, close-up photos of the astronauts’ faces and a moonwalk simulation balance visual impact with human details.", 
-  tone: "Colloquial and triumphant, treating the Moon like a newly conquered territory. The language is direct and engaging, celebrating the mission’s audacity and success.", importance: 1, 
+  tone: "Colloquial and triumphant, treating the Moon like a newly conquered territory. The language is direct and engaging, celebrating the mission’s audacity and success.",
+  importance: 1, 
   main_headline: "Moon, We’re Onto You", 
   headline_description: "Moon, We’re Onto You.", 
   tone_category: "celebratory", 
