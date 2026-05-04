@@ -258,7 +258,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetic
     border: 1px solid #252520;
     z-index: 1000;
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 6px;
 }
