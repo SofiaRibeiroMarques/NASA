@@ -16,11 +16,25 @@
   <div>
     <button class="nav-tab active" onclick="showView('map')">Map</button> 
     <button class="nav-tab" onclick="showView('archive')">Archive</button>
+    <button class="nav-tab" onclick="toggleSourcesModal()">Sources</button>
   </div>
 </nav>
 
     <!-- ARCHIVE -->
     <div id="archive-view"></div>
+
+    <!-- COMPARE/SELECT BUTTON AND PREVIEW AREA -->
+    <div id="compare-select-container">
+        <button id="compare-select-btn" onclick="toggleCompareMode()">Compare/Select</button>
+        <div class="compare-actions" id="compare-actions" style="display: none;">
+            <button id="cancel-compare-btn" onclick="toggleCompareMode()">Cancel</button>
+            <button id="start-compare-btn" onclick="executeComparison()" disabled>Compare</button>
+        </div>
+        <div id="compare-preview-area">
+            <div class="compare-preview-slot" id="compare-preview-slot-1"></div>
+            <div class="compare-preview-slot" id="compare-preview-slot-2"></div>
+        </div>
+    </div>
 
     <div id="lightbox" onclick="this.style.display='none'">
         <img id="lightbox-img" src="" alt="Zoom">
@@ -48,22 +62,9 @@
         </div>
     </div>
 
-    <!-- NEW COMPARE/SELECT BUTTON AND PREVIEW AREA -->
-    <div id="compare-select-container">
-        <button id="compare-select-btn" onclick="toggleCompareMode()">Compare/Select</button>
-        <div class="compare-actions" id="compare-actions" style="display: none;">
-            <button id="cancel-compare-btn" onclick="toggleCompareMode()">Cancel</button>
-            <button id="start-compare-btn" onclick="executeComparison()" disabled>Compare</button>
-        </div>
-        <div id="compare-preview-area">
-            <div class="compare-preview-slot" id="compare-preview-slot-1"></div>
-            <div class="compare-preview-slot" id="compare-preview-slot-2"></div>
-        </div>
-    </div>
-
     <div id="purpose-overlay">
         <div id="purpose-modal">
-            <h2>MOONPRINT</h2>
+            <h2>MoonPrint</h2>
             <p>This interactive archive explores how global media reported the Apollo 11 moon landing in July 1969. It visualizes the geopolitical narratives of the Cold War, contrasting the triumphant tone. Through a dynamic visualization, the site compares journalistic narratives from different countries, highlighting variations in tone, language, and perspective across international publications. The project was created to mark NASA’s 70th anniversary of the West with the more subdued, technical coverage from the Soviet bloc.</p>
             <p style="font-size: 14px; color: #555; line-height: 1.6; margin-top: 20px;">
                 <strong>Instructions:</strong><br>
@@ -71,6 +72,20 @@
                 • Select two markers to compare different perspectives.<br>
             </p>
             <button class="close-purpose-btn">Start</button>
+        </div>
+    </div>
+
+    <div id="sources-overlay">
+        <div id="sources-modal">
+            <h2>Sources</h2>
+            <ul id="sources-list">
+                <li><a href="https://santamariatimes.com/news/archives/headlines-apollo-11-moon-landing/collection_2fa322a0-8815-53ca-bf3b-3a1b92e92c36.html#16" target="_blank">Santa Maria Times - Apollo 11 Headlines</a></li>
+                <li><a href="https://syvnews.com/news/archives/headlines-apollo-11-moon-landing/collection_3c0d5e05-ab70-5d3f-88fc-f43c67b7f810.html#12" target="_blank">SYV News - Apollo 11 Headlines</a></li>
+                <li><a href="https://issuu.com/quotidianonet/docs/1969.07.21_-_l_impronta_di_neil_arm" target="_blank">Issuu - L'Impronta di Neil Arm</a></li>
+                <li><a href="https://www.repubblica.it/scienze/2019/07/13/foto/allunaggio_luglio_1969_le_prime_pagine_dei_giornali_italiani-230917118/1/" target="_blank">Repubblica - Prime pagine giornali italiani</a></li>
+                <li><a href="https://history.stackexchange.com/questions/15023/what-was-the-internal-soviet-reaction-to-the-moon-landing?utm_source=chatgpt.com" target="_blank">History StackExchange - Soviet Reaction</a></li>
+            </ul>
+            <button class="close-sources-btn">Close</button>
         </div>
     </div>
 
