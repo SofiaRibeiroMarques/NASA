@@ -16,6 +16,7 @@ const compareActionsArea = document.getElementById('compare-actions');
 const comparePreviewSlot1 = document.getElementById('compare-preview-slot-1');
 const comparePreviewSlot2 = document.getElementById('compare-preview-slot-2');
 const legendBtn = document.getElementById('legend-btn');
+const sourcesOverlay = document.getElementById('sources-overlay');
 
 function toggleLegend() {
     const legend = document.getElementById('map-legend');
@@ -228,11 +229,15 @@ document.addEventListener('click', function (e) {
 const purposeOverlay = document.getElementById('purpose-overlay');
 purposeOverlay.style.display = 'flex';
 const closePurposeModal = () => { purposeOverlay.style.display = 'none'; };
+const toggleSourcesModal = () => { sourcesOverlay.style.display = (sourcesOverlay.style.display === 'flex') ? 'none' : 'flex'; };
+const closeSourcesModal = () => { sourcesOverlay.style.display = 'none'; };
+
 purposeOverlay.querySelector('.close-purpose-btn').addEventListener('click', closePurposeModal);
+sourcesOverlay.querySelector('.close-sources-btn').addEventListener('click', closeSourcesModal);
 
 window.addEventListener('keydown', (e) => {
     if(e.key === "Escape") { 
-        closeComparison(); closeDetail(); closePurposeModal();
+        closeComparison(); closeDetail(); closePurposeModal(); closeSourcesModal();
         document.getElementById('lightbox').style.display = 'none'; 
         if (compareMode) _toggleCompareModeInternal(false);
     }
@@ -241,7 +246,6 @@ window.addEventListener('keydown', (e) => {
 function showView(viewName) {
     document.querySelectorAll('.nav-tab[onclick]').forEach(t => t.classList.toggle('active', t.getAttribute('onclick').includes(viewName)));
     document.getElementById('archive-view').style.display = viewName === 'archive' ? 'block' : 'none';
-    document.getElementById('compare-select-container').style.display = viewName === 'archive' ? 'none' : 'flex';
     legendBtn.style.display = viewName === 'archive' ? 'none' : 'flex';
     if (viewName === 'archive') {
         document.getElementById('map-legend').style.display = 'none';
@@ -264,13 +268,6 @@ function renderArchive() {
                     <button class="filter-btn ${currentImportanceFilter === '2' ? 'active' : ''}" onclick="filterImportance('2')">Significant</button>
                     <button class="filter-btn ${currentImportanceFilter === '3' ? 'active' : ''}" onclick="filterImportance('3')">Brief</button>
                 </div>
-            </div>
-            <div style="display:flex; gap:10px; align-items:flex-end;">
-                ${!compareMode ? 
-                    `<button class="filter-btn archive-compare-button" onclick="toggleCompareMode()">Compare/Select</button>` : 
-                    `<button class="filter-btn" onclick="toggleCompareMode()" style="background:#333; color:#fff; border-color:#333;">Cancel</button>
-                     <button class="filter-btn archive-compare-button ${selection.length === 2 ? 'active' : ''}" ${selection.length !== 2 ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''} onclick="executeComparison()">Compare</button>`
-                }
             </div>
         </div>
         ${compareMode ? `<div class="compare-hint">Select two images to compare different perspectives.</div>` : ''}
