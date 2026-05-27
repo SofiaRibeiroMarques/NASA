@@ -40,12 +40,13 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetic
     text-decoration: none;
     display: inline-block;
     transition: all 0.2s;
+    box-sizing: border-box; /* Ensure padding doesn't push it out */
 }
 .nav-tab:hover, .nav-tab.active { color: var(--moon-hi); background: rgba(200,192,168,0.04); }
 
 .site-title {
     font-weight: 600;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     margin-left: 25px;
     color: #e0e0e0;
     text-transform: none;
@@ -151,7 +152,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetic
 #archive-view {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #e6e6e6; z-index: 9000; overflow-y: auto;
-    padding: 50px 10% 40px; box-sizing: border-box;
+    padding: 40px 11% 40px; box-sizing: border-box;
 }
 .continent-block { margin-bottom: 60px; }
 .continent-title { 
@@ -251,7 +252,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetic
 #map-legend {
     position: fixed;
     bottom: 30px;
-    right: 25px;
+    left: 59px;
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(4px);
     padding: 12px 15px;
@@ -280,7 +281,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetic
 #legend-btn {
     position: fixed;
     bottom: 30px;
-    right: 25px;
+    left: 25px;
     width: 35px;
     height: 35px;
     background: rgba(255, 255, 255, 0.7);
@@ -320,13 +321,69 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetic
 }
 .close-purpose-btn:hover { background: #000; }
 
+/* --- SOURCES MODAL --- */
+#sources-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+    z-index: 25000; align-items: center; justify-content: center; animation: fadeIn 0.3s;
+}
+
+#sources-modal {
+    background: #fff; color: #333; padding: 30px 40px;
+    max-width: 550px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+#sources-modal h2 { margin-top: 0; font-size: 16px; letter-spacing: 2px; text-transform: none; }
+#sources-modal ul {
+    list-style: none;
+    padding: 0;
+    margin: 25px 0;
+}
+#sources-modal a {
+    color: #444;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+}
+#sources-modal li:last-child a { border-bottom: none; }
+#sources-modal a::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: var(--imp-med);
+    border-radius: 50%;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: transform 0.2s;
+}
+#sources-modal a:hover {
+    color: #000;
+    padding-left: 5px;
+}
+#sources-modal a:hover::before {
+    transform: scale(1.3);
+    opacity: 1;
+}
+.close-sources-btn {
+    display: block; margin-top: 25px; margin-left: auto; background: #333; color: #fff;
+    border: none; padding: 10px 25px; cursor: pointer; text-transform: none;
+    font-size: 11px; letter-spacing: 1px; transition: background 0.2s;
+}
+#sources-modal .close-sources-btn:hover { background: #000; }
+
 #compare-select-container {
     position: fixed;
     bottom: 30px;
-    left: 25px;
+    right: 25px;
     z-index: 11000;
     display: flex;
     align-items: flex-end;
+    flex-direction: row-reverse;
     gap: 10px;
 }
 #compare-select-btn {
