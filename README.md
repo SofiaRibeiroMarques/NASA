@@ -4,7 +4,7 @@ Docenti: A. Gysin, G. Profeta
 
 Progetto 1: La conquista dello spazio
 
-# MOONPRINT
+# MoonPrint
 Autore: Sofia Marques \
 [MOONPRINT](https://sofiaribeiromarques.github.io/NASA/progetto/index.html)
 
