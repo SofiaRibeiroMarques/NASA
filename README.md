@@ -6,7 +6,7 @@ Progetto 1: La conquista dello spazio
 
 # MoonPrint
 Autore: Sofia Marques \
-[MOONPRINT](https://sofiaribeiromarques.github.io/NASA/progetto/index.html)
+[MoonPrint](https://sofiaribeiromarques.github.io/NASA/progetto/index.html)
 
 
 ## Introduzione e tema
