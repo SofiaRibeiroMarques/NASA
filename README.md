@@ -19,24 +19,18 @@ Il progetto diventa così non solo un archivio, ma un’indagine interattiva su 
 
 
 ## Riferimenti progettuali
-Per la parte della mappa interattiva mi sono ispirata al sito nicholsonconstruction.com (https://www.nicholsonconstruction.com/drill-down/the-hanford-nuclear-site) che al suo interno mostra delle mappe che hanno degli elementi cliccabili che contengono delle informazioni.
-Per la visualizzazione delle front pages, ho seguito il layout della pagina Artandculture google (https://artsandculture.google.com/category/artist) per avere una maggiore organizzazione dei contenuti per semplificare l'esperienza utenti.
+Per la parte della mappa interattiva mi sono ispirata al sito [nicholsonconstruction.com](https://www.nicholsonconstruction.com/drill-down/the-hanford-nuclear-site) che al suo interno mostra delle mappe che hanno degli elementi cliccabili che contengono delle informazioni.
+Per la visualizzazione delle front pages, ho seguito il layout della pagina [Artandculture google](https://artsandculture.google.com/category/artist) per avere una maggiore organizzazione dei contenuti per semplificare l'esperienza utenti.
 
 
 
 ## Design dell’interfaccia e modalità di interazione
-Il sito utilizza un layout one-page organizzato in sezioni verticali, che consente una navigazione fluida sia tramite scroll sia attraverso un menu di navigazione. La struttura è pensata per guidare l’utente in modo chiaro tra le diverse aree tematiche, mantenendo una continuità visiva senza interruzioni tra una sezione e l’altra. L’interazione avviene principalmente tramite click su elementi del menu e su pannelli interattivi, che permettono di mostrare o nascondere contenuti senza ricaricare la pagina, favorendo un’esplorazione più dinamica e non lineare.
+Il sito utilizza un layout organizzato in sezioni verticali, che consente una navigazione fluida sia tramite scroll sia attraverso un menu di navigazione. La struttura è pensata per guidare l’utente in modo chiaro tra le diverse aree tematiche, mantenendo una continuità visiva senza interruzioni tra una sezione e l’altra. L’interazione avviene principalmente tramite click su elementi del menu e su pannelli interattivi, che permettono di mostrare o nascondere contenuti senza ricaricare la pagina, favorendo un’esplorazione più dinamica e non lineare.
 Un elemento distintivo dell’interfaccia è la mappa interattiva, che rappresenta visivamente i diversi paesi coinvolti nell’analisi. Su di essa sono presenti dei pallini cliccabili, ciascuno associato a uno specifico contesto nazionale: selezionandoli, l’utente può accedere a contenuti dedicati, come articoli, immagini o approfondimenti relativi al modo in cui i media di quel paese hanno raccontato lo sbarco sulla Luna. Questo sistema rende l’esperienza più immediata e intuitiva, permettendo di passare rapidamente da un contesto all’altro attraverso un’interazione diretta e visiva.
-
-
 
 https://github.com/user-attachments/assets/69db0ad4-2ba6-4391-8b2d-5d6cfcaff7fc
 
 https://github.com/user-attachments/assets/da578e60-9cf1-4eb7-8d75-cf54d04e1be5
-
-
-
-
 
 
 ## Tecnologia usata
