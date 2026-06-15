@@ -6,7 +6,7 @@
     <title>MoonPrint</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
 
@@ -90,7 +90,7 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="data.js"></script>
+    <script src="assets/data/data.js"></script>
     <script>
 const map = L.map('map', { 
     zoomControl: false, 
@@ -381,8 +381,8 @@ function renderArchive() {
             html += `<div class="country-block"><div class="country-title">${country}</div><div class="grid-container">`;
             cItems.forEach(t => {
                 const isSelected = selection.includes(t);
-                html += `<div class="grid-item ${isSelected ? 'selected' : ''}" onclick="${compareMode ? `toggleGridSelection('${t.id}')` : `openDetail('${t.id}')`}">
-                            <div class="grid-img-wrapper"><img src="${t.img}"></div>
+                html += `<div class="grid-item ${isSelected ? 'selected' : ''}" onclick="${compareMode ? `toggleGridSelection('${t.id}')` : `openDetail('${t.id}')`}" title="${t.newspaper}">
+                            <div class="grid-img-wrapper"><img src="${t.img}" onerror="console.error('Errore caricamento immagine per: ${t.newspaper}', this.src)"></div>
                             <div class="grid-info"><div class="grid-city">${t.city}</div><div class="grid-journal">${t.newspaper}</div></div>
                          </div>`;
             });
