@@ -9,7 +9,7 @@
 
 body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetica Neue', Arial, sans-serif; overflow: hidden; color: white; margin-top:0; }
 
-#map { height: calc(100vh - 50px); width: 100%; background: #e6e6e6; margin-top: 50px }
+#map { height: calc(110vh - 40px); width: 100%; background: #e6e6e6; }
 .leaflet-tile-pane {
     filter: grayscale(100%) brightness(105%);
 }
@@ -42,7 +42,8 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetic
     display: inline-block;
     transition: all 0.2s;
 }
-.nav-tab:hover, .nav-tab.active { color: var(--moon-hi); background: rgba(200,192,168,0.04); }
+.nav-tab:hover, .nav-tab.active { color: var(--moon-hi); background: rgba(200,192,168,0.04);
+ }
 
 .site-title {
     font-weight: 600;
@@ -471,12 +472,12 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetic
     transition: all 0.2s;
 }
 #start-compare-btn.enabled {
-    background: #0026ff;
+    background: #1e1e1e;
     cursor: pointer;
     opacity: 1;
     color: #fff;
 }
-#start-compare-btn.enabled:hover { background: #001ecc; }
+#start-compare-btn.enabled:hover { background: #414141; }
 
 #cancel-compare-btn {
     background: rgba(255, 255, 255, 0.7);
