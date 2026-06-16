@@ -3,7 +3,8 @@ const map = L.map('map', {
     minZoom: 2, 
     maxBounds: [[-85, -180], [85, 180]],
     maxBoundsViscosity: 1.0,
-    bounceAtZoomLimits: false
+    bounceAtZoomLimits: false,
+    attributionControl: false
 });
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
