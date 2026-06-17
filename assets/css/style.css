@@ -95,7 +95,7 @@ body {
     margin-top: 8px;
     border: 1px solid #333;
     background: #bdbdbd;
-    cursor: zoom-in;
+    cursor: pointer;
 }
 
 .popup-img-container img {
