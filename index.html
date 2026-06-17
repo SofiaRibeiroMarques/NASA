@@ -15,11 +15,12 @@
   <div>
     <button class="nav-tab active" onclick="showView('map')">Map</button> 
     <button class="nav-tab" onclick="showView('archive')">Archive</button>
-    <button class="nav-tab" onclick="toggleSourcesModal()">Sources</button>
+    <button class="nav-tab" onclick="showView('sources')">Sources</button>
   </div>
 </nav>
 
     <div id="archive-view"></div>
+    <div id="sources-view"></div>
 
     <div id="compare-select-container">
         <button id="compare-select-btn" onclick="toggleCompareMode()">Compare/Select</button>
@@ -68,20 +69,6 @@
                 • Click on the "compare/select" button to select two markers to compare different perspectives.<br>
             </p>
             <button class="close-purpose-btn">Start</button>
-        </div>
-    </div>
-
-    <div id="sources-overlay">
-        <div id="sources-modal">
-            <h2>Sources</h2>
-            <ul id="sources-list">
-                <li>Santa Maria Times. (n.d.). Apollo 11 Headlines.<br><a href="https://santamariatimes.com/news/archives/headlines-apollo-11-moon-landing/collection_2fa322a0-8815-53ca-bf3b-3a1b92e92c36.html#16" target="_blank">https://santamariatimes.com/news/archives/headlines-apollo-11-moon-landing/collection_2fa322a0-8815-53ca-bf3b-3a1b92e92c36.html#16</a></li>
-                <li>SYV News. (n.d.). Apollo 11 Headlines.<br><a href="https://syvnews.com/news/archives/headlines-apollo-11-moon-landing/collection_3c0d5e05-ab70-5d3f-88fc-f43c67b7f810.html#12" target="_blank">https://syvnews.com/news/archives/headlines-apollo-11-moon-landing/collection_3c0d5e05-ab70-5d3f-88fc-f43c67b7f810.html#12</a></li>
-                <li>Issuu. (n.d.). L'Impronta di Neil Arm.<br><a href="https://issuu.com/quotidianonet/docs/1969.07.21_-_l_impronta_di_neil_arm" target="_blank">https://issuu.com/quotidianonet/docs/1969.07.21_-_l_impronta_di_neil_arm</a></li>
-                <li>la Repubblica. (n.d.). Prime pagine giornali italiani.<br><a href="https://www.repubblica.it/scienze/2019/07/13/foto/allunaggio_luglio_1969_le_prime_pagine_dei_giornali_italiani-230917118/1/" target="_blank">https://www.repubblica.it/scienze/2019/07/13/foto/allunaggio_luglio_1969_le_prime_pagine_dei_giornali_italiani-230917118/1/</a></li>
-                <li>History Stack Exchange. (n.d.). What was the internal Soviet reaction to the moon landing?<br><a href="https://history.stackexchange.com/questions/15023/what-was-the-internal-soviet-reaction-to-the-moon-landing" target="_blank">https://history.stackexchange.com/questions/15023/what-was-the-internal-soviet-reaction-to-the-moon-landing</a></li>
-            </ul>
-            <button class="close-sources-btn">Close</button>
         </div>
     </div>
 
