@@ -27,6 +27,19 @@ const archiveView = document.getElementById('archive-view');
 const sourcesView = document.getElementById('sources-view');
 const lightbox = document.getElementById('lightbox');
 
+// Creazione dinamica del tasto Purpose e del contenitore controlli sinistra
+const leftControls = document.createElement('div');
+leftControls.id = 'left-controls-container';
+
+const purposeBtn = document.createElement('button');
+purposeBtn.id = 'purpose-btn'; // L'ID rimane lo stesso
+purposeBtn.innerText = 'About'; // Cambia il testo del pulsante
+purposeBtn.onclick = () => { purposeOverlay.style.display = 'flex'; };
+
+leftControls.appendChild(purposeBtn);
+leftControls.appendChild(legendBtn);
+document.body.appendChild(leftControls);
+
 /* ─── FUNZIONI DI UTILITÀ ─── */
 function getPubColor(t) {
     if (t.importance == 1) return "var(--imp-high)";
@@ -43,8 +56,8 @@ function toggleLegend() {
 function updateComparePreview(pub, slotElement, index) {
     if (pub && pub.img) {
         slotElement.innerHTML = `<button class="remove-btn" onclick="removeFromSelection(${index})">−</button><img src="${pub.img}" alt="${pub.newspaper}"><div class="newspaper-name-overlay">${pub.city}, ${pub.country}</div>`;
-    } else if (pub && pub.country === "China") { // Caso speciale Cina (No Image)
-        slotElement.innerHTML = `<button class="remove-btn" onclick="removeFromSelection(${index})">−</button><span style="color:#666; letter-spacing:1px; text-transform:uppercase;">no image</span><div class="newspaper-name-overlay">${pub.country}</div>`;
+    } else if (pub && pub.country === "China") { // Caso speciale Cina (No Publication)
+        slotElement.innerHTML = `<button class="remove-btn" onclick="removeFromSelection(${index})">−</button><span style="color:#666; font-size:9px; letter-spacing:1px; text-transform:uppercase;">no publication</span><div class="newspaper-name-overlay">${pub.country}</div>`;
     } else {
         slotElement.innerHTML = '';
     }
@@ -180,7 +193,7 @@ const renderCard = (t, color) => `
         </div>
     </div>
     <div class="image-box">
-        ${t.img ? `<img src="${t.img}">` : `<span style="color:#666; font-size:11px; letter-spacing:1px; text-transform:uppercase;">no image</span>`}
+        ${t.img ? `<img src="${t.img}">` : `<span style="color:#666; font-size:11px; letter-spacing:1px; text-transform:uppercase;">no publication</span>`}
     </div>
     <div class="card-footer">
         <div class="footer-label">${t.newspaper || t.country} • ${t.city || t.continent}</div>
@@ -246,9 +259,12 @@ document.addEventListener('click', function (e) {
     }
 });
 
-purposeOverlay.style.display = 'flex';
 const closePurposeModal = () => { purposeOverlay.style.display = 'none'; };
 purposeOverlay.querySelector('.close-purpose-btn').addEventListener('click', closePurposeModal);
+
+// Inizializzazione: mostra la mappa e l'overlay di introduzione all'avvio
+showView('map');
+purposeOverlay.style.display = 'flex';
 
 window.addEventListener('keydown', (e) => {
     if(e.key === "Escape") { 
@@ -263,10 +279,10 @@ function showView(viewName) {
     document.querySelectorAll('.nav-tab[onclick]').forEach(t => t.classList.toggle('active', t.getAttribute('onclick').includes(viewName)));
     archiveView.style.display = viewName === 'archive' ? 'block' : 'none';
     sourcesView.style.display = viewName === 'sources' ? 'block' : 'none';
+    document.getElementById('map').style.display = viewName === 'map' ? 'block' : 'none';
     
     // Gestione visibilità elementi mappa
-    legendBtn.style.display = (viewName === 'map' || viewName === 'archive') ? 'none' : 'none'; // Da regolare base a design
-    legendBtn.style.display = (viewName === 'map') ? 'flex' : 'none';
+    leftControls.style.display = (viewName === 'map') ? 'flex' : 'none';
     document.getElementById('compare-select-container').style.display = (viewName === 'sources') ? 'none' : 'flex';
 
     if (viewName === 'archive') {
