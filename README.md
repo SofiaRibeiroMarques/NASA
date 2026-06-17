@@ -14,8 +14,7 @@ Il sito visualizza come lo sbarco sulla Luna sia stato narrato dai giornali di d
 Piuttosto che funzionare come un semplice archivio, la piattaforma analizza le scelte editoriali fatte dalle diverse testate.
 Attraverso una mappa interattiva, gli utenti possono esplorare le prime pagine dei quotidiani di vari paesi.
 Inoltre, tramite le visualizzazioni dei dati, il progetto mostra come lo stesso evento storico sia stato interpretato e raccontato in modi diversi a seconda del contesto culturale e politico.
-L’esperienza integra inoltre un archivio di telecronache storiche e comunicazioni audio tra gli astronauti e Houston, sincronizzate con i momenti chiave dell’evento, permettendo di confrontare l’evento reale con la narrazione costruita dai media.
-Il progetto diventa così non solo un archivio, ma un’indagine interattiva su come i media globali hanno costruito il significato di uno degli eventi più iconici della storia contemporanea.
+Il progetto diventa così non solo un archivio, ma un’indagine interattiva su come i media globali hanno costruito il significato di uno degli eventi più iconici della storia.
 
 
 ## Riferimenti progettuali
@@ -25,8 +24,8 @@ Per la visualizzazione delle front pages, ho seguito il layout della pagina [Art
 
 
 ## Design dell’interfaccia e modalità di interazione
-Il sito utilizza un layout organizzato in sezioni verticali, che consente una navigazione fluida sia tramite scroll sia attraverso un menu di navigazione. La struttura è pensata per guidare l’utente in modo chiaro tra le diverse aree tematiche, mantenendo una continuità visiva senza interruzioni tra una sezione e l’altra. L’interazione avviene principalmente tramite click su elementi del menu e su pannelli interattivi, che permettono di mostrare o nascondere contenuti senza ricaricare la pagina, favorendo un’esplorazione più dinamica e non lineare.
-Un elemento distintivo dell’interfaccia è la mappa interattiva, che rappresenta visivamente i diversi paesi coinvolti nell’analisi. Su di essa sono presenti dei pallini cliccabili, ciascuno associato a uno specifico contesto nazionale: selezionandoli, l’utente può accedere a contenuti dedicati, come articoli, immagini o approfondimenti relativi al modo in cui i media di quel paese hanno raccontato lo sbarco sulla Luna. Questo sistema rende l’esperienza più immediata e intuitiva, permettendo di passare rapidamente da un contesto all’altro attraverso un’interazione diretta e visiva.
+Il sito utilizza un layout organizzato in sezioni verticali, che consente una navigazione fluida sia tramite scroll sia attraverso un menu di navigazione. La struttura è pensata per guidare l’utente in modo chiaro tra le diverse aree, mantenendo una continuità visiva senza interruzioni tra una sezione e l’altra. L’interazione avviene principalmente tramite click su elementi del menu e su elementi interattivi, che permettono di mostrare o nascondere contenuti senza ricaricare la pagina, favorendo un’esplorazione più dinamica e non lineare.
+Un elemento distintivo dell’interfaccia è la mappa interattiva, che rappresenta visivamente i diversi paesi coinvolti nell’analisi. Su di essa sono presenti dei pallini cliccabili, ciascuno associato a uno specifico contesto nazionale: selezionandoli, l’utente può visualizzare l’immagine della testata giornalistica e approfondire il modo in cui i media di quel paese hanno raccontato lo sbarco sulla Luna. Questo sistema rende l’esperienza più immediata e intuitiva, permettendo di passare rapidamente da un contesto all’altro attraverso un’interazione diretta e visiva.
 
 
 <img width="1511" height="857" alt="Ribeiro_Sofia_progetto_1_map" src="https://github.com/user-attachments/assets/0b0b3c42-c608-440d-96db-e0d8a291ed75" />
@@ -36,8 +35,6 @@ Un elemento distintivo dell’interfaccia è la mappa interattiva, che rappresen
 
 
 https://github.com/user-attachments/assets/83d16d7d-73e1-4c2f-b142-83e8bf86ca25
-
-
 
 
 
