@@ -150,7 +150,7 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetic
 .leaflet-popup-tip { background: #111; }
 
 /* ─── ARCHIVE VIEW ─── */
-#archive-view {
+#archive-view, #sources-view {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #e6e6e6; z-index: 9000; overflow-y: auto;
     padding: 40px 9% 40px; box-sizing: border-box;
@@ -319,23 +319,20 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetic
 }
 .close-purpose-btn:hover { background: #000; }
 
-/* --- SOURCES MODAL --- */
-#sources-overlay {
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
-    z-index: 25000; align-items: center; justify-content: center; animation: fadeIn 0.3s;
-}
-
-#sources-modal {
-    background: #fff; color: #333; padding: 30px 40px;
-    max-width: 550px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-#sources-modal h2 { margin-top: 0; font-size: 16px; letter-spacing: 2px; text-transform: none; }
-#sources-modal ul { list-style: none; padding: 0; margin: 25px 0; }
-#sources-modal li {
+/* --- SOURCES VIEW (Archive Style) --- */
+#sources-view .continent-title { padding-top: 40px; }
+#sources-view ul { list-style: none; padding: 0; margin: 0; }
+#sources-view li {
     color: #444; font-size: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 0;
+    border-bottom: 1px solid #ccc;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    word-break: break-all;
+}
+#sources-view li:last-child { border-bottom: none; }
+#sources-view li a {
+    color: var(--imp-med);
     line-height: 1.5;
     overflow-wrap: anywhere;
     word-break: break-all;
