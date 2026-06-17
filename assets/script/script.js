@@ -165,7 +165,7 @@ publications.forEach(t => {
     m.pubData = t;
     const selectBtnHtml = `<button class="popup-select-btn" data-id="${t.id}" onclick="toggleSelection('${t.id}')">Select</button>`;
     const popupHtml = t.country === "China" 
-        ? `<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;"><strong style="color:#eee; font-size:8px; display:block; margin-bottom:5px; text-transform:uppercase;">Analysis</strong>${t.analysis}<div class="popup-btns">${selectBtnHtml}</div></div>`
+        ? `<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;">${t.analysis}<div class="popup-btns">${selectBtnHtml}</div></div>`
         : `<div style="width:180px"><strong>${t.newspaper}</strong><br><small>${t.city}, ${t.country}</small><div class="popup-img-container"><img src="${t.img}" data-pub-id="${t.id}"><div class="popup-view-overlay">View</div></div><div class="popup-btns">${selectBtnHtml}</div></div>`;
     m.bindPopup(popupHtml);
 });
