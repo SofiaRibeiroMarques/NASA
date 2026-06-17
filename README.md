@@ -29,13 +29,15 @@ Il sito utilizza un layout organizzato in sezioni verticali, che consente una na
 Un elemento distintivo dell’interfaccia è la mappa interattiva, che rappresenta visivamente i diversi paesi coinvolti nell’analisi. Su di essa sono presenti dei pallini cliccabili, ciascuno associato a uno specifico contesto nazionale: selezionandoli, l’utente può accedere a contenuti dedicati, come articoli, immagini o approfondimenti relativi al modo in cui i media di quel paese hanno raccontato lo sbarco sulla Luna. Questo sistema rende l’esperienza più immediata e intuitiva, permettendo di passare rapidamente da un contesto all’altro attraverso un’interazione diretta e visiva.
 
 
-
-
-
-
-<img width="1511" height="857" alt="Ribeiro_Sofia_progetto_1_intro" src="https://github.com/user-attachments/assets/c25e5f77-4c36-463d-bfaf-81fa7c2c2eea" />
 <img width="1511" height="857" alt="Ribeiro_Sofia_progetto_1_map" src="https://github.com/user-attachments/assets/0b0b3c42-c608-440d-96db-e0d8a291ed75" />
 <img width="1511" height="857" alt="Ribeiro_Sofia_progetto_1_sources" src="https://github.com/user-attachments/assets/44e7ff56-8288-46f5-9ece-119ed7710cb5" />
+<img width="1511" height="857" alt="Ribeiro_Sofia_progetto_1_archive" src="https://github.com/user-attachments/assets/8d7b3009-3df1-4215-a011-7b18a1699142" />
+
+
+
+
+
+
 
 
 
