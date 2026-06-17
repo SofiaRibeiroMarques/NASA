@@ -17,7 +17,6 @@ const compareActionsArea = document.getElementById('compare-actions');
 const comparePreviewSlot1 = document.getElementById('compare-preview-slot-1');
 const comparePreviewSlot2 = document.getElementById('compare-preview-slot-2');
 const legendBtn = document.getElementById('legend-btn');
-const sourcesOverlay = document.getElementById('sources-overlay');
 
 function toggleLegend() {
     const legend = document.getElementById('map-legend');
@@ -230,15 +229,12 @@ document.addEventListener('click', function (e) {
 const purposeOverlay = document.getElementById('purpose-overlay');
 purposeOverlay.style.display = 'flex';
 const closePurposeModal = () => { purposeOverlay.style.display = 'none'; };
-const toggleSourcesModal = () => { sourcesOverlay.style.display = (sourcesOverlay.style.display === 'flex') ? 'none' : 'flex'; };
-const closeSourcesModal = () => { sourcesOverlay.style.display = 'none'; };
 
 purposeOverlay.querySelector('.close-purpose-btn').addEventListener('click', closePurposeModal);
-sourcesOverlay.querySelector('.close-sources-btn').addEventListener('click', closeSourcesModal);
 
 window.addEventListener('keydown', (e) => {
     if(e.key === "Escape") { 
-        closeComparison(); closeDetail(); closePurposeModal(); closeSourcesModal();
+        closeComparison(); closeDetail(); closePurposeModal();
         document.getElementById('lightbox').style.display = 'none'; 
         if (compareMode) _toggleCompareModeInternal(false);
     }
@@ -247,11 +243,35 @@ window.addEventListener('keydown', (e) => {
 function showView(viewName) {
     document.querySelectorAll('.nav-tab[onclick]').forEach(t => t.classList.toggle('active', t.getAttribute('onclick').includes(viewName)));
     document.getElementById('archive-view').style.display = viewName === 'archive' ? 'block' : 'none';
-    legendBtn.style.display = viewName === 'archive' ? 'none' : 'flex';
+    document.getElementById('sources-view').style.display = viewName === 'sources' ? 'block' : 'none';
+    
+    // Gestione visibilità elementi mappa
+    legendBtn.style.display = (viewName === 'map') ? 'flex' : 'none';
+    document.getElementById('compare-select-container').style.display = (viewName === 'sources') ? 'none' : 'flex';
+
     if (viewName === 'archive') {
         document.getElementById('map-legend').style.display = 'none';
         renderArchive();
     }
+    if (viewName === 'sources') {
+        renderSources();
+    }
+}
+
+function renderSources() {
+    const container = document.getElementById('sources-view');
+    container.innerHTML = `
+        <div class="continent-block">
+            <div class="continent-title">Information Sources</div>
+            <ul>
+                <li>Santa Maria Times. (n.d.). Apollo 11 Headlines.<br><a href="https://santamariatimes.com/news/archives/headlines-apollo-11-moon-landing/collection_2fa322a0-8815-53ca-bf3b-3a1b92e92c36.html#16" target="_blank">https://santamariatimes.com/news/archives/headlines-apollo-11-moon-landing/collection_2fa322a0-8815-53ca-bf3b-3a1b92e92c36.html#16</a></li>
+                <li>SYV News. (n.d.). Apollo 11 Headlines.<br><a href="https://syvnews.com/news/archives/headlines-apollo-11-moon-landing/collection_3c0d5e05-ab70-5d3f-88fc-f43c67b7f810.html#12" target="_blank">https://syvnews.com/news/archives/headlines-apollo-11-moon-landing/collection_3c0d5e05-ab70-5d3f-88fc-f43c67b7f810.html#12</a></li>
+                <li>Issuu. (n.d.). L'Impronta di Neil Arm.<br><a href="https://issuu.com/quotidianonet/docs/1969.07.21_-_l_impronta_di_neil_arm" target="_blank">https://issuu.com/quotidianonet/docs/1969.07.21_-_l_impronta_di_neil_arm</a></li>
+                <li>la Repubblica. (n.d.). Prime pagine giornali italiani.<br><a href="https://www.repubblica.it/scienze/2019/07/13/foto/allunaggio_luglio_1969_le_prime_pagine_dei_giornali_italiani-230917118/1/" target="_blank">https://www.repubblica.it/scienze/2019/07/13/foto/allunaggio_luglio_1969_le_prime_pagine_dei_giornali_italiani-230917118/1/</a></li>
+                <li>History Stack Exchange. (n.d.). What was the internal Soviet reaction to the moon landing?<br><a href="https://history.stackexchange.com/questions/15023/what-was-the-internal-soviet-reaction-to-the-moon-landing" target="_blank">https://history.stackexchange.com/questions/15023/what-was-the-internal-soviet-reaction-to-the-moon-landing</a></li>
+            </ul>
+        </div>
+    `;
 }
 
 function renderArchive() {
