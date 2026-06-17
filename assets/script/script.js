@@ -1,3 +1,4 @@
+/* ─── CONFIGURAZIONE MAPPA ─── */
 const map = L.map('map', { 
     zoomControl: false, 
     minZoom: 2, 
@@ -8,32 +9,42 @@ const map = L.map('map', {
 });
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
-let selection = [];
-let compareMode = false;
+/* ─── STATO DELL'APPLICAZIONE ─── */
+let selection = [];         // Memorizza le pubblicazioni selezionate per la comparazione
+let compareMode = false;    // Indica se la modalità comparazione è attiva
+let currentImportanceFilter = 'all';
+const markers = L.featureGroup();
 
+/* ─── ELEMENTI DOM ─── */
 const compareSelectBtn = document.getElementById('compare-select-btn');
 const comparePreviewArea = document.getElementById('compare-preview-area');
 const compareActionsArea = document.getElementById('compare-actions');
 const comparePreviewSlot1 = document.getElementById('compare-preview-slot-1');
 const comparePreviewSlot2 = document.getElementById('compare-preview-slot-2');
 const legendBtn = document.getElementById('legend-btn');
+const purposeOverlay = document.getElementById('purpose-overlay');
+const archiveView = document.getElementById('archive-view');
+const sourcesView = document.getElementById('sources-view');
+const lightbox = document.getElementById('lightbox');
 
-function toggleLegend() {
-    const legend = document.getElementById('map-legend');
-    legend.style.display = (legend.style.display === 'flex') ? 'none' : 'flex';
-}
-
+/* ─── FUNZIONI DI UTILITÀ ─── */
 function getPubColor(t) {
     if (t.importance == 1) return "var(--imp-high)";
     if (t.importance == 2) return "var(--imp-med)";
     return "var(--imp-low)";
 }
 
+function toggleLegend() {
+    const legend = document.getElementById('map-legend');
+    legend.style.display = (legend.style.display === 'flex') ? 'none' : 'flex';
+}
+
+/* ─── LOGICA DI COMPARAZIONE ─── */
 function updateComparePreview(pub, slotElement, index) {
     if (pub && pub.img) {
         slotElement.innerHTML = `<button class="remove-btn" onclick="removeFromSelection(${index})">−</button><img src="${pub.img}" alt="${pub.newspaper}"><div class="newspaper-name-overlay">${pub.city}, ${pub.country}</div>`;
-    } else if (pub && pub.country === "China") {
-        slotElement.innerHTML = `<button class="remove-btn" onclick="removeFromSelection(${index})">−</button><div class="newspaper-name-overlay">${pub.country} (No Data)</div>`;
+    } else if (pub && pub.country === "China") { // Caso speciale Cina (No Image)
+        slotElement.innerHTML = `<button class="remove-btn" onclick="removeFromSelection(${index})">−</button><span style="color:#666; letter-spacing:1px; text-transform:uppercase;">no image</span><div class="newspaper-name-overlay">${pub.country}</div>`;
     } else {
         slotElement.innerHTML = '';
     }
@@ -89,7 +100,7 @@ function toggleSelection(pubId) {
             selection.push(pub);
             markers.eachLayer(layer => {
                 if (layer.pubData && layer.pubData.id === pubId) {
-                    layer.setStyle({ weight: 3, color: 'white' });
+                    layer.setStyle({ weight: 3, color: '#fff' });
                 }
             });
             refreshPreviews();
@@ -109,6 +120,11 @@ function executeComparison() {
 function _toggleCompareModeInternal(activate) {
     compareMode = (activate === undefined) ? !compareMode : activate;
     if (compareMode) {
+        compareSelectBtn.classList.add('hidden');
+        comparePreviewArea.classList.add('visible');
+        compareActionsArea.classList.add('visible');
+        // Invece di inline style, è meglio usare classi CSS se possibile, 
+        // ma per ora manteniamo la logica esistente pulita:
         compareSelectBtn.style.display = 'none';
         comparePreviewArea.style.display = 'flex';
         compareActionsArea.style.display = 'flex';
@@ -121,15 +137,12 @@ function _toggleCompareModeInternal(activate) {
         clearAllComparePreviews();
         refreshPreviews();
     }
-    if (document.getElementById('archive-view').style.display === 'block') renderArchive();
+    if (archiveView.style.display === 'block') renderArchive();
 }
 
-function toggleCompareMode() {
-    _toggleCompareModeInternal();
-}
+const toggleCompareMode = () => _toggleCompareModeInternal();
 
-let currentImportanceFilter = 'all';
-const markers = L.featureGroup();
+/* ─── INIZIALIZZAZIONE MARKERS ─── */
 publications.forEach(t => {
     const color = getPubColor(t);
     const m = L.circleMarker(t.coords, { radius: 7, fillColor: color, stroke: true, color: '#fff', weight: 0, fillOpacity: 0.9 }).addTo(markers);
@@ -154,6 +167,7 @@ map.on('popupopen', function(e) {
     }
 });
 
+/* ─── RENDERING SCHEDE ─── */
 const renderCard = (t, color) => `
     <div class="card-header">
         <div class="header-left">
@@ -162,7 +176,7 @@ const renderCard = (t, color) => `
         </div>
     </div>
     <div class="image-box">
-        ${t.img ? `<img src="${t.img}">` : `<div style="padding:40px; color:#333; font-size:14px; line-height:1.6; text-align:left;">${t.analysis}</div>`}
+        ${t.img ? `<img src="${t.img}">` : `<span style="color:#666; font-size:11px; letter-spacing:1px; text-transform:uppercase;">no image</span>`}
     </div>
     <div class="card-footer">
         <div class="footer-label">${t.newspaper || t.country} • ${t.city || t.continent}</div>
@@ -173,8 +187,8 @@ const renderCard = (t, color) => `
                     ${t.main_headline_en && t.main_headline_en !== t.main_headline ? `<br><span style="font-style: italic; font-size: 0.9em; color: #666;">“${t.main_headline_en}”</span>` : ''}
                 </div>` : ''}
             <div class="footer-desc"><strong>Analysis</strong> ${t.analysis || '—'}</div>
-            <div class="footer-desc"><strong>Visual Hierarchy</strong> ${t.visual || '—'}</div>
-            <div class="footer-desc"><strong>Rhetorical Tone</strong> ${t.tone || '—'}</div>
+            ${t.visual ? `<div class="footer-desc"><strong>Visual Hierarchy</strong> ${t.visual}</div>` : ''}
+            ${t.tone ? `<div class="footer-desc"><strong>Rhetorical Tone</strong> ${t.tone}</div>` : ''}
         </div>
     </div>`;
 
@@ -200,6 +214,7 @@ function openDetail(pubId) {
 const closeDetail = () => { document.getElementById('detail-overlay').style.display = 'none'; };
 const closeComparison = () => { document.getElementById('comparison-overlay').style.display = 'none'; };
 
+/* ─── ARCHIVIO ─── */
 function toggleGridSelection(pubId) {
     const pub = publications.find(p => p.id === pubId);
     if (selection.includes(pub)) selection = selection.filter(p => p !== pub);
@@ -216,6 +231,7 @@ function filterImportance(val) {
 markers.addTo(map);
 map.fitBounds(markers.getBounds().pad(0.1));
 
+/* ─── EVENT LISTENER GLOBALI ─── */
 document.addEventListener('click', function (e) {
     if (e.target.tagName === 'IMG' && e.target.closest('.popup-img-container')) {
         openDetail(e.target.getAttribute('data-pub-id'));
@@ -226,10 +242,8 @@ document.addEventListener('click', function (e) {
     }
 });
 
-const purposeOverlay = document.getElementById('purpose-overlay');
 purposeOverlay.style.display = 'flex';
 const closePurposeModal = () => { purposeOverlay.style.display = 'none'; };
-
 purposeOverlay.querySelector('.close-purpose-btn').addEventListener('click', closePurposeModal);
 
 window.addEventListener('keydown', (e) => {
@@ -240,12 +254,14 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
+/* ─── NAVIGAZIONE VISTE ─── */
 function showView(viewName) {
     document.querySelectorAll('.nav-tab[onclick]').forEach(t => t.classList.toggle('active', t.getAttribute('onclick').includes(viewName)));
-    document.getElementById('archive-view').style.display = viewName === 'archive' ? 'block' : 'none';
-    document.getElementById('sources-view').style.display = viewName === 'sources' ? 'block' : 'none';
+    archiveView.style.display = viewName === 'archive' ? 'block' : 'none';
+    sourcesView.style.display = viewName === 'sources' ? 'block' : 'none';
     
     // Gestione visibilità elementi mappa
+    legendBtn.style.display = (viewName === 'map' || viewName === 'archive') ? 'none' : 'none'; // Da regolare base a design
     legendBtn.style.display = (viewName === 'map') ? 'flex' : 'none';
     document.getElementById('compare-select-container').style.display = (viewName === 'sources') ? 'none' : 'flex';
 
@@ -258,9 +274,9 @@ function showView(viewName) {
     }
 }
 
+/* ─── RENDERING CONTENUTI ─── */
 function renderSources() {
-    const container = document.getElementById('sources-view');
-    container.innerHTML = `
+    sourcesView.innerHTML = `
         <div class="continent-block">
             <div class="continent-title">Information Sources</div>
             <ul>
@@ -275,8 +291,7 @@ function renderSources() {
 }
 
 function renderArchive() {
-    const container = document.getElementById('archive-view');
-    container.innerHTML = "";
+    archiveView.innerHTML = "";
     const toolbar = document.createElement('div');
     toolbar.className = 'archive-toolbar';
     toolbar.innerHTML = `
@@ -293,7 +308,7 @@ function renderArchive() {
         </div>
         ${compareMode ? `<div class="compare-hint">Select two images to compare different perspectives.</div>` : ''}
     `;
-    container.appendChild(toolbar);
+    archiveView.appendChild(toolbar);
     const filteredPubs = currentImportanceFilter === 'all' ? publications : publications.filter(p => p.importance == currentImportanceFilter);
     const continents = [...new Set(filteredPubs.map(t => t.continent))];
     let fullHtml = "";
@@ -317,5 +332,5 @@ function renderArchive() {
         });
         fullHtml += html + `</div>`;
     });
-    container.insertAdjacentHTML('beforeend', fullHtml);
+    archiveView.insertAdjacentHTML('beforeend', fullHtml);
 }
