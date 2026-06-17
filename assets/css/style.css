@@ -1,4 +1,3 @@
-/* ─── VARIABILI E ROOT ─── */
 :root {
     --imp-high: #FC3D21;
     --imp-med: #005DAB;
@@ -8,7 +7,6 @@
     --card-bg: #111;
 }
 
-/* ─── BASE STYLES ─── */
 body {
     margin: 0;
     padding: 0;
@@ -16,10 +14,8 @@ body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     overflow: hidden;
     color: white;
-    margin-top: 0;
 }
 
-/* ─── LAYOUT MAPPA ─── */
 #map {
     height: calc(110vh - 40px);
     width: 100%;
@@ -30,7 +26,6 @@ body {
     filter: grayscale(100%) brightness(105%);
 }
 
-/* ─── NAVIGATION ─── */
 .section-nav {
     position: fixed;
     top: 0;
@@ -46,7 +41,6 @@ body {
 
 .nav-tab {
     padding: 1rem 1.5rem;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 8px;
     font-weight: bold;
     letter-spacing: 1px;
@@ -62,7 +56,6 @@ body {
 
 .nav-tab:hover,
 .nav-tab.active {
-    color: var(--moon-hi);
     background: rgba(200, 192, 168, 0.04);
 }
 
@@ -74,7 +67,6 @@ body {
     text-transform: none;
 }
 
-/* ─── LIGHTBOX ─── */
 #lightbox {
     display: none;
     position: fixed;
@@ -96,9 +88,9 @@ body {
     border: 1px solid #444;
 }
 
-/* ─── POPUP MAPPA ─── */
+
 .popup-img-container {
-    position: relative; /* Necessario per posizionare l'overlay */
+    position: relative; 
     width: 100%;
     height: 110px;
     overflow: hidden;
@@ -112,7 +104,7 @@ body {
     width: 100%;
     height: auto;
     display: block;
-    transition: opacity 0.3s ease; /* Transizione per l'opacità */
+    transition: opacity 0.3s ease;
 }
 
 .popup-view-overlay {
@@ -128,18 +120,18 @@ body {
     font-size: 10px;
     letter-spacing: 2px;
     text-transform: none;
-    background-color: rgba(0, 0, 0, 0.5); /* Sfondo semi-trasparente per il testo */
-    opacity: 0; /* Inizialmente invisibile */
-    transition: opacity 0.3s ease; /* Transizione per l'opacità */
-    pointer-events: none; /* Permette al click di passare attraverso l'overlay e arrivare all'immagine */
+    background-color: rgba(0, 0, 0, 0.5); 
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none; 
 }
 
 .popup-img-container:hover img {
-    opacity: 0.8; /* Diminuisce l'opacità dell'immagine al hover */
+    opacity: 0.8; 
 }
 
 .popup-img-container:hover .popup-view-overlay {
-    opacity: 1; /* Rende visibile l'overlay al hover */
+    opacity: 1; 
 }
 
 .popup-btns {
@@ -155,17 +147,16 @@ body {
     color: #ffffff;
     border: none;
     letter-spacing: 0.5px;
-    padding: 8px; /* Diminuito il padding */
-    font-size: 10px; /* Diminuita la dimensione del font */
+    padding: 8px;
+    font-size: 10px; 
     font-weight: bold;
     text-transform: none;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.popup-select-btn:hover { /* Stili specifici per il bottone select al hover */
+.popup-select-btn:hover {
     background: #003e71;
-    color: #ffffff;
 }
 
 .popup-select-btn.is-remove {
@@ -175,8 +166,6 @@ body {
 }
 
 
-
-/* ─── OVERLAYS (DETAIL & COMPARISON) ─── */
 #comparison-overlay,
 #detail-overlay {
     display: none;
@@ -203,7 +192,6 @@ body {
     position: relative;
 }
 
-/* ─── NEWSPAPER CARD COMPONENT ─── */
 .newspaper-card {
     flex: 1;
     background: #ffffff;
@@ -258,7 +246,7 @@ body {
     height: 100%;
     object-fit: contain;
     object-position: center;
-    cursor: zoom-in;
+    cursor: pointer;
 }
 
 .card-footer {
@@ -323,7 +311,6 @@ body {
     background: #bbb;
 }
 
-/* ─── ELEMENTI UI (BOTTONI E COMPONENTI) ─── */
 .vs-divider {
     position: absolute;
     left: 50%;
@@ -380,7 +367,6 @@ body {
     background: #111;
 }
 
-/* ─── ARCHIVE & SOURCES VIEWS ─── */
 #archive-view,
 #sources-view {
     display: none;
@@ -500,7 +486,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 40px 0 15px; /* Aumentato il padding top per i filtri */
+    padding: 40px 0 15px;
     margin-bottom: 25px;
     border-bottom: none;
 }
@@ -553,7 +539,6 @@ body {
     color: #fff;
 }
 
-/* ─── LEGENDA MAPPA ─── */
 #map-legend {
     position: fixed;
     bottom: 30px;
@@ -563,7 +548,6 @@ body {
     padding: 12px 15px;
     border: 1px solid #252520;
     z-index: 1000;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     display: none;
     flex-direction: column;
     gap: 6px;
@@ -630,7 +614,6 @@ body {
     color: #000;
 }
 
-/* ─── MODALI E OVERLAY INFORMATIVI ─── */
 #purpose-overlay {
     display: none;
     position: fixed;
@@ -663,7 +646,6 @@ body {
 }
 
 #purpose-modal p {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 15px;
     line-height: 1.7;
     color: #555;
@@ -689,7 +671,6 @@ body {
     background: #000;
 }
 
-/* ─── VISTA FONTI ─── */
 #sources-view .continent-title {
     padding-top: 40px;
 }
@@ -715,10 +696,8 @@ body {
 }
 
 #sources-view li a {
-    color: #000; /* Cambiato da var(--imp-med) a nero */
+    color: #000;
     line-height: 1.5;
-    overflow-wrap: anywhere;
-    word-break: break-all;
 }
 
 #sources-modal li a {
@@ -749,7 +728,6 @@ body {
     background: #000;
 }
 
-/* ─── MODALITÀ COMPARAZIONE E PREVIEW ─── */
 #compare-select-container {
     position: fixed;
     bottom: 30px;
@@ -773,7 +751,6 @@ body {
     text-transform: none;
     cursor: pointer;
     transition: all 0.3s;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 #compare-select-btn:hover {
@@ -885,7 +862,7 @@ body {
 #start-compare-btn {
     background: #bbb;
     color: #fff;
-    border: none; /* Rimosso il bordo */
+    border: none; 
     padding: 10px 20px;
     font-size: 9px;
     letter-spacing: 1px;
@@ -924,7 +901,6 @@ body {
     color: #000;
 }
 
-/* ─── ANIMAZIONI ─── */
 @keyframes fadeIn {
     from {
         opacity: 0;
