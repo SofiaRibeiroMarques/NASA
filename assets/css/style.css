@@ -55,6 +55,7 @@ body {
 .nav-tab:hover,
 .nav-tab.active {
     background: rgba(200, 192, 168, 0.04);
+    color: white;
 }
 
 .site-title {
