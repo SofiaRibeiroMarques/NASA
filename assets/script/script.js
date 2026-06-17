@@ -119,12 +119,19 @@ function executeComparison() {
 
 function _toggleCompareModeInternal(activate) {
     compareMode = (activate === undefined) ? !compareMode : activate;
+
+    // Resetta la selezione e lo stile dei markers ogni volta che si cambia modalità
+    // per garantire un inizio pulito ("annullare la selezione fatta prima")
+    selection = [];
+    markers.eachLayer(l => { if(l.setStyle) l.setStyle({ weight: 0, color: '#fff' }); });
+    clearAllComparePreviews();
+    refreshPreviews();
+    map.closePopup();
+
     if (compareMode) {
         compareSelectBtn.classList.add('hidden');
         comparePreviewArea.classList.add('visible');
         compareActionsArea.classList.add('visible');
-        // Invece di inline style, è meglio usare classi CSS se possibile, 
-        // ma per ora manteniamo la logica esistente pulita:
         compareSelectBtn.style.display = 'none';
         comparePreviewArea.style.display = 'flex';
         compareActionsArea.style.display = 'flex';
@@ -132,10 +139,6 @@ function _toggleCompareModeInternal(activate) {
         compareSelectBtn.style.display = 'block';
         comparePreviewArea.style.display = 'none';
         compareActionsArea.style.display = 'none';
-        selection = [];
-        markers.eachLayer(l => { if(l.setStyle) l.setStyle({weight: 0}); });
-        clearAllComparePreviews();
-        refreshPreviews();
     }
     if (archiveView.style.display === 'block') renderArchive();
 }
@@ -149,21 +152,22 @@ publications.forEach(t => {
     m.pubData = t;
     const selectBtnHtml = `<button class="popup-select-btn" data-id="${t.id}" onclick="toggleSelection('${t.id}')">Select</button>`;
     const popupHtml = t.country === "China" 
-        ? `<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;"><strong style="color:#eee; font-size:8px; display:block; margin-bottom:5px; text-transform:uppercase;">Analysis</strong>${t.analysis}${selectBtnHtml}</div>`
-        : `<div style="width:180px"><strong>${t.newspaper}</strong><br><small>${t.city}, ${t.country}</small><div class="popup-img-container"><img src="${t.img}" data-pub-id="${t.id}"></div>${selectBtnHtml}</div>`;
+        ? `<div style="width:260px; padding:5px; font-size:12px; line-height:1.5; max-height:215px; overflow-y:auto;"><strong style="color:#eee; font-size:8px; display:block; margin-bottom:5px; text-transform:uppercase;">Analysis</strong>${t.analysis}<div class="popup-btns">${selectBtnHtml}</div></div>`
+        : `<div style="width:180px"><strong>${t.newspaper}</strong><br><small>${t.city}, ${t.country}</small><div class="popup-img-container"><img src="${t.img}" data-pub-id="${t.id}"><div class="popup-view-overlay">View</div></div><div class="popup-btns">${selectBtnHtml}</div></div>`;
     m.bindPopup(popupHtml);
 });
 
 map.on('popupopen', function(e) {
     const container = e.popup._container;
-    const btn = container.querySelector('.popup-select-btn');
-    if (btn) {
-        btn.style.display = compareMode ? 'block' : 'none';
-        const pubId = btn.getAttribute('data-id');
+    const selectBtn = container.querySelector('.popup-select-btn');
+    
+    if (selectBtn) {
+        selectBtn.style.display = compareMode ? 'block' : 'none';
+        const pubId = selectBtn.getAttribute('data-id');
         const pub = publications.find(p => p.id === pubId);
         const isSelected = selection.includes(pub);
-        btn.innerText = isSelected ? 'Remove' : 'Select';
-        btn.classList.toggle('is-remove', isSelected);
+        selectBtn.innerText = isSelected ? 'Remove' : 'Select';
+        selectBtn.classList.toggle('is-remove', isSelected);
     }
 });
 
