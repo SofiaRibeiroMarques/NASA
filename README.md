@@ -30,12 +30,12 @@ Un elemento distintivo dell’interfaccia è la mappa interattiva, che rappresen
 
 
 <img width="1511" height="857" alt="Ribeiro_Sofia_progetto_1_map" src="https://github.com/user-attachments/assets/0b0b3c42-c608-440d-96db-e0d8a291ed75" />
-<img width="1511" height="857" alt="Ribeiro_Sofia_progetto_1_sources" src="https://github.com/user-attachments/assets/44e7ff56-8288-46f5-9ece-119ed7710cb5" />
 <img width="1511" height="857" alt="Ribeiro_Sofia_progetto_1_archive" src="https://github.com/user-attachments/assets/8d7b3009-3df1-4215-a011-7b18a1699142" />
 
+<img width="1511" height="857" alt="Ribeiro_Sofia_progetto_1_sources" src="https://github.com/user-attachments/assets/a57ead9d-a9b1-4a92-ba02-2cd79d42990d" />
 
 
-
+https://github.com/user-attachments/assets/83d16d7d-73e1-4c2f-b142-83e8bf86ca25
 
 
 
