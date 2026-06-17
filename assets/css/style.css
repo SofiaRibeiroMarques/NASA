@@ -541,7 +541,7 @@ body {
 #map-legend {
     position: fixed;
     bottom: 30px;
-    left: 142px; /* Avvicinato al bottone '?' */
+    left: 142px;
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(4px);
     padding: 12px 15px;
