@@ -340,6 +340,12 @@ body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Helvetic
     overflow-wrap: anywhere;
     word-break: break-all;
 }
+#sources-modal li a {
+    color: inherit;
+    text-decoration: underline;
+    transition: opacity 0.2s;
+}
+#sources-modal li a:hover { opacity: 0.7; }
 
 .close-sources-btn {
     display: block; margin-top: 25px; margin-left: auto; background: #333; color: #fff;
