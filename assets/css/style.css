@@ -3,8 +3,6 @@
     --imp-med: #005DAB;
     --imp-low: #A7A9AC;
     --bg-dark: #050505;
-    --text-gray: #ccc;
-    --card-bg: #111;
 }
 
 body {
@@ -161,7 +159,6 @@ body {
 
 .popup-select-btn.is-remove {
     background: var(--imp-high);
-    color: #fff;
     border-color: var(--imp-high);
 }
 
